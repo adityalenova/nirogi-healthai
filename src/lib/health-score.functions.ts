@@ -1,149 +1,132 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-type Factor = { label: string; points: number; max: number; note: string };
+export type Pillar = { key: string; label: string; points: number; max: 25; note: string };
+
+function level(score: number) {
+  if (score >= 85) return "Outstanding";
+  if (score >= 70) return "Good";
+  if (score >= 50) return "Average";
+  if (score >= 30) return "Below Average";
+  return "Poor";
+}
+
+function message(score: number) {
+  if (score >= 85) return "Outstanding — your habits are protecting your future health.";
+  if (score >= 70) return "Good balance. A small push on your weakest pillar lifts everything.";
+  if (score >= 50) return "Average. Pick one pillar this week and be consistent.";
+  if (score >= 30) return "Below average. Start with hydration and sleep — they move fastest.";
+  return "Let's turn this around. One small habit today beats a perfect plan tomorrow.";
+}
 
 /**
- * Computes a 0-100 health score from the user's profile and recent activity.
- * Weights (from the product spec):
- *  - BMI                  15
- *  - Healthy eating/sugar 20  (food diary)
- *  - Medicine adherence   15  (medicine logs)
- *  - Tool engagement      10  (scan history breadth)
- *  - CancerSense          10
- *  - HeartSense           10
- *  - ScanIQ                5
- *  - Profile completeness 15
+ * Four-pillar Health Score: Physical Activity, Hydration, Sleep Quality and
+ * Personal OS — each out of 25, totalling 100.
  */
 export const getHealthScore = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
 
-    const since = new Date();
-    since.setDate(since.getDate() - 30);
-    const sinceIso = since.toISOString();
+    const weekAgo = new Date(Date.now() - 7 * 86_400_000).toISOString();
+    const monthAgo = new Date(Date.now() - 30 * 86_400_000).toISOString();
 
-    const [{ data: profile }, { data: scans }, { data: food }, { data: logs }, { data: history }] =
-      await Promise.all([
-        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-        supabase.from("scan_history").select("tool, result, created_at").eq("user_id", userId).gte("created_at", sinceIso),
-        supabase.from("food_diary").select("sugar_g, calories, created_at").eq("user_id", userId).gte("created_at", sinceIso),
-        supabase.from("medicine_logs").select("status, marked_at").eq("user_id", userId).gte("marked_at", sinceIso),
-        supabase.from("health_score_history").select("score, created_at").eq("user_id", userId).order("created_at", { ascending: true }).limit(12),
-      ]);
+    const [
+      { data: profile },
+      { data: sessions },
+      { data: exercise },
+      { data: water },
+      { data: settings },
+      { data: sleep },
+      { data: doses },
+      { data: scans },
+      { data: history },
+    ] = await Promise.all([
+      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+      supabase.from("exercise_sessions").select("duration_seconds, calories_burned, started_at").eq("user_id", userId).gte("started_at", weekAgo),
+      supabase.from("exercise_logs").select("duration_min, logged_at").eq("user_id", userId).gte("logged_at", weekAgo),
+      supabase.from("water_logs").select("amount_ml, logged_at").eq("user_id", userId).gte("logged_at", weekAgo),
+      supabase.from("wellness_settings").select("water_goal_ml, sleep_goal_min, exercise_goal_min").eq("user_id", userId).maybeSingle(),
+      supabase.from("sleep_logs").select("duration_min, quality_score, logged_at").eq("user_id", userId).gte("logged_at", weekAgo),
+      supabase.from("medicine_logs").select("status, marked_at").eq("user_id", userId).gte("marked_at", monthAgo),
+      supabase.from("scan_history").select("tool, created_at").eq("user_id", userId).gte("created_at", monthAgo),
+      supabase.from("health_score_history").select("score, created_at").eq("user_id", userId).order("created_at", { ascending: true }).limit(14),
+    ]);
 
-    const factors: Factor[] = [];
+    const pillars: Pillar[] = [];
 
-    // BMI (15)
-    const bmi = profile?.bmi as number | null | undefined;
-    if (bmi == null) {
-      factors.push({ label: "Body Mass Index", points: 6, max: 15, note: "Add weight & height to refine this." });
-    } else {
-      const bmiPts = bmi >= 18.5 && bmi < 25 ? 15 : bmi >= 25 && bmi < 30 ? 9 : bmi >= 17 && bmi < 18.5 ? 9 : 4;
-      factors.push({
-        label: "Body Mass Index",
-        points: bmiPts,
-        max: 15,
-        note: bmiPts === 15 ? "Healthy BMI range." : "Aim for a BMI between 18.5 and 24.9.",
-      });
-    }
-
-    // Healthy eating / sugar (20)
-    const meals = food ?? [];
-    if (meals.length === 0) {
-      factors.push({ label: "Healthy eating", points: 8, max: 20, note: "Log meals with CalorieEye to track this." });
-    } else {
-      const avgSugar = meals.reduce((s, m) => s + (m.sugar_g ?? 0), 0) / meals.length;
-      const eatPts = avgSugar <= 15 ? 20 : avgSugar <= 30 ? 14 : avgSugar <= 50 ? 8 : 4;
-      factors.push({
-        label: "Healthy eating",
-        points: eatPts,
-        max: 20,
-        note: `Avg ${Math.round(avgSugar)}g sugar/meal over ${meals.length} logged meals.`,
-      });
-    }
-
-    // Medicine adherence (15)
-    const allLogs = logs ?? [];
-    if (allLogs.length === 0) {
-      factors.push({ label: "Medicine adherence", points: 9, max: 15, note: "Set reminders to track adherence." });
-    } else {
-      const taken = allLogs.filter((l) => l.status === "taken").length;
-      const rate = taken / allLogs.length;
-      factors.push({
-        label: "Medicine adherence",
-        points: Math.round(rate * 15),
-        max: 15,
-        note: `${Math.round(rate * 100)}% of doses taken on time.`,
-      });
-    }
-
-    // Tool engagement (10)
-    const scanRows = scans ?? [];
-    const distinctTools = new Set(scanRows.map((s) => s.tool)).size;
-    factors.push({
-      label: "Preventive check-ups",
-      points: Math.min(10, distinctTools * 2),
-      max: 10,
-      note: `${distinctTools} different tools used this month.`,
+    // 1) Physical activity — weekly active minutes against a 150-minute target.
+    const sessionMins = (sessions ?? []).reduce((s, r) => s + Math.round((r.duration_seconds ?? 0) / 60), 0);
+    const loggedMins = (exercise ?? []).reduce((s, r) => s + (r.duration_min ?? 0), 0);
+    const activeMins = sessionMins + loggedMins;
+    const activityPts = Math.round(Math.min(1, activeMins / 150) * 25);
+    pillars.push({
+      key: "activity",
+      label: "Physical Activity",
+      points: activeMins === 0 ? 0 : Math.max(3, activityPts),
+      max: 25,
+      note: activeMins === 0 ? "No workouts logged this week." : `${activeMins} active minutes this week (target 150).`,
     });
 
-    // Helper to read a tool's latest risk
-    const riskScore = (tool: string, max: number): Factor => {
-      const rows = scanRows.filter((s) => s.tool === tool);
-      if (rows.length === 0)
-        return { label: tool, points: Math.round(max * 0.6), max, note: "Not assessed recently." };
-      const latest = rows[rows.length - 1].result as { riskLevel?: string } | null;
-      const lvl = latest?.riskLevel ?? "info";
-      const pts =
-        lvl === "low" ? max : lvl === "info" ? Math.round(max * 0.8) : lvl === "moderate" ? Math.round(max * 0.6) : lvl === "high" ? Math.round(max * 0.3) : 0;
-      return { label: tool, points: pts, max, note: `Latest risk: ${lvl}.` };
-    };
+    // 2) Hydration — average daily intake against the personal goal.
+    const goalMl = settings?.water_goal_ml ?? 2500;
+    const totalMl = (water ?? []).reduce((s, r) => s + (r.amount_ml ?? 0), 0);
+    const days = Math.max(1, new Set((water ?? []).map((r) => (r.logged_at ?? "").slice(0, 10))).size);
+    const avgMl = totalMl / days;
+    const hydrationPts = totalMl === 0 ? 0 : Math.max(3, Math.round(Math.min(1, avgMl / goalMl) * 25));
+    pillars.push({
+      key: "hydration",
+      label: "Hydration",
+      points: hydrationPts,
+      max: 25,
+      note: totalMl === 0 ? "No water logged this week." : `${(avgMl / 1000).toFixed(1)} L average per day (goal ${(goalMl / 1000).toFixed(1)} L).`,
+    });
 
-    const cancer = riskScore("cancersense", 10);
-    cancer.label = "Cancer risk (CancerSense)";
-    factors.push(cancer);
-    const heart = riskScore("heartsense", 10);
-    heart.label = "Heart risk (HeartSense)";
-    factors.push(heart);
-    const scan = riskScore("scaniq", 5);
-    scan.label = "Reports reviewed (ScanIQ)";
-    factors.push(scan);
+    // 3) Sleep quality — duration against goal, adjusted by self-rated quality.
+    const sleepRows = sleep ?? [];
+    const sleepGoal = settings?.sleep_goal_min ?? 450;
+    let sleepPts = 0;
+    let sleepNote = "No sleep logged this week.";
+    if (sleepRows.length) {
+      const avgMin = sleepRows.reduce((s, r) => s + (r.duration_min ?? 0), 0) / sleepRows.length;
+      const quality = sleepRows.filter((r) => r.quality_score != null);
+      const avgQual = quality.length ? quality.reduce((s, r) => s + (r.quality_score ?? 0), 0) / quality.length : null;
+      const durationPart = Math.min(1, avgMin / sleepGoal) * 18;
+      const qualityPart = avgQual != null ? (avgQual / 10) * 7 : 4;
+      sleepPts = Math.max(3, Math.round(durationPart + qualityPart));
+      sleepNote = `${(avgMin / 60).toFixed(1)} h average${avgQual != null ? `, quality ${avgQual.toFixed(1)}/10` : ""}.`;
+    }
+    pillars.push({ key: "sleep", label: "Sleep Quality", points: sleepPts, max: 25, note: sleepNote });
 
-    // Profile completeness (15)
+    // 4) Personal OS — profile completeness, medicine adherence, tool engagement.
     const fields = [
-      profile?.full_name,
-      profile?.age,
-      profile?.gender,
-      profile?.blood_group,
-      profile?.weight_kg,
-      profile?.height_cm,
-      profile?.health_conditions,
-      profile?.current_medicines,
+      profile?.full_name, profile?.age, profile?.gender, profile?.blood_group,
+      profile?.weight_kg, profile?.height_cm, profile?.health_conditions, profile?.allergies,
     ];
     const filled = fields.filter((f) => f != null && `${f}`.trim() !== "").length;
-    factors.push({
-      label: "Profile completeness",
-      points: Math.round((filled / fields.length) * 15),
-      max: 15,
-      note: `${filled}/${fields.length} key fields filled.`,
+    const completeness = (filled / fields.length) * 10;
+
+    const doseRows = doses ?? [];
+    const adherence = doseRows.length
+      ? (doseRows.filter((d) => d.status === "taken").length / doseRows.length) * 8
+      : 5;
+
+    const distinctTools = new Set((scans ?? []).map((s) => s.tool)).size;
+    const engagement = Math.min(7, distinctTools * 1.5);
+
+    const osPts = Math.round(completeness + adherence + engagement);
+    pillars.push({
+      key: "personal_os",
+      label: "Personal OS",
+      points: Math.min(25, osPts),
+      max: 25,
+      note: `${filled}/${fields.length} profile fields, ${distinctTools} tools used this month.`,
     });
 
-    const score = Math.max(0, Math.min(100, factors.reduce((s, f) => s + f.points, 0)));
+    const score = Math.max(0, Math.min(100, pillars.reduce((s, p) => s + p.points, 0)));
+    const band = level(score);
 
-    const band =
-      score >= 80 ? "Excellent" : score >= 60 ? "Good" : score >= 40 ? "Needs attention" : "At risk";
-    const message =
-      score >= 80
-        ? "You're doing great — keep up your healthy habits!"
-        : score >= 60
-          ? "A solid foundation. Small tweaks can push you higher."
-          : score >= 40
-            ? "Some areas need care. Focus on your lowest factors below."
-            : "Let's turn this around — start with one factor this week.";
-
-    // Store today's snapshot (one per day)
+    // Daily snapshot (one row per day).
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     const { data: todaySnap } = await supabase
@@ -153,18 +136,21 @@ export const getHealthScore = createServerFn({ method: "GET" })
       .gte("created_at", startOfDay.toISOString())
       .maybeSingle();
 
+    const breakdown = JSON.parse(JSON.stringify(pillars));
     if (todaySnap) {
-      await supabase
-        .from("health_score_history")
-        .update({ score, breakdown: JSON.parse(JSON.stringify(factors)) })
-        .eq("id", todaySnap.id);
+      await supabase.from("health_score_history").update({ score, breakdown }).eq("id", todaySnap.id);
     } else {
-      await supabase
-        .from("health_score_history")
-        .insert({ user_id: userId, score, breakdown: JSON.parse(JSON.stringify(factors)) });
+      await supabase.from("health_score_history").insert({ user_id: userId, score, breakdown });
     }
 
-    const trend = (history ?? []).map((h) => ({ score: h.score, date: h.created_at }));
-
-    return { score, band, message, factors, trend };
+    return {
+      score,
+      band,
+      message: message(score),
+      pillars,
+      // Kept for older callers that still read `factors`.
+      factors: pillars.map((p) => ({ label: p.label, points: p.points, max: p.max, note: p.note })),
+      name: profile?.full_name ?? null,
+      trend: (history ?? []).map((h) => ({ score: h.score, date: h.created_at })),
+    };
   });
