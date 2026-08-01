@@ -289,6 +289,56 @@ export type Database = {
           },
         ]
       }
+      exercise_sessions: {
+        Row: {
+          activity_type: string
+          calories_burned: number | null
+          created_at: string
+          distance_km: number | null
+          duration_seconds: number
+          ended_at: string
+          id: string
+          member_id: string | null
+          started_at: string
+          steps: number | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          calories_burned?: number | null
+          created_at?: string
+          distance_km?: number | null
+          duration_seconds?: number
+          ended_at?: string
+          id?: string
+          member_id?: string | null
+          started_at?: string
+          steps?: number | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          calories_burned?: number | null
+          created_at?: string
+          distance_km?: number | null
+          duration_seconds?: number
+          ended_at?: string
+          id?: string
+          member_id?: string | null
+          started_at?: string
+          steps?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercise_sessions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       family_invites: {
         Row: {
           accepted_at: string | null
@@ -881,27 +931,72 @@ export type Database = {
         Row: {
           balance: number
           created_at: string
+          last_refresh_date: string | null
           last_streak_date: string | null
           lifetime_earned: number
           lifetime_spent: number
+          referral_code: string | null
+          referred_by: string | null
+          signup_date: string
           updated_at: string
           user_id: string
         }
         Insert: {
           balance?: number
           created_at?: string
+          last_refresh_date?: string | null
           last_streak_date?: string | null
           lifetime_earned?: number
           lifetime_spent?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          signup_date?: string
           updated_at?: string
           user_id: string
         }
         Update: {
           balance?: number
           created_at?: string
+          last_refresh_date?: string | null
           last_streak_date?: string | null
           lifetime_earned?: number
           lifetime_spent?: number
+          referral_code?: string | null
+          referred_by?: string | null
+          signup_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_integrations: {
+        Row: {
+          access_token: string | null
+          connected_at: string
+          id: string
+          provider: string
+          refresh_token: string | null
+          token_expiry: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          connected_at?: string
+          id?: string
+          provider: string
+          refresh_token?: string | null
+          token_expiry?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          connected_at?: string
+          id?: string
+          provider?: string
+          refresh_token?: string | null
+          token_expiry?: string | null
           updated_at?: string
           user_id?: string
         }
