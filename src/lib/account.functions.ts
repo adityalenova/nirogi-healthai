@@ -49,13 +49,14 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
       "sleep_logs", "exercise_logs", "exercise_sessions", "breathing_sessions", "heart_rate_logs",
       "weight_logs", "health_score_history", "health_goals", "diet_compliance", "diet_plans",
       "doctor_messages", "doctor_chats", "credit_transactions", "user_credits", "user_integrations",
-      "wellness_settings", "family_invites", "family_members",
-    ] as const;
+      "wellness_settings", "family_invites",
+    ];
 
+    const db = supabase as any;
     for (const table of tables) {
-      await supabase.from(table).delete().eq("user_id", userId);
+      await db.from(table).delete().eq("user_id", userId);
     }
-    await supabase.from("family_members").delete().eq("owner_id", userId);
+    await db.from("family_members").delete().eq("owner_id", userId);
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin.from("profiles").delete().eq("id", userId);
