@@ -41,7 +41,7 @@ function SenseCheckPage() {
   const speak = (text: string) => {
     try {
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang === "hi" ? "hi-IN" : "en-IN";
+      u.lang = "en-IN";
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(u);
     } catch { /* TTS unavailable */ }
@@ -53,7 +53,7 @@ function SenseCheckPage() {
     if (!SR) { toast.error("Voice input isn't supported in this browser. Please type your answer."); return; }
     // @ts-expect-error browser speech API
     const rec = new SR();
-    rec.lang = lang === "hi" ? "hi-IN" : "en-IN";
+    rec.lang = "en-IN";
     rec.interimResults = false;
     rec.onresult = (e: { results: { [k: number]: { [k: number]: { transcript: string } } } }) => {
       const text = e.results[0][0].transcript;
