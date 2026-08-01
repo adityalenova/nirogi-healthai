@@ -46,7 +46,7 @@ export const sendDoctorMessage = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => SendInput.parse(i))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const cost = data.voice ? 3 : 2;
+    const cost = data.voice ? 5 : 2;
 
     const { ensureCredits } = await import("./credits.server");
     const { row: creditRow } = await ensureCredits(supabase, userId);
