@@ -50,18 +50,32 @@ const PrescriptionInput = z.object({
   lang: z.enum(["en", "hi"]).optional(),
 });
 
+export type PrescriptionMedicine = {
+  name: string;
+  dose: string;
+  frequency: string;
+  timings: string[];
+  with_food: string;
+  duration: string;
+  purpose: string;
+  cautions: string;
+};
+
 export const analyzePrescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => PrescriptionInput.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const key = process.env.LOVABLE_API_KEY;
+    const key = process.env['LOVABLE_API_KEY'];
     if (!key) throw new Error("AI is not configured.");
 
-    const langLine =
-      data.lang === "hi"
-        ? " Respond entirely in simple, everyday Hindi (Devanagari script), keeping medicine names recognisable."
-        : "";
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("current_medicines, allergies, health_conditions")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const contextLine = `Medicines the patient already takes: ${profile?.current_medicines || "none recorded"}. Known allergies: ${profile?.allergies || "none recorded"}. Conditions: ${profile?.health_conditions || "none recorded"}.`;
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -72,13 +86,15 @@ export const analyzePrescription = createServerFn({ method: "POST" })
           {
             role: "system",
             content:
-              "You are a clinical assistant. Read the prescription image and explain it in clear, simple language for a patient. For each medicine give: what it is, what it treats, how to take it, common side effects, and key cautions. End with a clear reminder to follow the prescribing doctor and pharmacist, and to never self-medicate. Use short headed paragraphs in plain text (no markdown symbols)." +
-              langLine,
+              "You are a clinical assistant reading a prescription image for a patient. Convert doctor shorthand to plain language (OD = once daily, BD = twice daily 8 AM and 8 PM, TDS = three times daily 8 AM, 2 PM and 8 PM, QID = four times daily, HS = at bedtime, AC = before food, PC = after food). " +
+              "Also cross-check the new medicines against the ones the patient already takes and flag any dangerous interaction or duplicate. " +
+              'Reply with STRICT JSON only, no markdown fences, shaped: {"explanation": string, "medicines": [{"name": string, "dose": string, "frequency": string, "timings": ["08:00"], "with_food": string, "duration": string, "purpose": string, "cautions": string}], "interactions": [string], "doctor": string}. ' +
+              "The explanation is a friendly plain-text summary in short headed paragraphs ending with a reminder to follow the prescribing doctor and pharmacist. timings must be 24-hour HH:MM strings.",
           },
           {
             role: "user",
             content: [
-              { type: "text", text: "Please read and explain this prescription." },
+              { type: "text", text: `Please read and explain this prescription. ${contextLine}` },
               { type: "image_url", image_url: { url: data.image } },
             ],
           },
@@ -94,19 +110,53 @@ export const analyzePrescription = createServerFn({ method: "POST" })
     }
 
     const json = await res.json();
-    const analysis: string = json?.choices?.[0]?.message?.content ?? "";
+    const raw: string = json?.choices?.[0]?.message?.content ?? "";
+
+    let analysis = raw;
+    let medicines: PrescriptionMedicine[] = [];
+    let interactions: string[] = [];
+    let doctor = "";
+    try {
+      const cleaned = raw.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+      const parsed = JSON.parse(cleaned);
+      analysis = typeof parsed.explanation === "string" ? parsed.explanation : raw;
+      medicines = Array.isArray(parsed.medicines)
+        ? parsed.medicines.slice(0, 20).map((m: Record<string, unknown>) => ({
+            name: String(m['name'] ?? "Medicine"),
+            dose: String(m['dose'] ?? ""),
+            frequency: String(m['frequency'] ?? ""),
+            timings: Array.isArray(m['timings']) ? (m['timings'] as unknown[]).slice(0, 6).map(String) : [],
+            with_food: String(m['with_food'] ?? ""),
+            duration: String(m['duration'] ?? ""),
+            purpose: String(m['purpose'] ?? ""),
+            cautions: String(m['cautions'] ?? ""),
+          }))
+        : [];
+      interactions = Array.isArray(parsed.interactions) ? parsed.interactions.slice(0, 10).map(String) : [];
+      doctor = String(parsed.doctor ?? "");
+    } catch {
+      /* Model returned prose — keep the plain explanation. */
+    }
 
     await supabase.from("profiles").update({ prescription_analysis: analysis }).eq("id", userId);
 
-    // Record in history so it shows on the medical history page.
     const firstLine = analysis.split("\n").find((l) => l.trim())?.slice(0, 140) ?? "Prescription analyzed";
     await supabase.from("scan_history").insert({
       user_id: userId,
       tool: "prescription",
       title: "Prescription reading",
       summary: firstLine,
-      result: { riskLevel: "info", analysis },
+      result: JSON.parse(JSON.stringify({ riskLevel: "info", analysis, medicines, interactions })),
     });
 
-    return { analysis };
+    // One-time credit reward for uploading a prescription.
+    try {
+      const { grantOnce } = await import("./credits.server");
+      await grantOnce(supabase, userId, "prescription_upload", 15, "Uploaded a prescription");
+    } catch {
+      /* credits are non-critical */
+    }
+
+    return { analysis, medicines, interactions, doctor };
   });
+
