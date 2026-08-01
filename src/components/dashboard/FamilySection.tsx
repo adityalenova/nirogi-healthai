@@ -22,6 +22,7 @@ import {
   deleteFamilyMember,
 } from "@/lib/family.functions";
 import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite } from "@/lib/family-invite.functions";
+import { getFamilyOverview, type FamilyOverviewMember } from "@/lib/family-overview.functions";
 import { useActiveMember } from "@/lib/active-member";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -87,6 +88,12 @@ export function FamilySection() {
     queryFn: () => listFn(),
   });
   const members = (data?.members ?? []) as MemberRow[];
+
+  const overviewFn = useServerFn(getFamilyOverview);
+  const { data: overviewData } = useQuery({
+    queryKey: ["family-overview"],
+    queryFn: () => overviewFn(),
+  });
 
   const { data: invitesData } = useQuery({
     queryKey: ["family-invites"],
