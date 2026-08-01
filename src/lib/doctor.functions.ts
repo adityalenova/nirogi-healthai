@@ -2,37 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const SIGNUP_BONUS = 50;
-
-/** Ensure a credits row exists; grant the one-time signup bonus on creation. */
-async function ensureCredits(supabase: any, userId: string): Promise<number> {
-  const { data: existing } = await supabase
-    .from("user_credits")
-    .select("balance")
-    .eq("user_id", userId)
-    .maybeSingle();
-  if (existing) return existing.balance as number;
-
-  await supabase.from("user_credits").insert({
-    user_id: userId,
-    balance: SIGNUP_BONUS,
-    lifetime_earned: SIGNUP_BONUS,
-    lifetime_spent: 0,
-  });
-  await supabase.from("credit_transactions").insert({
-    user_id: userId,
-    amount: SIGNUP_BONUS,
-    reason: "signup_bonus",
-  });
-  return SIGNUP_BONUS;
-}
-
 export const getCredits = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
-    const balance = await ensureCredits(supabase, userId);
-    return { balance };
+    const { ensureCredits } = await import("./credits.server");
+    const { row } = await ensureCredits(supabase, userId);
+    return { balance: row.balance };
   });
 
 export const getDoctorChat = createServerFn({ method: "POST" })
@@ -70,9 +46,11 @@ export const sendDoctorMessage = createServerFn({ method: "POST" })
   .inputValidator((i: unknown) => SendInput.parse(i))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const cost = data.voice ? 3 : 2;
+    const cost = data.voice ? 5 : 2;
 
-    const balance = await ensureCredits(supabase, userId);
+    const { ensureCredits } = await import("./credits.server");
+    const { row: creditRow } = await ensureCredits(supabase, userId);
+    const balance = creditRow.balance;
     if (balance < cost) throw new Error("INSUFFICIENT_CREDITS");
 
     // Find or create the chat thread for this doctor.
@@ -129,15 +107,14 @@ export const sendDoctorMessage = createServerFn({ method: "POST" })
       { chat_id: chatId, user_id: userId, role: "assistant", content: reply },
     ]);
 
-    // Deduct credits.
-    const newBalance = balance - cost;
-    await supabase
-      .from("user_credits")
-      .update({ balance: newBalance, updated_at: new Date().toISOString() })
-      .eq("user_id", userId);
-    await supabase
-      .from("credit_transactions")
-      .insert({ user_id: userId, amount: -cost, reason: data.voice ? "voice_turn" : "chat_message", meta: { doctorId: data.doctorId } });
+    // Deduct credits through the shared ledger.
+    const { spendCredits } = await import("./credits.server");
+    const newBalance = await spendCredits(
+      supabase,
+      userId,
+      cost,
+      data.voice ? `Voice minute with ${data.doctorId}` : `Doctor chat with ${data.doctorId}`,
+    );
 
     // Optional voice.
     let audio: string | null = null;

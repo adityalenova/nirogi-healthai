@@ -124,7 +124,7 @@ function DoctorPage() {
     if (!SR) { toast.error("Voice input isn't supported on this browser. Try typing instead."); return; }
     const rec = new SR();
     recognitionRef.current = rec;
-    rec.lang = lang === "hi" ? "hi-IN" : "en-IN";
+    rec.lang = "en-IN";
     rec.interimResults = false;
     rec.maxAlternatives = 1;
     setListening(true);

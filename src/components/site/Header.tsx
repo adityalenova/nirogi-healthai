@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 export function Header() {
   const { user } = useAuth();
-  const { lang, setLang, t } = useI18n();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
 
   const nav = [
@@ -42,20 +42,6 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <div className="flex items-center rounded-full border border-border p-0.5">
-            <button
-              onClick={() => setLang("en")}
-              className={cn("rounded-full px-2 py-0.5 text-xs font-semibold transition-colors", lang === "en" ? "bg-primary text-primary-foreground" : "text-muted-foreground")}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLang("hi")}
-              className={cn("rounded-full px-2 py-0.5 text-xs font-semibold transition-colors", lang === "hi" ? "bg-primary text-primary-foreground" : "text-muted-foreground")}
-            >
-              हिं
-            </button>
-          </div>
           <Button asChild size="sm" variant="destructive">
             <Link to="/sos">
               <Siren className="size-4" /> {t("common.sos", "SOS")}

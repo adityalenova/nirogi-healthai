@@ -22,6 +22,7 @@ import {
   deleteFamilyMember,
 } from "@/lib/family.functions";
 import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite } from "@/lib/family-invite.functions";
+import { getFamilyOverview, type FamilyOverviewMember } from "@/lib/family-overview.functions";
 import { useActiveMember } from "@/lib/active-member";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -87,6 +88,12 @@ export function FamilySection() {
     queryFn: () => listFn(),
   });
   const members = (data?.members ?? []) as MemberRow[];
+
+  const overviewFn = useServerFn(getFamilyOverview);
+  const { data: overviewData } = useQuery({
+    queryKey: ["family-overview"],
+    queryFn: () => overviewFn(),
+  });
 
   const { data: invitesData } = useQuery({
     queryKey: ["family-invites"],
@@ -200,68 +207,112 @@ export function FamilySection() {
 
   const set = (k: keyof FormState, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
+  const overview = (overviewData?.members ?? []) as FamilyOverviewMember[];
+
+
+  const shareWhatsApp = (token: string, label: string) => {
+    const text = `Hi ${label}, join my family health group on Nirogi AI so we can look after each other. Tap to join: ${inviteLink(token)}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+  };
+
+  const scoreFor = (id: string) => overview.find((o) => o.id === id)?.score ?? null;
+  const avatarFor = (id: string) => overview.find((o) => o.id === id)?.avatar_url ?? null;
+  const joined = (id: string) => overview.find((o) => o.id === id)?.member_user_id != null;
+
   return (
     <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
           <Users className="size-5 text-primary" /> {t("dash.family", "Family")}
         </h2>
-        <Button size="sm" variant="outline" onClick={startAdd}>
-          <Plus className="size-4" /> {t("dash.add_member", "Add member")}
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setInviteOpen(true)}>
+            <Link2 className="size-4" /> Invite with Google
+          </Button>
+          <Button size="sm" variant="outline" onClick={startAdd}>
+            <Plus className="size-4" /> {t("dash.add_member", "Add member")}
+          </Button>
+        </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        {t("dash.family_note", "Switch profiles to run tools for a family member.")}
+        Up to 6 people. Tap a card to view that person&apos;s dashboard and run tools for them.
       </p>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          onClick={() => setMember(null, null)}
-          className={cn(
-            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
-            memberId === null ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted",
-          )}
-        >
-          <User className="size-3.5" /> {t("dash.you", "You")}
-        </button>
-        {members.map((m) => (
-          <button
-            key={m.id}
-            onClick={() => setMember(m.id, m.full_name)}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
-              memberId === m.id ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted",
-            )}
-          >
-            {m.full_name}
-          </button>
-        ))}
-      </div>
 
       {isLoading ? (
         <div className="mt-6 flex justify-center"><Loader2 className="size-5 animate-spin text-primary" /></div>
-      ) : members.length > 0 ? (
-        <div className="mt-4 space-y-2">
+      ) : (
+        <div className="-mx-1 mt-4 flex snap-x gap-3 overflow-x-auto px-1 pb-2">
+          <MemberCard
+            name={t("dash.you", "You")}
+            subtitle="Your own profile"
+            active={memberId === null}
+            onClick={() => setMember(null, null)}
+          />
           {members.map((m) => (
-            <div key={m.id} className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
-              <div className="text-sm">
-                <span className="font-medium">{m.full_name}</span>
-                <span className="text-muted-foreground">
-                  {m.relation ? ` · ${m.relation}` : ""}{m.age ? ` · ${m.age}y` : ""}{m.blood_group ? ` · ${m.blood_group}` : ""}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Button size="icon" variant="ghost" className="size-8" onClick={() => startEdit(m)}>
-                  <Pencil className="size-4" />
-                </Button>
-                <Button size="icon" variant="ghost" className="size-8 text-destructive" onClick={() => delMut.mutate(m.id)}>
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
-            </div>
+            <MemberCard
+              key={m.id}
+              name={m.full_name}
+              subtitle={[m.relation, m.age ? `${m.age}y` : null, m.blood_group].filter(Boolean).join(" · ") || "No details yet"}
+              score={scoreFor(m.id)}
+              avatar={avatarFor(m.id)}
+              joined={joined(m.id)}
+              active={memberId === m.id}
+              onClick={() => setMember(m.id, m.full_name)}
+              onEdit={() => startEdit(m)}
+              onDelete={() => delMut.mutate(m.id)}
+            />
           ))}
         </div>
-      ) : null}
+      )}
+
+      {invites.filter((i) => i.status === "pending").length > 0 && (
+        <div className="mt-4 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pending invites</p>
+          {invites
+            .filter((i) => i.status === "pending")
+            .map((i) => (
+              <div key={i.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-sm">
+                <span className="font-medium">
+                  {i.label}
+                  {i.relation ? <span className="text-muted-foreground"> · {i.relation}</span> : null}
+                </span>
+                <div className="flex items-center gap-1">
+                  <Button size="sm" variant="ghost" onClick={() => shareWhatsApp(i.token, i.label)}>
+                    Share
+                  </Button>
+                  <Button size="icon" variant="ghost" className="size-8" onClick={() => copyLink(i.token)}>
+                    {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
+                  </Button>
+                  <Button size="icon" variant="ghost" className="size-8 text-destructive" onClick={() => revokeMut.mutate(i.id)}>
+                    <X className="size-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+        </div>
+      )}
+
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Invite a family member</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            We&apos;ll create a private join link. When they open it and sign in with Google, their profile joins your
+            family group automatically.
+          </p>
+          <div className="grid gap-3">
+            <Field label="Their name"><Input value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="e.g. Mummy" /></Field>
+            <Field label="Relation"><Input value={inviteRelation} onChange={(e) => setInviteRelation(e.target.value)} placeholder="e.g. Mother" /></Field>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => inviteMut.mutate()} disabled={!inviteName.trim() || inviteMut.isPending}>
+              {inviteMut.isPending ? <Loader2 className="size-4 animate-spin" /> : <Link2 className="size-4" />}
+              Create invite link
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[85vh] overflow-y-auto">
@@ -291,6 +342,79 @@ export function FamilySection() {
     </section>
   );
 }
+
+function MemberCard({
+  name,
+  subtitle,
+  score,
+  avatar,
+  joined,
+  active,
+  onClick,
+  onEdit,
+  onDelete,
+}: {
+  name: string;
+  subtitle: string;
+  score?: number | null;
+  avatar?: string | null;
+  joined?: boolean;
+  active: boolean;
+  onClick: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}) {
+  const pct = score ?? 0;
+  return (
+    <div
+      className={cn(
+        "w-44 shrink-0 snap-start rounded-xl border p-3 text-left transition-colors",
+        active ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50",
+      )}
+    >
+      <button onClick={onClick} className="w-full text-left">
+        <div className="relative mx-auto size-16">
+          <svg viewBox="0 0 64 64" className="size-16 -rotate-90">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--border))" strokeWidth="5" />
+            <circle
+              cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--primary))" strokeWidth="5" strokeLinecap="round"
+              strokeDasharray={`${(pct / 100) * 2 * Math.PI * 28} ${2 * Math.PI * 28}`}
+            />
+          </svg>
+          <div className="absolute inset-1.5 overflow-hidden rounded-full bg-muted">
+            {avatar ? (
+              <img src={avatar} alt="" className="size-full object-cover" />
+            ) : (
+              <span className="flex size-full items-center justify-center">
+                <User className="size-6 text-muted-foreground" />
+              </span>
+            )}
+          </div>
+        </div>
+        <p className="mt-2 truncate text-center text-sm font-semibold">{name}</p>
+        <p className="truncate text-center text-[11px] text-muted-foreground">{subtitle}</p>
+        <p className="mt-1 text-center text-[11px] font-medium text-primary">
+          {score != null ? `Score ${score}` : joined ? "No score yet" : "Invite pending"}
+        </p>
+      </button>
+      {(onEdit || onDelete) && (
+        <div className="mt-2 flex justify-center gap-1">
+          {onEdit && (
+            <Button size="icon" variant="ghost" className="size-7" onClick={onEdit}>
+              <Pencil className="size-3.5" />
+            </Button>
+          )}
+          {onDelete && (
+            <Button size="icon" variant="ghost" className="size-7 text-destructive" onClick={onDelete}>
+              <Trash2 className="size-3.5" />
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
