@@ -200,6 +200,9 @@ export function FamilySection() {
 
   const set = (k: keyof FormState, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
+  const overview = (overviewData?.members ?? []) as FamilyOverviewMember[];
+
+
   const shareWhatsApp = (token: string, label: string) => {
     const text = `Hi ${label}, join my family health group on Nirogi AI so we can look after each other. Tap to join: ${inviteLink(token)}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
