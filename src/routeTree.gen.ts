@@ -26,6 +26,7 @@ import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedExerciseTrackerRouteImport } from './routes/_authenticated/exercise-tracker'
 import { Route as AuthenticatedDietPlanRouteImport } from './routes/_authenticated/diet-plan'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
 import { Route as AuthenticatedBreatheRouteImport } from './routes/_authenticated/breathe'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
@@ -139,6 +140,11 @@ const AuthenticatedDietPlanRoute = AuthenticatedDietPlanRouteImport.update({
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
+  id: '/credits',
+  path: '/credits',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedBreatheRoute = AuthenticatedBreatheRouteImport.update({
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/breathe': typeof AuthenticatedBreatheRoute
+  '/credits': typeof AuthenticatedCreditsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByTo {
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/breathe': typeof AuthenticatedBreatheRoute
+  '/credits': typeof AuthenticatedCreditsRoute
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/goals': typeof AuthenticatedGoalsRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/_authenticated/breathe': typeof AuthenticatedBreatheRoute
+  '/_authenticated/credits': typeof AuthenticatedCreditsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/diet-plan': typeof AuthenticatedDietPlanRoute
   '/_authenticated/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
@@ -438,6 +447,7 @@ export interface FileRouteTypes {
     | '/sos'
     | '/terms'
     | '/breathe'
+    | '/credits'
     | '/dashboard'
     | '/diet-plan'
     | '/exercise-tracker'
@@ -482,6 +492,7 @@ export interface FileRouteTypes {
     | '/sos'
     | '/terms'
     | '/breathe'
+    | '/credits'
     | '/diet-plan'
     | '/exercise-tracker'
     | '/goals'
@@ -526,6 +537,7 @@ export interface FileRouteTypes {
     | '/sos'
     | '/terms'
     | '/_authenticated/breathe'
+    | '/_authenticated/credits'
     | '/_authenticated/dashboard'
     | '/_authenticated/diet-plan'
     | '/_authenticated/exercise-tracker'
@@ -693,6 +705,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/credits': {
+      id: '/_authenticated/credits'
+      path: '/credits'
+      fullPath: '/credits'
+      preLoaderRoute: typeof AuthenticatedCreditsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/breathe': {
@@ -944,6 +963,7 @@ const AuthenticatedDashboardRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedBreatheRoute: typeof AuthenticatedBreatheRoute
+  AuthenticatedCreditsRoute: typeof AuthenticatedCreditsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
   AuthenticatedDietPlanRoute: typeof AuthenticatedDietPlanRoute
   AuthenticatedExerciseTrackerRoute: typeof AuthenticatedExerciseTrackerRoute
@@ -959,6 +979,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBreatheRoute: AuthenticatedBreatheRoute,
+  AuthenticatedCreditsRoute: AuthenticatedCreditsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
   AuthenticatedDietPlanRoute: AuthenticatedDietPlanRoute,
   AuthenticatedExerciseTrackerRoute: AuthenticatedExerciseTrackerRoute,
