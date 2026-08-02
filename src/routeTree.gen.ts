@@ -41,7 +41,6 @@ import { Route as AuthenticatedDashboardStressRouteImport } from './routes/_auth
 import { Route as AuthenticatedDashboardSpo2RouteImport } from './routes/_authenticated/dashboard.spo2'
 import { Route as AuthenticatedDashboardSleepRouteImport } from './routes/_authenticated/dashboard.sleep'
 import { Route as AuthenticatedDashboardOxygenRouteImport } from './routes/_authenticated/dashboard.oxygen'
-import { Route as AuthenticatedDashboardMenstrualRouteImport } from './routes/_authenticated/dashboard.menstrual'
 import { Route as AuthenticatedDashboardHeartRateRouteImport } from './routes/_authenticated/dashboard.heart-rate'
 import { Route as AuthenticatedDashboardHearingHealthRouteImport } from './routes/_authenticated/dashboard.hearing-health'
 import { Route as AuthenticatedDashboardHearingRouteImport } from './routes/_authenticated/dashboard.hearing'
@@ -228,12 +227,6 @@ const AuthenticatedDashboardOxygenRoute =
     path: '/oxygen',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardMenstrualRoute =
-  AuthenticatedDashboardMenstrualRouteImport.update({
-    id: '/menstrual',
-    path: '/menstrual',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
 const AuthenticatedDashboardHeartRateRoute =
   AuthenticatedDashboardHeartRateRouteImport.update({
     id: '/heart-rate',
@@ -339,7 +332,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/hearing': typeof AuthenticatedDashboardHearingRoute
   '/dashboard/hearing-health': typeof AuthenticatedDashboardHearingHealthRoute
   '/dashboard/heart-rate': typeof AuthenticatedDashboardHeartRateRoute
-  '/dashboard/menstrual': typeof AuthenticatedDashboardMenstrualRoute
   '/dashboard/oxygen': typeof AuthenticatedDashboardOxygenRoute
   '/dashboard/sleep': typeof AuthenticatedDashboardSleepRoute
   '/dashboard/spo2': typeof AuthenticatedDashboardSpo2Route
@@ -384,7 +376,6 @@ export interface FileRoutesByTo {
   '/dashboard/hearing': typeof AuthenticatedDashboardHearingRoute
   '/dashboard/hearing-health': typeof AuthenticatedDashboardHearingHealthRoute
   '/dashboard/heart-rate': typeof AuthenticatedDashboardHeartRateRoute
-  '/dashboard/menstrual': typeof AuthenticatedDashboardMenstrualRoute
   '/dashboard/oxygen': typeof AuthenticatedDashboardOxygenRoute
   '/dashboard/sleep': typeof AuthenticatedDashboardSleepRoute
   '/dashboard/spo2': typeof AuthenticatedDashboardSpo2Route
@@ -432,7 +423,6 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/hearing': typeof AuthenticatedDashboardHearingRoute
   '/_authenticated/dashboard/hearing-health': typeof AuthenticatedDashboardHearingHealthRoute
   '/_authenticated/dashboard/heart-rate': typeof AuthenticatedDashboardHeartRateRoute
-  '/_authenticated/dashboard/menstrual': typeof AuthenticatedDashboardMenstrualRoute
   '/_authenticated/dashboard/oxygen': typeof AuthenticatedDashboardOxygenRoute
   '/_authenticated/dashboard/sleep': typeof AuthenticatedDashboardSleepRoute
   '/_authenticated/dashboard/spo2': typeof AuthenticatedDashboardSpo2Route
@@ -480,7 +470,6 @@ export interface FileRouteTypes {
     | '/dashboard/hearing'
     | '/dashboard/hearing-health'
     | '/dashboard/heart-rate'
-    | '/dashboard/menstrual'
     | '/dashboard/oxygen'
     | '/dashboard/sleep'
     | '/dashboard/spo2'
@@ -525,7 +514,6 @@ export interface FileRouteTypes {
     | '/dashboard/hearing'
     | '/dashboard/hearing-health'
     | '/dashboard/heart-rate'
-    | '/dashboard/menstrual'
     | '/dashboard/oxygen'
     | '/dashboard/sleep'
     | '/dashboard/spo2'
@@ -572,7 +560,6 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/hearing'
     | '/_authenticated/dashboard/hearing-health'
     | '/_authenticated/dashboard/heart-rate'
-    | '/_authenticated/dashboard/menstrual'
     | '/_authenticated/dashboard/oxygen'
     | '/_authenticated/dashboard/sleep'
     | '/_authenticated/dashboard/spo2'
@@ -824,13 +811,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardOxygenRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/menstrual': {
-      id: '/_authenticated/dashboard/menstrual'
-      path: '/menstrual'
-      fullPath: '/dashboard/menstrual'
-      preLoaderRoute: typeof AuthenticatedDashboardMenstrualRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/heart-rate': {
       id: '/_authenticated/dashboard/heart-rate'
       path: '/heart-rate'
@@ -931,7 +911,6 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardHearingRoute: typeof AuthenticatedDashboardHearingRoute
   AuthenticatedDashboardHearingHealthRoute: typeof AuthenticatedDashboardHearingHealthRoute
   AuthenticatedDashboardHeartRateRoute: typeof AuthenticatedDashboardHeartRateRoute
-  AuthenticatedDashboardMenstrualRoute: typeof AuthenticatedDashboardMenstrualRoute
   AuthenticatedDashboardOxygenRoute: typeof AuthenticatedDashboardOxygenRoute
   AuthenticatedDashboardSleepRoute: typeof AuthenticatedDashboardSleepRoute
   AuthenticatedDashboardSpo2Route: typeof AuthenticatedDashboardSpo2Route
@@ -960,7 +939,6 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardHearingHealthRoute:
       AuthenticatedDashboardHearingHealthRoute,
     AuthenticatedDashboardHeartRateRoute: AuthenticatedDashboardHeartRateRoute,
-    AuthenticatedDashboardMenstrualRoute: AuthenticatedDashboardMenstrualRoute,
     AuthenticatedDashboardOxygenRoute: AuthenticatedDashboardOxygenRoute,
     AuthenticatedDashboardSleepRoute: AuthenticatedDashboardSleepRoute,
     AuthenticatedDashboardSpo2Route: AuthenticatedDashboardSpo2Route,

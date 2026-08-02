@@ -19,6 +19,7 @@ import { FamilySection } from "@/components/dashboard/FamilySection";
 import { MedicineReminders } from "@/components/dashboard/MedicineReminders";
 import { WellnessTrackers } from "@/components/dashboard/WellnessTrackers";
 import { MyDoctors } from "@/components/dashboard/MyDoctors";
+import { PrescriptionAnalyzer } from "@/components/dashboard/PrescriptionAnalyzer";
 import { ReportActions } from "@/components/site/ReportActions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -302,27 +303,7 @@ function Dashboard() {
                   <p className="mt-1 text-sm opacity-90">{bmiLabel || t("dash.add_wh", "Add weight & height")}</p>
                 </section>
 
-                <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
-                  <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-                    <FileText className="size-5 text-primary" /> {t("dash.prescription_reader", "Prescription reader")}
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">{t("dash.prescription_note", "Upload a prescription photo and AI explains it in simple words. Stored privately to you.")}</p>
-                  <label className="mt-4 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-center hover:bg-muted">
-                    <input type="file" accept="image/*" className="hidden" onChange={(e) => onPrescription(e.target.files?.[0])} />
-                    {analyzing ? <Loader2 className="size-5 animate-spin text-primary" /> : <Upload className="size-5 text-muted-foreground" />}
-                    <span className="mt-2 text-sm text-muted-foreground">{analyzing ? t("dash.reading", "Reading…") : t("dash.upload_prescription", "Upload prescription")}</span>
-                  </label>
-                  {prescription && (
-                    <>
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 max-h-64 overflow-auto whitespace-pre-wrap rounded-xl border border-border bg-muted/30 p-4 text-sm text-foreground/80">
-                        {prescription}
-                      </motion.div>
-                      <div className="mt-3">
-                        <ReportActions source={{ toolName: "Prescription reading", text: prescription }} />
-                      </div>
-                    </>
-                  )}
-                </section>
+                <PrescriptionAnalyzer initial={prescription} />
 
                 <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
                   <h2 className="font-display text-lg font-semibold">{t("dash.jump_tool", "Jump into a tool")}</h2>
