@@ -28,6 +28,7 @@ import { Route as AuthenticatedDietPlanRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
 import { Route as AuthenticatedBreatheRouteImport } from './routes/_authenticated/breathe'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
 import { Route as AuthenticatedDoctorsIdRouteImport } from './routes/_authenticated/doctors.$id'
@@ -150,6 +151,11 @@ const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
 const AuthenticatedBreatheRoute = AuthenticatedBreatheRouteImport.update({
   id: '/breathe',
   path: '/breathe',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardIndexRoute =
@@ -308,6 +314,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
+  '/account': typeof AuthenticatedAccountRoute
   '/breathe': typeof AuthenticatedBreatheRoute
   '/credits': typeof AuthenticatedCreditsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
@@ -353,6 +360,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
+  '/account': typeof AuthenticatedAccountRoute
   '/breathe': typeof AuthenticatedBreatheRoute
   '/credits': typeof AuthenticatedCreditsRoute
   '/diet-plan': typeof AuthenticatedDietPlanRoute
@@ -399,6 +407,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/breathe': typeof AuthenticatedBreatheRoute
   '/_authenticated/credits': typeof AuthenticatedCreditsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
@@ -446,6 +455,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sos'
     | '/terms'
+    | '/account'
     | '/breathe'
     | '/credits'
     | '/dashboard'
@@ -491,6 +501,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sos'
     | '/terms'
+    | '/account'
     | '/breathe'
     | '/credits'
     | '/diet-plan'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/sos'
     | '/terms'
+    | '/_authenticated/account'
     | '/_authenticated/breathe'
     | '/_authenticated/credits'
     | '/_authenticated/dashboard'
@@ -719,6 +731,13 @@ declare module '@tanstack/react-router' {
       path: '/breathe'
       fullPath: '/breathe'
       preLoaderRoute: typeof AuthenticatedBreatheRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/': {
@@ -962,6 +981,7 @@ const AuthenticatedDashboardRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedBreatheRoute: typeof AuthenticatedBreatheRoute
   AuthenticatedCreditsRoute: typeof AuthenticatedCreditsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
@@ -978,6 +998,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedBreatheRoute: AuthenticatedBreatheRoute,
   AuthenticatedCreditsRoute: AuthenticatedCreditsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
