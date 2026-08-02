@@ -13,6 +13,7 @@ import { useActiveMember } from "@/lib/active-member";
 import { useI18n } from "@/lib/i18n";
 import { getExercise, addExercise, deleteExercise, getWellnessSettings } from "@/lib/wellness.functions";
 import { getMyProfile } from "@/lib/profile.functions";
+import { LiveExerciseSession } from "@/components/dashboard/LiveExerciseSession";
 import { ACTIVITIES, SPORT_CATEGORIES, estimateCalories, findActivity, type SportCategory } from "@/lib/sports";
 
 export const Route = createFileRoute("/_authenticated/exercise-tracker")({
@@ -111,6 +112,8 @@ function ExerciseTracker() {
               <Progress value={goalPct} className="mt-2" />
               {goalPct >= 100 && <p className="mt-2 text-sm font-medium text-success">🎉 {t("exercise.goal_hit", "Weekly goal smashed — great work!")}</p>}
             </section>
+
+            <LiveExerciseSession weightKg={weight} />
 
             <section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card">
               <h2 className="font-display text-lg font-semibold">{t("exercise.log_activity", "Log an activity")}</h2>

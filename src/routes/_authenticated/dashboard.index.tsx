@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Loader2, LogOut, Upload, FileText, ArrowRight, History, Target, UtensilsCrossed, Wind, HeartPulse, Ear, Brain, Droplet, Thermometer, Bone, Hourglass, Eye, Sun, Smartphone, Scale, Zap, Mountain, Flower2, Moon, Footprints, GlassWater } from "lucide-react";
+import { Loader2, LogOut, Upload, FileText, ArrowRight, History, Target, UtensilsCrossed, Wind, HeartPulse, Ear, Brain, Droplet, Thermometer, Bone, Hourglass, Eye, Sun, Smartphone, Scale, Zap, Mountain, Moon, Footprints, GlassWater, Boxes, Coins, Settings } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -155,6 +155,16 @@ function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
+              <Link to="/credits">
+                <Coins className="size-4" /> Credits
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/account">
+                <Settings className="size-4" /> Account
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
               <Link to="/history">
                 <History className="size-4" /> {t("nav.history", "History")}
               </Link>
@@ -239,10 +249,8 @@ function Dashboard() {
                     { to: "/dashboard/bone-health" as const, icon: Bone, accent: "bg-success/10 text-success", name: "Bone & Joint", note: "Pain tracker" },
                     { to: "/dashboard/bio-age" as const, icon: Hourglass, accent: "bg-primary/10 text-primary", name: "Biological Age", note: "Body age index" },
                     { to: "/dashboard/altitude" as const, icon: Mountain, accent: "bg-primary/10 text-primary", name: "Altitude", note: "Height & breathing" },
+                    { to: "/dashboard/body-3d" as const, icon: Boxes, accent: "bg-primary/10 text-primary", name: "3D Body View", note: "Organ-by-organ insight" },
                     { to: "/dashboard/energy" as const, icon: Zap, accent: "bg-warning/10 text-warning", name: "Energy & Recovery", note: "Daily readiness" },
-                    ...(form.gender.trim().toLowerCase() !== "male"
-                      ? [{ to: "/dashboard/menstrual" as const, icon: Flower2, accent: "bg-pulse/10 text-pulse", name: "Menstrual Health", note: "Cycle & symptoms" }]
-                      : []),
                   ].map((m) => (
                     <Link key={m.name} to={m.to} className="group rounded-xl border border-border p-4 transition-colors hover:bg-muted/50">
                       <span className={`flex size-9 items-center justify-center rounded-xl ${m.accent}`}><m.icon className="size-5" /></span>
