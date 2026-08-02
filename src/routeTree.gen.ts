@@ -49,6 +49,7 @@ import { Route as AuthenticatedDashboardEyeStrainRouteImport } from './routes/_a
 import { Route as AuthenticatedDashboardEnergyRouteImport } from './routes/_authenticated/dashboard.energy'
 import { Route as AuthenticatedDashboardDevicesRouteImport } from './routes/_authenticated/dashboard.devices'
 import { Route as AuthenticatedDashboardBoneHealthRouteImport } from './routes/_authenticated/dashboard.bone-health'
+import { Route as AuthenticatedDashboardBody3dRouteImport } from './routes/_authenticated/dashboard.body-3d'
 import { Route as AuthenticatedDashboardBioAgeRouteImport } from './routes/_authenticated/dashboard.bio-age'
 import { Route as AuthenticatedDashboardAltitudeRouteImport } from './routes/_authenticated/dashboard.altitude'
 
@@ -275,6 +276,12 @@ const AuthenticatedDashboardBoneHealthRoute =
     path: '/bone-health',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardBody3dRoute =
+  AuthenticatedDashboardBody3dRouteImport.update({
+    id: '/body-3d',
+    path: '/body-3d',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardBioAgeRoute =
   AuthenticatedDashboardBioAgeRouteImport.update({
     id: '/bio-age',
@@ -308,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/invite/$token': typeof InviteTokenRoute
   '/dashboard/altitude': typeof AuthenticatedDashboardAltitudeRoute
   '/dashboard/bio-age': typeof AuthenticatedDashboardBioAgeRoute
+  '/dashboard/body-3d': typeof AuthenticatedDashboardBody3dRoute
   '/dashboard/bone-health': typeof AuthenticatedDashboardBoneHealthRoute
   '/dashboard/devices': typeof AuthenticatedDashboardDevicesRoute
   '/dashboard/energy': typeof AuthenticatedDashboardEnergyRoute
@@ -350,6 +358,7 @@ export interface FileRoutesByTo {
   '/invite/$token': typeof InviteTokenRoute
   '/dashboard/altitude': typeof AuthenticatedDashboardAltitudeRoute
   '/dashboard/bio-age': typeof AuthenticatedDashboardBioAgeRoute
+  '/dashboard/body-3d': typeof AuthenticatedDashboardBody3dRoute
   '/dashboard/bone-health': typeof AuthenticatedDashboardBoneHealthRoute
   '/dashboard/devices': typeof AuthenticatedDashboardDevicesRoute
   '/dashboard/energy': typeof AuthenticatedDashboardEnergyRoute
@@ -395,6 +404,7 @@ export interface FileRoutesById {
   '/invite/$token': typeof InviteTokenRoute
   '/_authenticated/dashboard/altitude': typeof AuthenticatedDashboardAltitudeRoute
   '/_authenticated/dashboard/bio-age': typeof AuthenticatedDashboardBioAgeRoute
+  '/_authenticated/dashboard/body-3d': typeof AuthenticatedDashboardBody3dRoute
   '/_authenticated/dashboard/bone-health': typeof AuthenticatedDashboardBoneHealthRoute
   '/_authenticated/dashboard/devices': typeof AuthenticatedDashboardDevicesRoute
   '/_authenticated/dashboard/energy': typeof AuthenticatedDashboardEnergyRoute
@@ -440,6 +450,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/dashboard/altitude'
     | '/dashboard/bio-age'
+    | '/dashboard/body-3d'
     | '/dashboard/bone-health'
     | '/dashboard/devices'
     | '/dashboard/energy'
@@ -482,6 +493,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/dashboard/altitude'
     | '/dashboard/bio-age'
+    | '/dashboard/body-3d'
     | '/dashboard/bone-health'
     | '/dashboard/devices'
     | '/dashboard/energy'
@@ -526,6 +538,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/_authenticated/dashboard/altitude'
     | '/_authenticated/dashboard/bio-age'
+    | '/_authenticated/dashboard/body-3d'
     | '/_authenticated/dashboard/bone-health'
     | '/_authenticated/dashboard/devices'
     | '/_authenticated/dashboard/energy'
@@ -843,6 +856,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBoneHealthRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/body-3d': {
+      id: '/_authenticated/dashboard/body-3d'
+      path: '/body-3d'
+      fullPath: '/dashboard/body-3d'
+      preLoaderRoute: typeof AuthenticatedDashboardBody3dRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/bio-age': {
       id: '/_authenticated/dashboard/bio-age'
       path: '/bio-age'
@@ -863,6 +883,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAltitudeRoute: typeof AuthenticatedDashboardAltitudeRoute
   AuthenticatedDashboardBioAgeRoute: typeof AuthenticatedDashboardBioAgeRoute
+  AuthenticatedDashboardBody3dRoute: typeof AuthenticatedDashboardBody3dRoute
   AuthenticatedDashboardBoneHealthRoute: typeof AuthenticatedDashboardBoneHealthRoute
   AuthenticatedDashboardDevicesRoute: typeof AuthenticatedDashboardDevicesRoute
   AuthenticatedDashboardEnergyRoute: typeof AuthenticatedDashboardEnergyRoute
@@ -889,6 +910,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAltitudeRoute: AuthenticatedDashboardAltitudeRoute,
     AuthenticatedDashboardBioAgeRoute: AuthenticatedDashboardBioAgeRoute,
+    AuthenticatedDashboardBody3dRoute: AuthenticatedDashboardBody3dRoute,
     AuthenticatedDashboardBoneHealthRoute:
       AuthenticatedDashboardBoneHealthRoute,
     AuthenticatedDashboardDevicesRoute: AuthenticatedDashboardDevicesRoute,
