@@ -42,6 +42,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <CreditPill />
           <Button asChild size="sm" variant="destructive">
             <Link to="/sos">
               <Siren className="size-4" /> {t("common.sos", "SOS")}
