@@ -11,7 +11,7 @@ One shipment, built in the order below.
 
 ## 2. Remove the menstruation card
 
-Drop the Menstrual Health card from the dashboard grid and every nav/quick-access list. The page itself stays in the codebase, just unlinked.
+Drop the Menstrual Health card from the dashboard grid and every nav/quick-access list. The page itself stays in the codebase, just unlinked. Not be visible for users
 
 ## 3. 3D Body View (`/dashboard/body-3d`)
 
