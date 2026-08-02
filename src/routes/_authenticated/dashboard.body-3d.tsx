@@ -7,7 +7,6 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { Body3D, type OrganKey, type OrganStatus } from "@/components/dashboard/Body3D";
 import { getMyProfile } from "@/lib/profile.functions";
 import { getHealthScore } from "@/lib/health-score.functions";
-import { ClinicalDisclaimer } from "@/components/site/ClinicalDisclaimer";
 
 export const Route = createFileRoute("/_authenticated/dashboard/body-3d")({
   head: () => ({
@@ -175,9 +174,10 @@ function Body3DPage() {
           </div>
         )}
 
-        <div className="mt-6">
-          <ClinicalDisclaimer />
-        </div>
+        <p className="mt-6 rounded-xl border border-warning/30 bg-warning/5 p-3 text-xs text-muted-foreground">
+          This model is an educational visualisation built from the details you entered — not a scan, an
+          imaging result or a diagnosis. Always speak to a doctor about symptoms.
+        </p>
       </div>
     </SiteLayout>
   );
