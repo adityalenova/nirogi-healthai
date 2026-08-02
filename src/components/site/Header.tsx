@@ -64,8 +64,10 @@ export function Header() {
           )}
         </div>
 
-        <button
-          className="md:hidden"
+        <div className="flex items-center gap-2 md:hidden">
+          <CreditPill />
+          <button
+            className=""
           aria-label="Toggle menu"
           onClick={() => setOpen((o) => !o)}
         >
