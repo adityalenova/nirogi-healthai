@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useActiveMember } from "@/lib/active-member";
 import { useI18n } from "@/lib/i18n";
+import { WaterReminders } from "@/components/dashboard/WaterReminders";
 import { getWaterToday, addWater, deleteWater, getWellnessSettings, saveWellnessSettings } from "@/lib/wellness.functions";
 
 export const Route = createFileRoute("/_authenticated/water-tracker")({
@@ -134,6 +135,8 @@ function WaterTracker() {
                 </ResponsiveContainer>
               </div>
             </section>
+
+            <WaterReminders goalReached={pct >= 100} />
 
             <section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card">
               <h2 className="font-display text-lg font-semibold">{t("water.goal", "Daily goal")}</h2>
