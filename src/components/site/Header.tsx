@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
 import { TOOLS } from "@/lib/tools";
 import logo from "@/assets/nirogi-logo.png";
+import { CreditPill } from "@/components/site/CreditPill";
 import { cn } from "@/lib/utils";
 
 export function Header() {
