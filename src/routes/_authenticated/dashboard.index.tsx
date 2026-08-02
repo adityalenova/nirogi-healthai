@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Loader2, LogOut, Upload, FileText, ArrowRight, History, Target, UtensilsCrossed, Wind, HeartPulse, Ear, Brain, Droplet, Thermometer, Bone, Hourglass, Eye, Sun, Smartphone, Scale, Zap, Mountain, Flower2, Moon, Footprints, GlassWater } from "lucide-react";
+import { Loader2, LogOut, Upload, FileText, ArrowRight, History, Target, UtensilsCrossed, Wind, HeartPulse, Ear, Brain, Droplet, Thermometer, Bone, Hourglass, Eye, Sun, Smartphone, Scale, Zap, Mountain, Moon, Footprints, GlassWater, Boxes, Coins, Settings } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,7 @@ import { FamilySection } from "@/components/dashboard/FamilySection";
 import { MedicineReminders } from "@/components/dashboard/MedicineReminders";
 import { WellnessTrackers } from "@/components/dashboard/WellnessTrackers";
 import { MyDoctors } from "@/components/dashboard/MyDoctors";
+import { PrescriptionAnalyzer } from "@/components/dashboard/PrescriptionAnalyzer";
 import { ReportActions } from "@/components/site/ReportActions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -155,6 +156,16 @@ function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
+              <Link to="/credits">
+                <Coins className="size-4" /> Credits
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/account">
+                <Settings className="size-4" /> Account
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
               <Link to="/history">
                 <History className="size-4" /> {t("nav.history", "History")}
               </Link>
@@ -239,10 +250,8 @@ function Dashboard() {
                     { to: "/dashboard/bone-health" as const, icon: Bone, accent: "bg-success/10 text-success", name: "Bone & Joint", note: "Pain tracker" },
                     { to: "/dashboard/bio-age" as const, icon: Hourglass, accent: "bg-primary/10 text-primary", name: "Biological Age", note: "Body age index" },
                     { to: "/dashboard/altitude" as const, icon: Mountain, accent: "bg-primary/10 text-primary", name: "Altitude", note: "Height & breathing" },
+                    { to: "/dashboard/body-3d" as const, icon: Boxes, accent: "bg-primary/10 text-primary", name: "3D Body View", note: "Organ-by-organ insight" },
                     { to: "/dashboard/energy" as const, icon: Zap, accent: "bg-warning/10 text-warning", name: "Energy & Recovery", note: "Daily readiness" },
-                    ...(form.gender.trim().toLowerCase() !== "male"
-                      ? [{ to: "/dashboard/menstrual" as const, icon: Flower2, accent: "bg-pulse/10 text-pulse", name: "Menstrual Health", note: "Cycle & symptoms" }]
-                      : []),
                   ].map((m) => (
                     <Link key={m.name} to={m.to} className="group rounded-xl border border-border p-4 transition-colors hover:bg-muted/50">
                       <span className={`flex size-9 items-center justify-center rounded-xl ${m.accent}`}><m.icon className="size-5" /></span>
@@ -294,27 +303,7 @@ function Dashboard() {
                   <p className="mt-1 text-sm opacity-90">{bmiLabel || t("dash.add_wh", "Add weight & height")}</p>
                 </section>
 
-                <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
-                  <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-                    <FileText className="size-5 text-primary" /> {t("dash.prescription_reader", "Prescription reader")}
-                  </h2>
-                  <p className="mt-1 text-sm text-muted-foreground">{t("dash.prescription_note", "Upload a prescription photo and AI explains it in simple words. Stored privately to you.")}</p>
-                  <label className="mt-4 flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/40 px-4 py-6 text-center hover:bg-muted">
-                    <input type="file" accept="image/*" className="hidden" onChange={(e) => onPrescription(e.target.files?.[0])} />
-                    {analyzing ? <Loader2 className="size-5 animate-spin text-primary" /> : <Upload className="size-5 text-muted-foreground" />}
-                    <span className="mt-2 text-sm text-muted-foreground">{analyzing ? t("dash.reading", "Reading…") : t("dash.upload_prescription", "Upload prescription")}</span>
-                  </label>
-                  {prescription && (
-                    <>
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-4 max-h-64 overflow-auto whitespace-pre-wrap rounded-xl border border-border bg-muted/30 p-4 text-sm text-foreground/80">
-                        {prescription}
-                      </motion.div>
-                      <div className="mt-3">
-                        <ReportActions source={{ toolName: "Prescription reading", text: prescription }} />
-                      </div>
-                    </>
-                  )}
-                </section>
+                <PrescriptionAnalyzer initial={prescription} />
 
                 <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
                   <h2 className="font-display text-lg font-semibold">{t("dash.jump_tool", "Jump into a tool")}</h2>

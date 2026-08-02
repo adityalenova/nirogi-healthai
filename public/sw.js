@@ -1,7 +1,7 @@
 /* Nirogi service worker — network-first with offline fallback.
  * Intentionally conservative: never caches server-function (POST) requests or
  * API routes so live data and auth always stay fresh. */
-const CACHE = "nirogi-static-v2";
+const CACHE = "nirogi-static-v3";
 const OFFLINE_URL = "/";
 const PRECACHE = ["/", "/icons/nirogi-512.png", "/manifest.webmanifest"];
 
@@ -53,6 +53,60 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => cached);
       return cached || fetched;
+    }),
+  );
+});
+
+/* ---------------------------------------------------------------------------
+ * Water reminders. The page posts a schedule and the service worker fires
+ * notifications on its own timer, so reminders keep coming with the tab closed.
+ * ------------------------------------------------------------------------- */
+let waterSchedule = null; // { intervalMin, startHour, endHour, enabled }
+let waterTimer = null;
+
+function armWaterTimer() {
+  if (waterTimer) clearTimeout(waterTimer);
+  waterTimer = null;
+  if (!waterSchedule || !waterSchedule.enabled) return;
+  const ms = Math.max(5, waterSchedule.intervalMin) * 60 * 1000;
+  waterTimer = setTimeout(async () => {
+    const hour = new Date().getHours();
+    const { startHour = 7, endHour = 22 } = waterSchedule;
+    if (hour >= startHour && hour < endHour) {
+      await self.registration.showNotification("Time for water 💧", {
+        body: "A glass now keeps you on track for today's hydration goal.",
+        icon: "/icons/nirogi-512.png",
+        badge: "/icons/nirogi-512.png",
+        tag: "nirogi-water",
+        renotify: true,
+        data: { url: "/water-tracker" },
+      });
+    }
+    armWaterTimer();
+  }, ms);
+}
+
+self.addEventListener("message", (event) => {
+  const data = event.data || {};
+  if (data.type === "WATER_SCHEDULE") {
+    waterSchedule = data.schedule;
+    armWaterTimer();
+  }
+  if (data.type === "WATER_STOP") {
+    waterSchedule = null;
+    armWaterTimer();
+  }
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if ("focus" in client) return client.focus();
+      }
+      return self.clients.openWindow(url);
     }),
   );
 });

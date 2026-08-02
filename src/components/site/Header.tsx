@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
 import { TOOLS } from "@/lib/tools";
 import logo from "@/assets/nirogi-logo.png";
+import { CreditPill } from "@/components/site/CreditPill";
 import { cn } from "@/lib/utils";
 
 export function Header() {
@@ -42,6 +43,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <CreditPill />
           <Button asChild size="sm" variant="destructive">
             <Link to="/sos">
               <Siren className="size-4" /> {t("common.sos", "SOS")}
@@ -62,14 +64,14 @@ export function Header() {
           )}
         </div>
 
-        <button
-          className="md:hidden"
-          aria-label="Toggle menu"
-          onClick={() => setOpen((o) => !o)}
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <CreditPill />
+          <button aria-label="Toggle menu" onClick={() => setOpen((o) => !o)}>
+            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
+        </div>
       </div>
+
 
       <div
         className={cn(
