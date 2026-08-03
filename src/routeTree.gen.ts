@@ -23,6 +23,7 @@ import { Route as AuthenticatedSenseCheckRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMindMoodRouteImport } from './routes/_authenticated/mind-mood'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedHeartRhythmRouteImport } from './routes/_authenticated/heart-rhythm'
+import { Route as AuthenticatedGutHealthRouteImport } from './routes/_authenticated/gut-health'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
 import { Route as AuthenticatedExerciseTrackerRouteImport } from './routes/_authenticated/exercise-tracker'
 import { Route as AuthenticatedDietPlanRouteImport } from './routes/_authenticated/diet-plan'
@@ -127,6 +128,11 @@ const AuthenticatedHeartRhythmRoute =
     path: '/heart-rhythm',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedGutHealthRoute = AuthenticatedGutHealthRouteImport.update({
+  id: '/gut-health',
+  path: '/gut-health',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedGoalsRoute = AuthenticatedGoalsRouteImport.update({
   id: '/goals',
   path: '/goals',
@@ -320,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/goals': typeof AuthenticatedGoalsRoute
+  '/gut-health': typeof AuthenticatedGutHealthRoute
   '/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/mind-mood': typeof AuthenticatedMindMoodRoute
@@ -365,6 +372,7 @@ export interface FileRoutesByTo {
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/goals': typeof AuthenticatedGoalsRoute
+  '/gut-health': typeof AuthenticatedGutHealthRoute
   '/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/mind-mood': typeof AuthenticatedMindMoodRoute
@@ -413,6 +421,7 @@ export interface FileRoutesById {
   '/_authenticated/diet-plan': typeof AuthenticatedDietPlanRoute
   '/_authenticated/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
+  '/_authenticated/gut-health': typeof AuthenticatedGutHealthRoute
   '/_authenticated/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/mind-mood': typeof AuthenticatedMindMoodRoute
@@ -461,6 +470,7 @@ export interface FileRouteTypes {
     | '/diet-plan'
     | '/exercise-tracker'
     | '/goals'
+    | '/gut-health'
     | '/heart-rhythm'
     | '/history'
     | '/mind-mood'
@@ -506,6 +516,7 @@ export interface FileRouteTypes {
     | '/diet-plan'
     | '/exercise-tracker'
     | '/goals'
+    | '/gut-health'
     | '/heart-rhythm'
     | '/history'
     | '/mind-mood'
@@ -553,6 +564,7 @@ export interface FileRouteTypes {
     | '/_authenticated/diet-plan'
     | '/_authenticated/exercise-tracker'
     | '/_authenticated/goals'
+    | '/_authenticated/gut-health'
     | '/_authenticated/heart-rhythm'
     | '/_authenticated/history'
     | '/_authenticated/mind-mood'
@@ -695,6 +707,13 @@ declare module '@tanstack/react-router' {
       path: '/heart-rhythm'
       fullPath: '/heart-rhythm'
       preLoaderRoute: typeof AuthenticatedHeartRhythmRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gut-health': {
+      id: '/_authenticated/gut-health'
+      path: '/gut-health'
+      fullPath: '/gut-health'
+      preLoaderRoute: typeof AuthenticatedGutHealthRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/goals': {
@@ -985,6 +1004,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDietPlanRoute: typeof AuthenticatedDietPlanRoute
   AuthenticatedExerciseTrackerRoute: typeof AuthenticatedExerciseTrackerRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
+  AuthenticatedGutHealthRoute: typeof AuthenticatedGutHealthRoute
   AuthenticatedHeartRhythmRoute: typeof AuthenticatedHeartRhythmRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedMindMoodRoute: typeof AuthenticatedMindMoodRoute
@@ -1003,6 +1023,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDietPlanRoute: AuthenticatedDietPlanRoute,
   AuthenticatedExerciseTrackerRoute: AuthenticatedExerciseTrackerRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
+  AuthenticatedGutHealthRoute: AuthenticatedGutHealthRoute,
   AuthenticatedHeartRhythmRoute: AuthenticatedHeartRhythmRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedMindMoodRoute: AuthenticatedMindMoodRoute,
