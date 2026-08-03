@@ -194,6 +194,15 @@ function Dashboard() {
             </div>
 
             <div className="mt-6">
+              <TodaysWellness />
+            </div>
+
+            <div className="mt-6">
+              <StreaksBadges />
+            </div>
+
+
+            <div className="mt-6">
               <MyDoctors />
             </div>
 
