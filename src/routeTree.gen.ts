@@ -31,6 +31,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDailyEnergyRouteImport } from './routes/_authenticated/daily-energy'
 import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
 import { Route as AuthenticatedBreatheRouteImport } from './routes/_authenticated/breathe'
+import { Route as AuthenticatedBadgesRouteImport } from './routes/_authenticated/badges'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
@@ -169,6 +170,11 @@ const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
 const AuthenticatedBreatheRoute = AuthenticatedBreatheRouteImport.update({
   id: '/breathe',
   path: '/breathe',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBadgesRoute = AuthenticatedBadgesRouteImport.update({
+  id: '/badges',
+  path: '/badges',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
@@ -327,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/badges': typeof AuthenticatedBadgesRoute
   '/breathe': typeof AuthenticatedBreatheRoute
   '/credits': typeof AuthenticatedCreditsRoute
   '/daily-energy': typeof AuthenticatedDailyEnergyRoute
@@ -375,6 +382,7 @@ export interface FileRoutesByTo {
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/badges': typeof AuthenticatedBadgesRoute
   '/breathe': typeof AuthenticatedBreatheRoute
   '/credits': typeof AuthenticatedCreditsRoute
   '/daily-energy': typeof AuthenticatedDailyEnergyRoute
@@ -424,6 +432,7 @@ export interface FileRoutesById {
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/badges': typeof AuthenticatedBadgesRoute
   '/_authenticated/breathe': typeof AuthenticatedBreatheRoute
   '/_authenticated/credits': typeof AuthenticatedCreditsRoute
   '/_authenticated/daily-energy': typeof AuthenticatedDailyEnergyRoute
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
     | '/sos'
     | '/terms'
     | '/account'
+    | '/badges'
     | '/breathe'
     | '/credits'
     | '/daily-energy'
@@ -522,6 +532,7 @@ export interface FileRouteTypes {
     | '/sos'
     | '/terms'
     | '/account'
+    | '/badges'
     | '/breathe'
     | '/credits'
     | '/daily-energy'
@@ -570,6 +581,7 @@ export interface FileRouteTypes {
     | '/sos'
     | '/terms'
     | '/_authenticated/account'
+    | '/_authenticated/badges'
     | '/_authenticated/breathe'
     | '/_authenticated/credits'
     | '/_authenticated/daily-energy'
@@ -776,6 +788,13 @@ declare module '@tanstack/react-router' {
       path: '/breathe'
       fullPath: '/breathe'
       preLoaderRoute: typeof AuthenticatedBreatheRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/badges': {
+      id: '/_authenticated/badges'
+      path: '/badges'
+      fullPath: '/badges'
+      preLoaderRoute: typeof AuthenticatedBadgesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/account': {
@@ -1018,6 +1037,7 @@ const AuthenticatedDashboardRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedBadgesRoute: typeof AuthenticatedBadgesRoute
   AuthenticatedBreatheRoute: typeof AuthenticatedBreatheRoute
   AuthenticatedCreditsRoute: typeof AuthenticatedCreditsRoute
   AuthenticatedDailyEnergyRoute: typeof AuthenticatedDailyEnergyRoute
@@ -1038,6 +1058,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedBadgesRoute: AuthenticatedBadgesRoute,
   AuthenticatedBreatheRoute: AuthenticatedBreatheRoute,
   AuthenticatedCreditsRoute: AuthenticatedCreditsRoute,
   AuthenticatedDailyEnergyRoute: AuthenticatedDailyEnergyRoute,
