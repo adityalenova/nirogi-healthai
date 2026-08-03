@@ -233,6 +233,30 @@ export type Database = {
           },
         ]
       }
+      energy_logs: {
+        Row: {
+          energy_level: number
+          id: string
+          log_date: string
+          logged_at: string
+          user_id: string
+        }
+        Insert: {
+          energy_level: number
+          id?: string
+          log_date?: string
+          logged_at?: string
+          user_id: string
+        }
+        Update: {
+          energy_level?: number
+          id?: string
+          log_date?: string
+          logged_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       exercise_logs: {
         Row: {
           activity: string
@@ -508,6 +532,66 @@ export type Database = {
           },
         ]
       }
+      gratitude_journal: {
+        Row: {
+          created_at: string
+          entry: string
+          id: string
+          log_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entry: string
+          id?: string
+          log_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entry?: string
+          id?: string
+          log_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      gut_health_logs: {
+        Row: {
+          appetite_normal: boolean | null
+          bloated: boolean | null
+          bowel_movement: boolean | null
+          created_at: string
+          hydrated: boolean | null
+          id: string
+          log_date: string
+          stomach_pain: boolean | null
+          user_id: string
+        }
+        Insert: {
+          appetite_normal?: boolean | null
+          bloated?: boolean | null
+          bowel_movement?: boolean | null
+          created_at?: string
+          hydrated?: boolean | null
+          id?: string
+          log_date?: string
+          stomach_pain?: boolean | null
+          user_id: string
+        }
+        Update: {
+          appetite_normal?: boolean | null
+          bloated?: boolean | null
+          bowel_movement?: boolean | null
+          created_at?: string
+          hydrated?: boolean | null
+          id?: string
+          log_date?: string
+          stomach_pain?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       health_goals: {
         Row: {
           ai_plan: Json | null
@@ -743,6 +827,30 @@ export type Database = {
           },
         ]
       }
+      mood_logs: {
+        Row: {
+          id: string
+          log_date: string
+          logged_at: string
+          mood_level: number
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          log_date?: string
+          logged_at?: string
+          mood_level: number
+          user_id: string
+        }
+        Update: {
+          id?: string
+          log_date?: string
+          logged_at?: string
+          mood_level?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
@@ -903,6 +1011,74 @@ export type Database = {
           },
         ]
       }
+      sleep_reports: {
+        Row: {
+          apnea_detected: boolean
+          apnea_events: number
+          created_at: string
+          disturbances: Json | null
+          duration_hours: number | null
+          id: string
+          member_id: string | null
+          movement_events: number
+          quality_score: number | null
+          recommendations: Json | null
+          report_date: string
+          snoring_severity: string | null
+          sound_events: number
+          target_hours: number | null
+          timeline: Json | null
+          urgency_level: string | null
+          user_id: string
+        }
+        Insert: {
+          apnea_detected?: boolean
+          apnea_events?: number
+          created_at?: string
+          disturbances?: Json | null
+          duration_hours?: number | null
+          id?: string
+          member_id?: string | null
+          movement_events?: number
+          quality_score?: number | null
+          recommendations?: Json | null
+          report_date?: string
+          snoring_severity?: string | null
+          sound_events?: number
+          target_hours?: number | null
+          timeline?: Json | null
+          urgency_level?: string | null
+          user_id: string
+        }
+        Update: {
+          apnea_detected?: boolean
+          apnea_events?: number
+          created_at?: string
+          disturbances?: Json | null
+          duration_hours?: number | null
+          id?: string
+          member_id?: string | null
+          movement_events?: number
+          quality_score?: number | null
+          recommendations?: Json | null
+          report_date?: string
+          snoring_severity?: string | null
+          sound_events?: number
+          target_hours?: number | null
+          timeline?: Json | null
+          urgency_level?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sleep_reports_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       updates: {
         Row: {
           body: string
@@ -924,6 +1100,27 @@ export type Database = {
           id?: string
           published_at?: string
           title?: string
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1077,6 +1274,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      wellness_completions: {
+        Row: {
+          activity_key: string
+          created_at: string
+          id: string
+          log_date: string
+          user_id: string
+        }
+        Insert: {
+          activity_key: string
+          created_at?: string
+          id?: string
+          log_date?: string
+          user_id: string
+        }
+        Update: {
+          activity_key?: string
+          created_at?: string
+          id?: string
+          log_date?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       wellness_settings: {
         Row: {
