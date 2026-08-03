@@ -20,6 +20,7 @@ import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as AuthenticatedWaterTrackerRouteImport } from './routes/_authenticated/water-tracker'
 import { Route as AuthenticatedSleepTrackerRouteImport } from './routes/_authenticated/sleep-tracker'
 import { Route as AuthenticatedSenseCheckRouteImport } from './routes/_authenticated/sense-check'
+import { Route as AuthenticatedMindMoodRouteImport } from './routes/_authenticated/mind-mood'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedHeartRhythmRouteImport } from './routes/_authenticated/heart-rhythm'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
@@ -108,6 +109,11 @@ const AuthenticatedSleepTrackerRoute =
 const AuthenticatedSenseCheckRoute = AuthenticatedSenseCheckRouteImport.update({
   id: '/sense-check',
   path: '/sense-check',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMindMoodRoute = AuthenticatedMindMoodRouteImport.update({
+  id: '/mind-mood',
+  path: '/mind-mood',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
@@ -316,6 +322,7 @@ export interface FileRoutesByFullPath {
   '/goals': typeof AuthenticatedGoalsRoute
   '/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/mind-mood': typeof AuthenticatedMindMoodRoute
   '/sense-check': typeof AuthenticatedSenseCheckRoute
   '/sleep-tracker': typeof AuthenticatedSleepTrackerRoute
   '/water-tracker': typeof AuthenticatedWaterTrackerRoute
@@ -360,6 +367,7 @@ export interface FileRoutesByTo {
   '/goals': typeof AuthenticatedGoalsRoute
   '/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/mind-mood': typeof AuthenticatedMindMoodRoute
   '/sense-check': typeof AuthenticatedSenseCheckRoute
   '/sleep-tracker': typeof AuthenticatedSleepTrackerRoute
   '/water-tracker': typeof AuthenticatedWaterTrackerRoute
@@ -407,6 +415,7 @@ export interface FileRoutesById {
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
   '/_authenticated/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/mind-mood': typeof AuthenticatedMindMoodRoute
   '/_authenticated/sense-check': typeof AuthenticatedSenseCheckRoute
   '/_authenticated/sleep-tracker': typeof AuthenticatedSleepTrackerRoute
   '/_authenticated/water-tracker': typeof AuthenticatedWaterTrackerRoute
@@ -454,6 +463,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/heart-rhythm'
     | '/history'
+    | '/mind-mood'
     | '/sense-check'
     | '/sleep-tracker'
     | '/water-tracker'
@@ -498,6 +508,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/heart-rhythm'
     | '/history'
+    | '/mind-mood'
     | '/sense-check'
     | '/sleep-tracker'
     | '/water-tracker'
@@ -544,6 +555,7 @@ export interface FileRouteTypes {
     | '/_authenticated/goals'
     | '/_authenticated/heart-rhythm'
     | '/_authenticated/history'
+    | '/_authenticated/mind-mood'
     | '/_authenticated/sense-check'
     | '/_authenticated/sleep-tracker'
     | '/_authenticated/water-tracker'
@@ -662,6 +674,13 @@ declare module '@tanstack/react-router' {
       path: '/sense-check'
       fullPath: '/sense-check'
       preLoaderRoute: typeof AuthenticatedSenseCheckRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mind-mood': {
+      id: '/_authenticated/mind-mood'
+      path: '/mind-mood'
+      fullPath: '/mind-mood'
+      preLoaderRoute: typeof AuthenticatedMindMoodRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/history': {
@@ -968,6 +987,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
   AuthenticatedHeartRhythmRoute: typeof AuthenticatedHeartRhythmRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedMindMoodRoute: typeof AuthenticatedMindMoodRoute
   AuthenticatedSenseCheckRoute: typeof AuthenticatedSenseCheckRoute
   AuthenticatedSleepTrackerRoute: typeof AuthenticatedSleepTrackerRoute
   AuthenticatedWaterTrackerRoute: typeof AuthenticatedWaterTrackerRoute
@@ -985,6 +1005,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
   AuthenticatedHeartRhythmRoute: AuthenticatedHeartRhythmRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedMindMoodRoute: AuthenticatedMindMoodRoute,
   AuthenticatedSenseCheckRoute: AuthenticatedSenseCheckRoute,
   AuthenticatedSleepTrackerRoute: AuthenticatedSleepTrackerRoute,
   AuthenticatedWaterTrackerRoute: AuthenticatedWaterTrackerRoute,
