@@ -18,6 +18,9 @@ import { HealthScoreCard } from "@/components/dashboard/HealthScoreCard";
 import { FamilySection } from "@/components/dashboard/FamilySection";
 import { MedicineReminders } from "@/components/dashboard/MedicineReminders";
 import { WellnessTrackers } from "@/components/dashboard/WellnessTrackers";
+import { TodaysWellness } from "@/components/dashboard/TodaysWellness";
+import { StreaksBadges } from "@/components/dashboard/StreaksBadges";
+
 import { MyDoctors } from "@/components/dashboard/MyDoctors";
 import { PrescriptionAnalyzer } from "@/components/dashboard/PrescriptionAnalyzer";
 import { ReportActions } from "@/components/site/ReportActions";
