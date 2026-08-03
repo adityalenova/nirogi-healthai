@@ -28,6 +28,7 @@ import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedExerciseTrackerRouteImport } from './routes/_authenticated/exercise-tracker'
 import { Route as AuthenticatedDietPlanRouteImport } from './routes/_authenticated/diet-plan'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDailyEnergyRouteImport } from './routes/_authenticated/daily-energy'
 import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
 import { Route as AuthenticatedBreatheRouteImport } from './routes/_authenticated/breathe'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -154,6 +155,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDailyEnergyRoute =
+  AuthenticatedDailyEnergyRouteImport.update({
+    id: '/daily-energy',
+    path: '/daily-energy',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
   id: '/credits',
   path: '/credits',
@@ -322,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/breathe': typeof AuthenticatedBreatheRoute
   '/credits': typeof AuthenticatedCreditsRoute
+  '/daily-energy': typeof AuthenticatedDailyEnergyRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
@@ -369,6 +377,7 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/breathe': typeof AuthenticatedBreatheRoute
   '/credits': typeof AuthenticatedCreditsRoute
+  '/daily-energy': typeof AuthenticatedDailyEnergyRoute
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/goals': typeof AuthenticatedGoalsRoute
@@ -417,6 +426,7 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/breathe': typeof AuthenticatedBreatheRoute
   '/_authenticated/credits': typeof AuthenticatedCreditsRoute
+  '/_authenticated/daily-energy': typeof AuthenticatedDailyEnergyRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/diet-plan': typeof AuthenticatedDietPlanRoute
   '/_authenticated/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
@@ -466,6 +476,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/breathe'
     | '/credits'
+    | '/daily-energy'
     | '/dashboard'
     | '/diet-plan'
     | '/exercise-tracker'
@@ -513,6 +524,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/breathe'
     | '/credits'
+    | '/daily-energy'
     | '/diet-plan'
     | '/exercise-tracker'
     | '/goals'
@@ -560,6 +572,7 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/_authenticated/breathe'
     | '/_authenticated/credits'
+    | '/_authenticated/daily-energy'
     | '/_authenticated/dashboard'
     | '/_authenticated/diet-plan'
     | '/_authenticated/exercise-tracker'
@@ -742,6 +755,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/daily-energy': {
+      id: '/_authenticated/daily-energy'
+      path: '/daily-energy'
+      fullPath: '/daily-energy'
+      preLoaderRoute: typeof AuthenticatedDailyEnergyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/credits': {
@@ -1000,6 +1020,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedBreatheRoute: typeof AuthenticatedBreatheRoute
   AuthenticatedCreditsRoute: typeof AuthenticatedCreditsRoute
+  AuthenticatedDailyEnergyRoute: typeof AuthenticatedDailyEnergyRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
   AuthenticatedDietPlanRoute: typeof AuthenticatedDietPlanRoute
   AuthenticatedExerciseTrackerRoute: typeof AuthenticatedExerciseTrackerRoute
@@ -1019,6 +1040,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedBreatheRoute: AuthenticatedBreatheRoute,
   AuthenticatedCreditsRoute: AuthenticatedCreditsRoute,
+  AuthenticatedDailyEnergyRoute: AuthenticatedDailyEnergyRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
   AuthenticatedDietPlanRoute: AuthenticatedDietPlanRoute,
   AuthenticatedExerciseTrackerRoute: AuthenticatedExerciseTrackerRoute,
