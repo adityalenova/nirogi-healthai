@@ -57,6 +57,7 @@ import { Route as AuthenticatedDashboardBoneHealthRouteImport } from './routes/_
 import { Route as AuthenticatedDashboardBody3dRouteImport } from './routes/_authenticated/dashboard.body-3d'
 import { Route as AuthenticatedDashboardBioAgeRouteImport } from './routes/_authenticated/dashboard.bio-age'
 import { Route as AuthenticatedDashboardAltitudeRouteImport } from './routes/_authenticated/dashboard.altitude'
+import { Route as AuthenticatedDashboardOrgansOrganRouteImport } from './routes/_authenticated/dashboard.organs.$organ'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -324,6 +325,12 @@ const AuthenticatedDashboardAltitudeRoute =
     path: '/altitude',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardOrgansOrganRoute =
+  AuthenticatedDashboardOrgansOrganRouteImport.update({
+    id: '/organs/$organ',
+    path: '/organs/$organ',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -373,6 +380,7 @@ export interface FileRoutesByFullPath {
   '/doctors/$id': typeof AuthenticatedDoctorsIdRoute
   '/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/organs/$organ': typeof AuthenticatedDashboardOrgansOrganRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -421,6 +429,7 @@ export interface FileRoutesByTo {
   '/doctors/$id': typeof AuthenticatedDoctorsIdRoute
   '/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/organs/$organ': typeof AuthenticatedDashboardOrgansOrganRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -472,6 +481,7 @@ export interface FileRoutesById {
   '/_authenticated/doctors/$id': typeof AuthenticatedDoctorsIdRoute
   '/_authenticated/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/organs/$organ': typeof AuthenticatedDashboardOrgansOrganRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -523,6 +533,7 @@ export interface FileRouteTypes {
     | '/doctors/$id'
     | '/tools/$tool'
     | '/dashboard/'
+    | '/dashboard/organs/$organ'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -571,6 +582,7 @@ export interface FileRouteTypes {
     | '/doctors/$id'
     | '/tools/$tool'
     | '/dashboard'
+    | '/dashboard/organs/$organ'
   id:
     | '__root__'
     | '/'
@@ -621,6 +633,7 @@ export interface FileRouteTypes {
     | '/_authenticated/doctors/$id'
     | '/_authenticated/tools/$tool'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/organs/$organ'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -972,6 +985,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAltitudeRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/organs/$organ': {
+      id: '/_authenticated/dashboard/organs/$organ'
+      path: '/organs/$organ'
+      fullPath: '/dashboard/organs/$organ'
+      preLoaderRoute: typeof AuthenticatedDashboardOrgansOrganRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
   }
 }
 
@@ -998,6 +1018,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardWaterRoute: typeof AuthenticatedDashboardWaterRoute
   AuthenticatedDashboardWeightRoute: typeof AuthenticatedDashboardWeightRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedDashboardOrgansOrganRoute: typeof AuthenticatedDashboardOrgansOrganRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
@@ -1028,6 +1049,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardWaterRoute: AuthenticatedDashboardWaterRoute,
     AuthenticatedDashboardWeightRoute: AuthenticatedDashboardWeightRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+    AuthenticatedDashboardOrgansOrganRoute:
+      AuthenticatedDashboardOrgansOrganRoute,
   }
 
 const AuthenticatedDashboardRouteWithChildren =
