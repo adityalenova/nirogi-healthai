@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Plus, Users, Trash2, Pencil, User, Link2, Copy, Check, X } from "lucide-react";
+import { Loader2, Plus, Users, Trash2, Pencil, User, Link2, Copy, Check, X, Eye, ArrowLeftRight } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   listFamilyMembers,
@@ -60,10 +59,15 @@ const empty: FormState = {
   weight_kg: "", height_cm: "", health_conditions: "", current_medicines: "", allergies: "",
 };
 
+/** Short human-friendly join code derived from the invite token (no DB change needed). */
+function shortCode(token: string) {
+  return token.slice(0, 6).toUpperCase();
+}
+
 export function FamilySection() {
   const { t } = useI18n();
   const qc = useQueryClient();
-  const { memberId, setMember } = useActiveMember();
+  const { memberId, memberName, setMember } = useActiveMember();
 
   const listFn = useServerFn(listFamilyMembers);
   const addFn = useServerFn(addFamilyMember);
@@ -82,6 +86,8 @@ export function FamilySection() {
   const [inviteName, setInviteName] = useState("");
   const [inviteRelation, setInviteRelation] = useState("");
   const [copied, setCopied] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [lastInvite, setLastInvite] = useState<{ token: string; label: string } | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["family-members"],
@@ -108,6 +114,7 @@ export function FamilySection() {
     onSuccess: async (res) => {
       qc.invalidateQueries({ queryKey: ["family-invites"] });
       qc.invalidateQueries({ queryKey: ["family-members"] });
+      setLastInvite({ token: res.token, label: inviteName.trim() });
       try {
         await navigator.clipboard.writeText(inviteLink(res.token));
         toast.success("Invite link copied to clipboard.");
@@ -116,7 +123,6 @@ export function FamilySection() {
       }
       setInviteName("");
       setInviteRelation("");
-      setInviteOpen(false);
     },
     onError: (e) => {
       const msg = e instanceof Error ? e.message : "";
@@ -133,6 +139,11 @@ export function FamilySection() {
 
   const copyLink = async (token: string) => {
     try { await navigator.clipboard.writeText(inviteLink(token)); setCopied(true); setTimeout(() => setCopied(false), 1500); toast.success("Link copied."); }
+    catch { toast.error("Couldn't copy."); }
+  };
+
+  const copyCode = async (token: string) => {
+    try { await navigator.clipboard.writeText(shortCode(token)); setCopiedCode(true); setTimeout(() => setCopiedCode(false), 1500); toast.success("Code copied."); }
     catch { toast.error("Couldn't copy."); }
   };
 
@@ -211,7 +222,7 @@ export function FamilySection() {
 
 
   const shareWhatsApp = (token: string, label: string) => {
-    const text = `Hi ${label}, join my family health group on Nirogi AI so we can look after each other. Tap to join: ${inviteLink(token)}`;
+    const text = `Hi ${label}, join my family health group on Nirogi AI so we can look after each other.\n\nJoin code: ${shortCode(token)}\nOr tap the link: ${inviteLink(token)}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener");
   };
 
@@ -219,15 +230,33 @@ export function FamilySection() {
   const avatarFor = (id: string) => overview.find((o) => o.id === id)?.avatar_url ?? null;
   const joined = (id: string) => overview.find((o) => o.id === id)?.member_user_id != null;
 
+  const viewingMember = memberId !== null;
+  const activeName = viewingMember ? (memberName ?? members.find((m) => m.id === memberId)?.full_name ?? "this member") : null;
+
   return (
     <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
+      {viewingMember && (
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
+          <div className="flex items-center gap-2 text-sm">
+            <Eye className="size-4 text-primary" />
+            <span>
+              Viewing <span className="font-semibold text-foreground">{activeName}</span>&apos;s dashboard —
+              you can see their data but can&apos;t make changes for them.
+            </span>
+          </div>
+          <Button size="sm" variant="outline" onClick={() => setMember(null, null)}>
+            <ArrowLeftRight className="size-4" /> Switch to my profile
+          </Button>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-          <Users className="size-5 text-primary" /> {t("dash.family", "Family")}
+          <Users className="size-5 text-primary" /> {t("dash.my_family", "My Family")}
         </h2>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={() => setInviteOpen(true)}>
-            <Link2 className="size-4" /> Invite with Google
+            <Link2 className="size-4" /> Invite family member
           </Button>
           <Button size="sm" variant="outline" onClick={startAdd}>
             <Plus className="size-4" /> {t("dash.add_member", "Add member")}
@@ -235,7 +264,8 @@ export function FamilySection() {
         </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        Up to 6 people. Tap a card to view that person&apos;s dashboard and run tools for them.
+        Up to 6 people. Tap a card to view that person&apos;s dashboard — everyone&apos;s health data stays private and
+        view-only to the rest of the family.
       </p>
 
       {isLoading ? (
@@ -275,12 +305,15 @@ export function FamilySection() {
                 <span className="font-medium">
                   {i.label}
                   {i.relation ? <span className="text-muted-foreground"> · {i.relation}</span> : null}
+                  <span className="ml-2 rounded-md bg-muted px-1.5 py-0.5 font-mono text-[11px] tracking-widest text-muted-foreground">
+                    {shortCode(i.token)}
+                  </span>
                 </span>
                 <div className="flex items-center gap-1">
                   <Button size="sm" variant="ghost" onClick={() => shareWhatsApp(i.token, i.label)}>
-                    Share
+                    Share on WhatsApp
                   </Button>
-                  <Button size="icon" variant="ghost" className="size-8" onClick={() => copyLink(i.token)}>
+                  <Button size="icon" variant="ghost" className="size-8" title="Copy link" onClick={() => copyLink(i.token)}>
                     {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
                   </Button>
                   <Button size="icon" variant="ghost" className="size-8 text-destructive" onClick={() => revokeMut.mutate(i.id)}>
@@ -292,25 +325,68 @@ export function FamilySection() {
         </div>
       )}
 
-      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+      <Dialog
+        open={inviteOpen}
+        onOpenChange={(v) => {
+          setInviteOpen(v);
+          if (!v) setLastInvite(null);
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Invite a family member</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            We&apos;ll create a private join link. When they open it and sign in with Google, their profile joins your
-            family group automatically.
-          </p>
-          <div className="grid gap-3">
-            <Field label="Their name"><Input value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="e.g. Mummy" /></Field>
-            <Field label="Relation"><Input value={inviteRelation} onChange={(e) => setInviteRelation(e.target.value)} placeholder="e.g. Mother" /></Field>
-          </div>
-          <DialogFooter>
-            <Button onClick={() => inviteMut.mutate()} disabled={!inviteName.trim() || inviteMut.isPending}>
-              {inviteMut.isPending ? <Loader2 className="size-4 animate-spin" /> : <Link2 className="size-4" />}
-              Create invite link
-            </Button>
-          </DialogFooter>
+          {!lastInvite ? (
+            <>
+              <p className="text-sm text-muted-foreground">
+                We&apos;ll create a private join link and a short code. When they open the link (or enter the code)
+                and sign in, their profile joins your family group — their data stays private, visible to you as
+                view-only.
+              </p>
+              <div className="grid gap-3">
+                <Field label="Their name"><Input value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="e.g. Mummy" /></Field>
+                <Field label="Relation"><Input value={inviteRelation} onChange={(e) => setInviteRelation(e.target.value)} placeholder="e.g. Mother" /></Field>
+              </div>
+              <DialogFooter>
+                <Button onClick={() => inviteMut.mutate()} disabled={!inviteName.trim() || inviteMut.isPending}>
+                  {inviteMut.isPending ? <Loader2 className="size-4 animate-spin" /> : <Link2 className="size-4" />}
+                  Create invite link
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              <p className="text-sm text-muted-foreground">
+                Share this link or code with <span className="font-semibold text-foreground">{lastInvite.label}</span>.
+              </p>
+              <div className="space-y-3">
+                <div className="rounded-lg border border-border p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Shareable link</p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <code className="flex-1 truncate text-xs">{inviteLink(lastInvite.token)}</code>
+                    <Button size="icon" variant="ghost" className="size-8 shrink-0" onClick={() => copyLink(lastInvite.token)}>
+                      {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
+                    </Button>
+                  </div>
+                </div>
+                <div className="rounded-lg border border-border p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Join code</p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <code className="flex-1 font-mono text-lg tracking-[0.3em]">{shortCode(lastInvite.token)}</code>
+                    <Button size="icon" variant="ghost" className="size-8 shrink-0" onClick={() => copyCode(lastInvite.token)}>
+                      {copiedCode ? <Check className="size-4 text-success" /> : <Copy className="size-4" />}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => shareWhatsApp(lastInvite.token, lastInvite.label)}>
+                  Share on WhatsApp
+                </Button>
+                <Button onClick={() => { setInviteOpen(false); setLastInvite(null); }}>Done</Button>
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
 
@@ -368,8 +444,10 @@ function MemberCard({
   return (
     <div
       className={cn(
-        "w-44 shrink-0 snap-start rounded-xl border p-3 text-left transition-colors",
-        active ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50",
+        "w-44 shrink-0 snap-start rounded-xl border p-3 text-left transition-all",
+        active
+          ? "border-primary bg-primary/5 shadow-[0_0_0_3px_var(--color-primary-glow)]"
+          : "border-border hover:bg-muted/50",
       )}
     >
       <button onClick={onClick} className="w-full text-left">

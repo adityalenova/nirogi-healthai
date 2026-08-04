@@ -330,3 +330,143 @@ export const logHeartRate = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true, note };
   });
+
+/* --------------------------- Sleep sessions/reports ---------------------- */
+
+const disturbanceEvent = z.object({
+  type: z.enum(["snore", "apnea", "movement", "sound"]),
+  t: z.number(), // seconds from session start
+  intensity: z.number().min(0).max(1).optional(),
+});
+
+export const submitSleepSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        memberId,
+        bedtime: z.string(),
+        wake_time: z.string(),
+        target_hours: z.number().min(1).max(14),
+        events: z.array(disturbanceEvent).max(2000).default([]),
+        notes: z.string().max(1000).nullable().optional(),
+        lang: z.enum(["en", "hi"]).optional(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const bed = new Date(data.bedtime);
+    let wake = new Date(data.wake_time);
+    if (wake.getTime() <= bed.getTime()) wake = new Date(wake.getTime() + 24 * 60 * 60 * 1000);
+    const durationHours = (wake.getTime() - bed.getTime()) / 3600000;
+
+    const snoringEvents = data.events.filter((e) => e.type === "snore").length;
+    const apneaEvents = data.events.filter((e) => e.type === "apnea").length;
+    const movementEvents = data.events.filter((e) => e.type === "movement").length;
+    const soundEvents = data.events.filter((e) => e.type === "sound").length;
+
+    const { analyzeSleepSessionAI } = await import("./wellness.server");
+    const analysis = await analyzeSleepSessionAI({
+      durationHours,
+      targetHours: data.target_hours,
+      bedtime: bed.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      wake: wake.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+      snoringEvents,
+      apneaEvents,
+      movementEvents,
+      soundEvents,
+      notes: data.notes ?? "",
+      lang: data.lang ?? "en",
+    });
+
+    const timeline = data.events
+      .slice()
+      .sort((a, b) => a.t - b.t)
+      .map((e) => ({ type: e.type, t: e.t, intensity: e.intensity ?? null }));
+
+    const { data: row, error } = await supabase
+      .from("sleep_reports")
+      .insert({
+        user_id: userId,
+        member_id: data.memberId ?? null,
+        report_date: new Date().toISOString().slice(0, 10),
+        duration_hours: Math.round(durationHours * 10) / 10,
+        target_hours: data.target_hours,
+        quality_score: analysis.score,
+        snoring_severity: analysis.snoring_severity,
+        apnea_detected: apneaEvents > 0,
+        apnea_events: apneaEvents,
+        movement_events: movementEvents,
+        sound_events: soundEvents + snoringEvents,
+        urgency_level: analysis.urgency_level,
+        timeline: JSON.parse(JSON.stringify(timeline)),
+        disturbances: JSON.parse(JSON.stringify({ summary: analysis.summary, flags: analysis.flags })),
+        recommendations: JSON.parse(JSON.stringify(analysis.tips)),
+      })
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+
+    // Keep the simple sleep_logs table in sync too, so existing widgets (e.g. health score) still work.
+    await supabase.from("sleep_logs").insert({
+      user_id: userId,
+      member_id: data.memberId ?? null,
+      bedtime: bed.toISOString(),
+      wake_time: wake.toISOString(),
+      duration_min: Math.round(durationHours * 60),
+      quality_score: analysis.score,
+      notes: data.notes ?? null,
+      ai_analysis: JSON.parse(JSON.stringify(analysis)),
+    });
+
+    return { report: row, analysis, durationHours };
+  });
+
+export const getSleepDashboard = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ memberId }).parse(input ?? {}))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    let q = supabase.from("sleep_reports").select("*").eq("user_id", userId).gte("report_date", daysAgo(6).toISOString().slice(0, 10));
+    q = data.memberId ? q.eq("member_id", data.memberId) : q.is("member_id", null);
+    const { data: reports } = await q.order("report_date", { ascending: true });
+    const rows = reports ?? [];
+
+    const week: { day: string; date: string; hours: number; target: number; score: number | null; apnea: boolean; snoring: string | null }[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const day = daysAgo(i);
+      const dateStr = day.toISOString().slice(0, 10);
+      const row = rows.find((r) => r.report_date === dateStr);
+      week.push({
+        day: day.toLocaleDateString("en-US", { weekday: "short" }),
+        date: dateStr,
+        hours: row?.duration_hours ?? 0,
+        target: row?.target_hours ?? 8,
+        score: row?.quality_score ?? null,
+        apnea: !!row?.apnea_detected,
+        snoring: row?.snoring_severity ?? null,
+      });
+    }
+
+    const scored = rows.filter((r) => r.quality_score != null);
+    const avgScore = scored.length ? Math.round(scored.reduce((s, r) => s + (r.quality_score ?? 0), 0) / scored.length) : 0;
+    const snoringNights = rows.filter((r) => r.snoring_severity && r.snoring_severity !== "none").length;
+    const apneaNights = rows.filter((r) => r.apnea_detected).length;
+    const best = scored.length ? scored.reduce((a, b) => ((a.quality_score ?? 0) >= (b.quality_score ?? 0) ? a : b)) : null;
+    const worst = scored.length ? scored.reduce((a, b) => ((a.quality_score ?? 0) <= (b.quality_score ?? 0) ? a : b)) : null;
+
+    // Consistency: how close each night's duration was to target, and how stable durations were night to night.
+    const durations = rows.map((r) => r.duration_hours ?? 0).filter((h) => h > 0);
+    let consistencyScore = 0;
+    if (durations.length) {
+      const targetDeviation =
+        rows.reduce((s, r) => s + Math.abs((r.duration_hours ?? 0) - (r.target_hours ?? 8)), 0) / rows.length;
+      const mean = durations.reduce((s, d) => s + d, 0) / durations.length;
+      const variance = durations.reduce((s, d) => s + (d - mean) ** 2, 0) / durations.length;
+      const stdDev = Math.sqrt(variance);
+      consistencyScore = Math.max(0, Math.min(100, Math.round(100 - targetDeviation * 15 - stdDev * 12)));
+    }
+
+    return { reports: rows, week, avgScore, snoringNights, apneaNights, best, worst, consistencyScore };
+  });

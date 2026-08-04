@@ -1,45 +1,64 @@
-/** Badge catalogue + streak maths shared by the dashboard, /badges and the server. */
-
-export type StreakKey = "login" | "water" | "exercise" | "sleep" | "medicine" | "tools";
-
-export type Streak = { key: StreakKey; current: number; longest: number };
+/** Streak-milestone badge catalogue + login-streak maths shared by the dashboard, /badges and the server. */
 
 export type BadgeDef = {
   id: string;
   name: string;
-  how: string;
-  color: string;
-  emoji: string;
+  days: number;
+  tagline: string;
+  /** Tailwind-friendly gradient stops used for the hexagon fill and glow. */
+  from: string;
+  to: string;
+  /** True for the two top-tier badges that use an animated hue-rotate / holographic shimmer. */
+  animated?: "rainbow" | "holo";
 };
 
-export const STREAK_META: Record<StreakKey, { label: string; emoji: string; accent: string }> = {
-  login: { label: "Daily login", emoji: "🔥", accent: "text-warning" },
-  water: { label: "Water goal", emoji: "💧", accent: "text-primary" },
-  exercise: { label: "Exercise", emoji: "⚡", accent: "text-warning" },
-  sleep: { label: "Sleep tracking", emoji: "🌙", accent: "text-primary" },
-  medicine: { label: "Medicines", emoji: "💊", accent: "text-success" },
-  tools: { label: "Tool use", emoji: "🩺", accent: "text-primary" },
-};
-
+/** The 14 premium hexagon badges — pure consecutive daily-login milestones. */
 export const BADGES: BadgeDef[] = [
-  { id: "first_step", name: "First Step", how: "Use any Nirogi tool for the first time", color: "from-slate-300 to-slate-500", emoji: "👣" },
-  { id: "health_detective", name: "Health Detective", how: "Use all 9 AI tools at least once", color: "from-amber-300 to-yellow-500", emoji: "🔎" },
-  { id: "hydration_hero", name: "Hydration Hero", how: "Hit your water goal 7 days in a row", color: "from-sky-300 to-blue-600", emoji: "💧" },
-  { id: "sleep_champion", name: "Sleep Champion", how: "Track sleep 14 nights in a row", color: "from-violet-400 to-indigo-600", emoji: "🌙" },
-  { id: "heart_guardian", name: "Heart Guardian", how: "Run a HeartSense check", color: "from-rose-400 to-red-600", emoji: "❤️" },
-  { id: "sugar_warrior", name: "Sugar Warrior", how: "Get a low-risk SugarSense result", color: "from-emerald-300 to-green-600", emoji: "🩸" },
-  { id: "medicine_guardian", name: "Medicine Guardian", how: "Take medicines on time 30 days in a row", color: "from-green-300 to-emerald-600", emoji: "💊" },
-  { id: "family_protector", name: "Family Protector", how: "Add 3 family members", color: "from-teal-300 to-cyan-600", emoji: "👨‍👩‍👧" },
-  { id: "fitness_streak", name: "Fitness Streak", how: "Exercise 14 days in a row", color: "from-orange-300 to-amber-600", emoji: "⚡" },
-  { id: "warrior_100", name: "100 Day Warrior", how: "Open Nirogi 100 days in a row", color: "from-yellow-300 to-orange-600", emoji: "🏆" },
-  { id: "cancer_preventer", name: "Cancer Preventer", how: "Get a low-risk CancerSense result", color: "from-purple-400 to-amber-500", emoji: "🎗️" },
-  { id: "xray_reader", name: "X-Ray Reader", how: "Analyse a medical scan in ScanIQ", color: "from-blue-300 to-slate-500", emoji: "🩻" },
-  { id: "referral_champion", name: "Referral Champion", how: "Refer 5 friends successfully", color: "from-amber-300 to-teal-500", emoji: "🤝" },
-  { id: "score_90", name: "Health Score 90+", how: "Reach a Health Score above 90", color: "from-slate-200 to-teal-400", emoji: "💎" },
+  { id: "rookie", name: "Rookie", days: 3, tagline: "Is this just fleeting motivation or real dedication?", from: "#CD7F32", to: "#A0522D" },
+  { id: "committed", name: "Committed", days: 7, tagline: "One week in. The real ones keep going.", from: "#FF6B35", to: "#FF8C00" },
+  { id: "two_weeks_strong", name: "Two Weeks Strong", days: 14, tagline: "Two weeks. Most people quit by now.", from: "#FF4500", to: "#FF6B35" },
+  { id: "habit_former", name: "Habit Former", days: 21, tagline: "21 days. Science says you have built a habit.", from: "#FF3D00", to: "#DD2C00" },
+  { id: "one_month_in", name: "One Month In", days: 30, tagline: "30 days. This is no longer motivation. This is discipline.", from: "#FF0000", to: "#CC0000" },
+  { id: "locked_in", name: "Locked In", days: 50, tagline: "50 days. This is now your identity.", from: "#FFD700", to: "#FFA500" },
+  { id: "unstoppable", name: "Unstoppable", days: 75, tagline: "75 days. You do not miss. That is your superpower.", from: "#FFD700", to: "#FF8C00" },
+  { id: "triple_threat", name: "Triple Threat", days: 100, tagline: "100 days. If consistency were a crime you would be doing life.", from: "#00BFFF", to: "#0080FF" },
+  { id: "legend", name: "Legend", days: 150, tagline: "150 days of choosing your health. Every single day.", from: "#4169E1", to: "#00BFFF" },
+  { id: "health_warrior", name: "Health Warrior", days: 200, tagline: "200 days. You have done more for your health than most do in a lifetime.", from: "#8A2BE2", to: "#9B59B6" },
+  { id: "year_one", name: "Year One", days: 365, tagline: "365 days. One full year. You changed your life.", from: "#9B59B6", to: "#6C3483" },
+  { id: "elite", name: "Elite", days: 500, tagline: "500 days. You are in a category most people do not even know exists.", from: "#2C3E50", to: "#9B59B6" },
+  { id: "master", name: "Master", days: 750, tagline: "750 days. Two years of dedication. You are the example.", from: "#FF0000", to: "#8A2BE2", animated: "rainbow" },
+  { id: "god_mode", name: "God Mode", days: 1000, tagline: "1000 days. You did not just change habits. You became who you were meant to be.", from: "#00BFFF", to: "#FF00FF", animated: "holo" },
 ];
+
+export type FlameTier = {
+  key: string;
+  min: number;
+  max: number;
+  from: string;
+  to: string;
+  size: "sm" | "md" | "lg" | "xl" | "xxl";
+  animated?: "rainbow";
+};
+
+/** Flame colour + size tiers driven purely by the current login streak. */
+export const FLAME_TIERS: FlameTier[] = [
+  { key: "bronze", min: 0, max: 6, from: "#CD7F32", to: "#A0522D", size: "sm" },
+  { key: "orange", min: 7, max: 13, from: "#FF6B35", to: "#FF8C00", size: "md" },
+  { key: "red-orange", min: 14, max: 29, from: "#FF4500", to: "#FF6B35", size: "md" },
+  { key: "red", min: 30, max: 49, from: "#FF0000", to: "#CC0000", size: "lg" },
+  { key: "gold", min: 50, max: 99, from: "#FFD700", to: "#FFA500", size: "lg" },
+  { key: "cyan-blue", min: 100, max: 364, from: "#00BFFF", to: "#0080FF", size: "xl" },
+  { key: "purple", min: 365, max: 999, from: "#9B59B6", to: "#6C3483", size: "xl" },
+  { key: "rainbow", min: 1000, max: Infinity, from: "#FF0000", to: "#9B59B6", size: "xxl", animated: "rainbow" },
+];
+
+export function flameTierFor(streak: number): FlameTier {
+  return FLAME_TIERS.find((t) => streak >= t.min && streak <= t.max) ?? FLAME_TIERS[0];
+}
 
 export const dayKey = (d: string | Date) => new Date(d).toISOString().slice(0, 10);
 
+/** Consecutive-day streak maths shared by login and (legacy) habit streaks. */
 export function streakFromDates(dates: Set<string>) {
   const sorted = [...dates].sort().reverse();
   if (sorted.length === 0) return { current: 0, longest: 0 };
