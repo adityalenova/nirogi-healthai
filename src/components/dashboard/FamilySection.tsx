@@ -68,6 +68,8 @@ function shortCode(token: string) {
 
 export function FamilySection() {
   const { t } = useI18n();
+  const navigate = useNavigate();
+
   const qc = useQueryClient();
   const { memberId, memberName, setMember } = useActiveMember();
 
