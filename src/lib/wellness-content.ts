@@ -281,3 +281,75 @@ export const GUT_CHECK_QUESTIONS: { key: "bowel_movement" | "bloated" | "stomach
 
 export const IRON_DEFICIENCY_CONTEXT =
   "Over 50% of Indian women and a large share of men are iron-deficient, largely due to vegetarian diets low in easily-absorbed iron. Pairing iron-rich foods with vitamin C (lemon, amla, tomato) roughly triples absorption — small daily swaps make a real difference.";
+
+// ---------------- Hub metadata (Gut Health & Daily Energy) ----------------
+
+export type HubTool = { id: string; title: string; description: string; gradient: string };
+
+export const GUT_TOOLS: HubTool[] = [
+  { id: "gut-check", title: "Daily Gut Check", description: "5 quick yes/no questions for your gut score", gradient: "from-emerald-500 to-teal-600" },
+  { id: "water-timer", title: "Warm Water Timer", description: "20-minute digestion kickstart ritual", gradient: "from-sky-500 to-cyan-600" },
+  { id: "yoga", title: "Yoga for Digestion", description: "3 gentle poses to ease bloating", gradient: "from-violet-500 to-purple-600" },
+  { id: "fibre", title: "High Fibre Foods", description: "Today's Indian pick and how to eat it", gradient: "from-lime-500 to-green-600" },
+  { id: "massage", title: "Massage Guide", description: "5-step clockwise abdominal massage", gradient: "from-amber-500 to-orange-600" },
+  { id: "recipe", title: "Gut Friendly Recipe", description: "Today's easy digestion-friendly recipe", gradient: "from-rose-500 to-pink-600" },
+];
+
+export const ENERGY_TOOLS: HubTool[] = [
+  { id: "check-in", title: "Energy Check-In", description: "Tell us your energy level right now", gradient: "from-yellow-500 to-orange-600" },
+  { id: "morning-wins", title: "2-Minute Morning Wins", description: "Three tiny tasks for an instant lift", gradient: "from-sky-500 to-blue-600" },
+  { id: "sunlight", title: "Sunlight Timer", description: "10 minutes outside for a natural boost", gradient: "from-amber-400 to-yellow-600" },
+  { id: "exercise", title: "Micro Exercise", description: "2-minute movement, today's pick", gradient: "from-red-500 to-rose-600" },
+  { id: "foods", title: "Anti-Fatigue Foods", description: "Iron-rich Indian food of the day", gradient: "from-emerald-500 to-green-600" },
+  { id: "chart", title: "7-Day Energy Chart", description: "See your energy trend across the week", gradient: "from-indigo-500 to-violet-600" },
+];
+
+/** Per-day, per-hub tool completion tracked in localStorage (no DB table for this). */
+function hubDoneStorageKey(hub: string, date = new Date()) {
+  return `nirogi-hub-done:${hub}:${date.toISOString().slice(0, 10)}`;
+}
+
+export function loadHubDone(hub: string): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = window.localStorage.getItem(hubDoneStorageKey(hub));
+    return new Set<string>(raw ? JSON.parse(raw) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+export function markHubToolDone(hub: string, toolId: string): Set<string> {
+  const set = loadHubDone(hub);
+  set.add(toolId);
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(hubDoneStorageKey(hub), JSON.stringify([...set]));
+  }
+  return set;
+}
+
+// ---------------- Gut-friendly recipes ----------------
+
+export type Recipe = { name: string; ingredients: string[]; steps: string[] };
+
+export const GUT_RECIPES: Recipe[] = [
+  { name: "Moong Dal Khichdi", ingredients: ["1/2 cup rice", "1/2 cup split moong dal", "1 tsp ghee", "1/2 tsp cumin", "1/4 tsp turmeric", "Salt to taste", "3 cups water"], steps: ["Wash rice and dal together.", "Pressure cook with turmeric, salt and water for 3-4 whistles.", "Heat ghee, splutter cumin, pour over khichdi.", "Serve warm — easy to digest and gentle on the gut."] },
+  { name: "Curd Rice (Thayir Sadam)", ingredients: ["1 cup cooked rice", "1 cup fresh curd", "1/2 tsp mustard seeds", "1 dried red chilli", "Few curry leaves", "Salt to taste"], steps: ["Mash rice slightly and mix in curd and salt.", "Heat a little oil, splutter mustard seeds, chilli and curry leaves.", "Pour tempering over the curd rice and mix.", "Probiotic curd soothes and aids digestion."] },
+  { name: "Vegetable Dalia (Broken Wheat Porridge)", ingredients: ["1/2 cup broken wheat (dalia)", "1 cup mixed vegetables, chopped", "1 tsp ghee", "1/2 tsp cumin", "Salt to taste", "2.5 cups water"], steps: ["Roast dalia in ghee until fragrant.", "Add cumin, vegetables and water.", "Pressure cook for 2-3 whistles.", "A high-fibre, light-on-the-stomach meal."] },
+  { name: "Sabudana Khichdi (light version)", ingredients: ["1 cup soaked sabudana", "1 boiled potato, diced", "1 tbsp peanuts, crushed", "1 tsp ghee", "1/2 tsp cumin", "Salt and lemon juice"], steps: ["Heat ghee, splutter cumin.", "Add potato and peanuts, sauté briefly.", "Add sabudana, mix gently until translucent.", "Finish with lemon juice — gentle and filling."] },
+  { name: "Vegetable Clear Soup", ingredients: ["1 cup mixed vegetables, chopped", "2 cups water or vegetable stock", "1/2 tsp ginger, grated", "Salt and pepper", "Coriander to garnish"], steps: ["Boil vegetables in water with ginger until soft.", "Season with salt and pepper.", "Garnish with coriander.", "Warm and hydrating — great before or after a heavy meal."] },
+  { name: "Ragi Porridge", ingredients: ["3 tbsp ragi flour", "1.5 cups water or milk", "1 tsp jaggery", "A pinch of cardamom"], steps: ["Mix ragi flour with a little water to a smooth paste.", "Add to boiling water/milk, stirring continuously to avoid lumps.", "Cook 5-7 minutes until thickened.", "Sweeten with jaggery — rich in fibre for regularity."] },
+  { name: "Papaya and Curd Bowl", ingredients: ["1 cup ripe papaya, cubed", "1/2 cup fresh curd", "1 tsp honey", "A few chia seeds (optional)"], steps: ["Combine papaya cubes with curd.", "Drizzle honey and sprinkle chia seeds.", "Eat on an empty stomach for best digestive benefit.", "Papaya's enzymes plus curd's probiotics support gut flora."] },
+  { name: "Jeera Rice with Dal", ingredients: ["1 cup cooked rice", "1 tsp ghee", "1 tsp cumin seeds", "1 cup cooked toor dal", "Pinch of asafoetida", "Salt to taste"], steps: ["Heat ghee, splutter cumin and asafoetida.", "Toss cooked rice in the tempering.", "Serve with warm dal.", "Asafoetida and cumin help reduce bloating."] },
+  { name: "Steamed Vegetable Idli", ingredients: ["1 cup idli batter", "1/4 cup grated carrot", "2 tbsp finely chopped beans", "Salt to taste"], steps: ["Mix vegetables into the batter.", "Pour into idli moulds.", "Steam for 10-12 minutes.", "Fermented batter is naturally probiotic and easy to digest."] },
+  { name: "Buttermilk (Spiced Chaas)", ingredients: ["1 cup curd", "2 cups water", "1/2 tsp roasted cumin powder", "A pinch of black salt", "Few mint leaves"], steps: ["Whisk curd and water together until frothy.", "Add roasted cumin, black salt and mint.", "Serve chilled or at room temperature after meals.", "A classic Indian digestive drink."] },
+  { name: "Vegetable Oats Upma", ingredients: ["1/2 cup rolled oats", "1/2 cup mixed vegetables, chopped", "1 tsp oil", "1/2 tsp mustard seeds", "Curry leaves", "Salt to taste"], steps: ["Dry roast oats lightly and set aside.", "Heat oil, splutter mustard seeds and curry leaves, add vegetables.", "Add water and bring to a boil, then stir in oats.", "Cook 3-4 minutes until soft — fibre-rich and light."] },
+  { name: "Beetroot and Carrot Salad", ingredients: ["1/2 cup grated beetroot", "1/2 cup grated carrot", "1 tsp lemon juice", "A pinch of chaat masala", "Roasted peanuts (optional)"], steps: ["Combine grated beetroot and carrot.", "Toss with lemon juice and chaat masala.", "Top with roasted peanuts for crunch.", "Raw fibre helps keep digestion moving."] },
+  { name: "Moong Sprouts Chaat", ingredients: ["1 cup moong sprouts, lightly steamed", "1/4 cup chopped onion and tomato", "1 tsp lemon juice", "Chaat masala and salt"], steps: ["Steam sprouts for 3-4 minutes to soften.", "Mix with onion, tomato, lemon juice and spices.", "Serve fresh.", "High in fibre and easy on digestion when lightly steamed."] },
+  { name: "Vegetable Khichuri Soup", ingredients: ["1/4 cup rice", "1/4 cup moong dal", "1/2 cup chopped vegetables", "1/2 tsp turmeric", "Salt and ghee"], steps: ["Combine rice, dal, vegetables, turmeric and water in a pot.", "Simmer until everything is soft and soupy.", "Finish with a spoon of ghee.", "A soothing, one-pot gut-friendly comfort meal."] },
+  { name: "Coconut Chutney with Idli/Dosa", ingredients: ["1/2 cup grated coconut", "1 tbsp roasted chana dal", "1 green chilli", "Salt and water", "Tempering: mustard seeds, curry leaves"], steps: ["Grind coconut, chana dal, chilli, salt and water to a smooth paste.", "Heat a little oil, splutter mustard seeds and curry leaves.", "Pour tempering over chutney.", "Pairs well with fermented idli/dosa for a gut-friendly combo."] },
+];
+
+export function recipeOfDay(date = new Date()): Recipe {
+  return GUT_RECIPES[dayIndex(GUT_RECIPES.length, 0, date)];
+}

@@ -20,7 +20,9 @@ import {
   updateFamilyMember,
   deleteFamilyMember,
 } from "@/lib/family.functions";
-import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite } from "@/lib/family-invite.functions";
+import { useNavigate } from "@tanstack/react-router";
+import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite, resolveFamilyCode } from "@/lib/family-invite.functions";
+
 import { getFamilyOverview, type FamilyOverviewMember } from "@/lib/family-overview.functions";
 import { useActiveMember } from "@/lib/active-member";
 import { useI18n } from "@/lib/i18n";
@@ -66,6 +68,8 @@ function shortCode(token: string) {
 
 export function FamilySection() {
   const { t } = useI18n();
+  const navigate = useNavigate();
+
   const qc = useQueryClient();
   const { memberId, memberName, setMember } = useActiveMember();
 
@@ -83,11 +87,14 @@ export function FamilySection() {
   const [form, setForm] = useState<FormState>(empty);
 
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [joinOpen, setJoinOpen] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteRelation, setInviteRelation] = useState("");
   const [copied, setCopied] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [lastInvite, setLastInvite] = useState<{ token: string; label: string } | null>(null);
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["family-members"],
@@ -136,6 +143,22 @@ export function FamilySection() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["family-invites"] }); toast.success("Invite revoked."); },
     onError: () => toast.error("Couldn't revoke the invite."),
   });
+
+  const resolveFn = useServerFn(resolveFamilyCode);
+  const joinMut = useMutation({
+    mutationFn: () => resolveFn({ data: { code: joinCode.trim() } }),
+    onSuccess: (res) => {
+      if (!res.token) {
+        toast.error("That code didn't match any active invite.");
+        return;
+      }
+      setJoinOpen(false);
+      navigate({ to: "/invite/$token", params: { token: res.token } });
+    },
+    onError: () => toast.error("Couldn't check that code. Please try again."),
+  });
+
+
 
   const copyLink = async (token: string) => {
     try { await navigator.clipboard.writeText(inviteLink(token)); setCopied(true); setTimeout(() => setCopied(false), 1500); toast.success("Link copied."); }
@@ -250,31 +273,42 @@ export function FamilySection() {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-          <Users className="size-5 text-primary" /> {t("dash.my_family", "My Family")}
-        </h2>
-        <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={() => setInviteOpen(true)}>
-            <Link2 className="size-4" /> Invite family member
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+            <Users className="size-5 shrink-0 text-primary" />
+            <span className="truncate">{t("dash.my_family", "My Family")}</span>
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {members.length} of 6 members. Tap a card to view that person&apos;s dashboard — everyone&apos;s health data
+            stays private and view-only to the rest of the family.
+          </p>
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+          <Button
+            size="sm"
+            className="bg-gradient-to-r from-primary to-primary-glow font-semibold text-primary-foreground shadow-[0_8px_20px_-10px_var(--color-primary)] transition-transform hover:-translate-y-0.5 hover:opacity-95"
+            onClick={() => setInviteOpen(true)}
+          >
+            <Link2 className="size-4" /> Invite
           </Button>
           <Button size="sm" variant="outline" onClick={startAdd}>
             <Plus className="size-4" /> {t("dash.add_member", "Add member")}
           </Button>
+          <Button size="sm" variant="ghost" onClick={() => setJoinOpen(true)}>
+            Have a code?
+          </Button>
         </div>
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Up to 6 people. Tap a card to view that person&apos;s dashboard — everyone&apos;s health data stays private and
-        view-only to the rest of the family.
-      </p>
 
       {isLoading ? (
         <div className="mt-6 flex justify-center"><Loader2 className="size-5 animate-spin text-primary" /></div>
       ) : (
-        <div className="-mx-1 mt-4 flex snap-x gap-3 overflow-x-auto px-1 pb-2">
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           <MemberCard
             name={t("dash.you", "You")}
             subtitle="Your own profile"
+            self
             active={memberId === null}
             onClick={() => setMember(null, null)}
           />
@@ -294,6 +328,7 @@ export function FamilySection() {
           ))}
         </div>
       )}
+
 
       {invites.filter((i) => i.status === "pending").length > 0 && (
         <div className="mt-4 space-y-2">
@@ -415,7 +450,35 @@ export function FamilySection() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={joinOpen} onOpenChange={setJoinOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Join a family with a code</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Enter the 6-character code someone shared with you. We&apos;ll open their invite so you can accept it.
+          </p>
+          <Input
+            value={joinCode}
+            onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+            placeholder="ABC123"
+            className="font-mono text-lg tracking-[0.3em]"
+            maxLength={8}
+          />
+          <DialogFooter>
+            <Button
+              disabled={joinCode.trim().length < 4 || joinMut.isPending}
+              onClick={() => joinMut.mutate()}
+              className="bg-gradient-to-r from-primary to-primary-glow text-primary-foreground"
+            >
+              {joinMut.isPending ? <Loader2 className="size-4 animate-spin" /> : null} Continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
+
   );
 }
 
@@ -425,6 +488,7 @@ function MemberCard({
   score,
   avatar,
   joined,
+  self,
   active,
   onClick,
   onEdit,
@@ -435,6 +499,7 @@ function MemberCard({
   score?: number | null;
   avatar?: string | null;
   joined?: boolean;
+  self?: boolean;
   active: boolean;
   onClick: () => void;
   onEdit?: () => void;
@@ -444,13 +509,13 @@ function MemberCard({
   return (
     <div
       className={cn(
-        "w-44 shrink-0 snap-start rounded-xl border p-3 text-left transition-all",
+        "min-w-0 rounded-2xl border p-3 text-left transition-all",
         active
-          ? "border-primary bg-primary/5 shadow-[0_0_0_3px_var(--color-primary-glow)]"
-          : "border-border hover:bg-muted/50",
+          ? "border-primary bg-primary/5 ring-2 ring-primary/30"
+          : "border-border hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-card",
       )}
     >
-      <button onClick={onClick} className="w-full text-left">
+      <button onClick={onClick} className="w-full min-w-0 text-left">
         <div className="relative mx-auto size-16">
           <svg viewBox="0 0 64 64" className="size-16 -rotate-90">
             <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--border))" strokeWidth="5" />
@@ -471,10 +536,11 @@ function MemberCard({
         </div>
         <p className="mt-2 truncate text-center text-sm font-semibold">{name}</p>
         <p className="truncate text-center text-[11px] text-muted-foreground">{subtitle}</p>
-        <p className="mt-1 text-center text-[11px] font-medium text-primary">
-          {score != null ? `Score ${score}` : joined ? "No score yet" : "Invite pending"}
+        <p className="mt-1 truncate text-center text-[11px] font-medium text-primary">
+          {score != null ? `Score ${score}` : self ? "Active profile" : joined ? "No score yet" : "Invite pending"}
         </p>
       </button>
+
       {(onEdit || onDelete) && (
         <div className="mt-2 flex justify-center gap-1">
           {onEdit && (

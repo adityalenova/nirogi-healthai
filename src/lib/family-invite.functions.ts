@@ -85,6 +85,23 @@ export const getInviteInfo = createServerFn({ method: "GET" })
     };
   });
 
+/** Resolve a short 6-character join code back to its full invite token. */
+export const resolveFamilyCode = createServerFn({ method: "GET" })
+  .inputValidator((input: unknown) => z.object({ code: z.string().min(4).max(12) }).parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const prefix = data.code.trim().toLowerCase();
+    const { data: rows } = await supabaseAdmin
+      .from("family_invites")
+      .select("token, status")
+      .ilike("token", `${prefix}%`)
+      .limit(2);
+    const pending = (rows ?? []).filter((r) => r.status !== "revoked");
+    if (pending.length !== 1) return { token: null as string | null };
+    return { token: pending[0].token as string };
+  });
+
+
 /** The signed-in family member accepts the invite and links their account. */
 export const acceptFamilyInvite = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
