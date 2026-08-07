@@ -140,6 +140,22 @@ export function FamilySection() {
     onError: () => toast.error("Couldn't revoke the invite."),
   });
 
+  const resolveFn = useServerFn(resolveFamilyCode);
+  const joinMut = useMutation({
+    mutationFn: () => resolveFn({ data: { code: joinCode.trim() } }),
+    onSuccess: (res) => {
+      if (!res.token) {
+        toast.error("That code didn't match any active invite.");
+        return;
+      }
+      setJoinOpen(false);
+      navigate({ to: "/invite/$token", params: { token: res.token } });
+    },
+    onError: () => toast.error("Couldn't check that code. Please try again."),
+  });
+
+
+
   const copyLink = async (token: string) => {
     try { await navigator.clipboard.writeText(inviteLink(token)); setCopied(true); setTimeout(() => setCopied(false), 1500); toast.success("Link copied."); }
     catch { toast.error("Couldn't copy."); }
