@@ -7,27 +7,26 @@ import { TOOLS } from "@/lib/tools";
 
 const ORGAN_KEYS: OrganKey[] = ["brain", "heart", "lungs", "liver", "stomach", "kidneys", "bones"];
 
+const isOrganKey = (v: string): v is OrganKey => (ORGAN_KEYS as string[]).includes(v);
+
 export const Route = createFileRoute("/_authenticated/dashboard/organs/$organ")({
-  params: {
-    parse: (raw) => {
-      const organ = raw.organ as OrganKey;
-      if (!ORGAN_KEYS.includes(organ)) throw notFound();
-      return { organ };
-    },
-    stringify: (p) => p,
+  beforeLoad: ({ params }) => {
+    if (!isOrganKey(params.organ)) throw notFound();
   },
   head: ({ params }) => ({
-    meta: [{ title: `${ORGAN_INFO[params.organ]?.label ?? "Organ"} · Nirogi` }],
+    meta: [{ title: `${isOrganKey(params.organ) ? ORGAN_INFO[params.organ].label : "Organ"} · Nirogi` }],
   }),
   component: OrganDetailPage,
 });
 
 function OrganDetailPage() {
-  const { organ } = Route.useParams();
+  const { organ: rawOrgan } = Route.useParams();
+  const organ: OrganKey = isOrganKey(rawOrgan) ? rawOrgan : "heart";
   const info = ORGAN_INFO[organ];
   const { organs, isLoading } = useOrganStatuses();
   const status = organs.find((o) => o.key === organ);
   const tools = TOOLS.filter((t) => info.toolSlugs.includes(t.slug));
+
 
   return (
     <SiteLayout>
