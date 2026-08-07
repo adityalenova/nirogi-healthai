@@ -38,6 +38,7 @@ import { Route as AuthenticatedGutHealthIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDailyEnergyIndexRouteImport } from './routes/_authenticated/daily-energy.index'
 import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
+import { Route as AuthenticatedGutHealthToolRouteImport } from './routes/_authenticated/gut-health.$tool'
 import { Route as AuthenticatedDoctorsIdRouteImport } from './routes/_authenticated/doctors.$id'
 import { Route as AuthenticatedDashboardWeightRouteImport } from './routes/_authenticated/dashboard.weight'
 import { Route as AuthenticatedDashboardWaterRouteImport } from './routes/_authenticated/dashboard.water'
@@ -215,6 +216,12 @@ const AuthenticatedToolsToolRoute = AuthenticatedToolsToolRouteImport.update({
   path: '/tools/$tool',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedGutHealthToolRoute =
+  AuthenticatedGutHealthToolRouteImport.update({
+    id: '/$tool',
+    path: '/$tool',
+    getParentRoute: () => AuthenticatedGutHealthRoute,
+  } as any)
 const AuthenticatedDoctorsIdRoute = AuthenticatedDoctorsIdRouteImport.update({
   id: '/doctors/$id',
   path: '/doctors/$id',
@@ -399,6 +406,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/water': typeof AuthenticatedDashboardWaterRoute
   '/dashboard/weight': typeof AuthenticatedDashboardWeightRoute
   '/doctors/$id': typeof AuthenticatedDoctorsIdRoute
+  '/gut-health/$tool': typeof AuthenticatedGutHealthToolRoute
   '/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/daily-energy/': typeof AuthenticatedDailyEnergyIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -448,6 +456,7 @@ export interface FileRoutesByTo {
   '/dashboard/water': typeof AuthenticatedDashboardWaterRoute
   '/dashboard/weight': typeof AuthenticatedDashboardWeightRoute
   '/doctors/$id': typeof AuthenticatedDoctorsIdRoute
+  '/gut-health/$tool': typeof AuthenticatedGutHealthToolRoute
   '/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/daily-energy': typeof AuthenticatedDailyEnergyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -503,6 +512,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/water': typeof AuthenticatedDashboardWaterRoute
   '/_authenticated/dashboard/weight': typeof AuthenticatedDashboardWeightRoute
   '/_authenticated/doctors/$id': typeof AuthenticatedDoctorsIdRoute
+  '/_authenticated/gut-health/$tool': typeof AuthenticatedGutHealthToolRoute
   '/_authenticated/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/_authenticated/daily-energy/': typeof AuthenticatedDailyEnergyIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -558,6 +568,7 @@ export interface FileRouteTypes {
     | '/dashboard/water'
     | '/dashboard/weight'
     | '/doctors/$id'
+    | '/gut-health/$tool'
     | '/tools/$tool'
     | '/daily-energy/'
     | '/dashboard/'
@@ -607,6 +618,7 @@ export interface FileRouteTypes {
     | '/dashboard/water'
     | '/dashboard/weight'
     | '/doctors/$id'
+    | '/gut-health/$tool'
     | '/tools/$tool'
     | '/daily-energy'
     | '/dashboard'
@@ -661,6 +673,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/water'
     | '/_authenticated/dashboard/weight'
     | '/_authenticated/doctors/$id'
+    | '/_authenticated/gut-health/$tool'
     | '/_authenticated/tools/$tool'
     | '/_authenticated/daily-energy/'
     | '/_authenticated/dashboard/'
@@ -884,6 +897,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tools/$tool'
       preLoaderRoute: typeof AuthenticatedToolsToolRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gut-health/$tool': {
+      id: '/_authenticated/gut-health/$tool'
+      path: '/$tool'
+      fullPath: '/gut-health/$tool'
+      preLoaderRoute: typeof AuthenticatedGutHealthToolRouteImport
+      parentRoute: typeof AuthenticatedGutHealthRoute
     }
     '/_authenticated/doctors/$id': {
       id: '/_authenticated/doctors/$id'
@@ -1127,11 +1147,13 @@ const AuthenticatedDashboardRouteWithChildren =
   )
 
 interface AuthenticatedGutHealthRouteChildren {
+  AuthenticatedGutHealthToolRoute: typeof AuthenticatedGutHealthToolRoute
   AuthenticatedGutHealthIndexRoute: typeof AuthenticatedGutHealthIndexRoute
 }
 
 const AuthenticatedGutHealthRouteChildren: AuthenticatedGutHealthRouteChildren =
   {
+    AuthenticatedGutHealthToolRoute: AuthenticatedGutHealthToolRoute,
     AuthenticatedGutHealthIndexRoute: AuthenticatedGutHealthIndexRoute,
   }
 
