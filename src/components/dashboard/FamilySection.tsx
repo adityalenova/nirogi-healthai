@@ -440,6 +440,7 @@ function MemberCard({
   score,
   avatar,
   joined,
+  self,
   active,
   onClick,
   onEdit,
@@ -450,6 +451,7 @@ function MemberCard({
   score?: number | null;
   avatar?: string | null;
   joined?: boolean;
+  self?: boolean;
   active: boolean;
   onClick: () => void;
   onEdit?: () => void;
@@ -459,13 +461,13 @@ function MemberCard({
   return (
     <div
       className={cn(
-        "w-44 shrink-0 snap-start rounded-xl border p-3 text-left transition-all",
+        "min-w-0 rounded-2xl border p-3 text-left transition-all",
         active
-          ? "border-primary bg-primary/5 shadow-[0_0_0_3px_var(--color-primary-glow)]"
-          : "border-border hover:bg-muted/50",
+          ? "border-primary bg-primary/5 ring-2 ring-primary/30"
+          : "border-border hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-card",
       )}
     >
-      <button onClick={onClick} className="w-full text-left">
+      <button onClick={onClick} className="w-full min-w-0 text-left">
         <div className="relative mx-auto size-16">
           <svg viewBox="0 0 64 64" className="size-16 -rotate-90">
             <circle cx="32" cy="32" r="28" fill="none" stroke="hsl(var(--border))" strokeWidth="5" />
@@ -486,10 +488,11 @@ function MemberCard({
         </div>
         <p className="mt-2 truncate text-center text-sm font-semibold">{name}</p>
         <p className="truncate text-center text-[11px] text-muted-foreground">{subtitle}</p>
-        <p className="mt-1 text-center text-[11px] font-medium text-primary">
-          {score != null ? `Score ${score}` : joined ? "No score yet" : "Invite pending"}
+        <p className="mt-1 truncate text-center text-[11px] font-medium text-primary">
+          {score != null ? `Score ${score}` : self ? "Active profile" : joined ? "No score yet" : "Invite pending"}
         </p>
       </button>
+
       {(onEdit || onDelete) && (
         <div className="mt-2 flex justify-center gap-1">
           {onEdit && (
