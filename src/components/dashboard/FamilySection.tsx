@@ -83,11 +83,14 @@ export function FamilySection() {
   const [form, setForm] = useState<FormState>(empty);
 
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [joinOpen, setJoinOpen] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteRelation, setInviteRelation] = useState("");
   const [copied, setCopied] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [lastInvite, setLastInvite] = useState<{ token: string; label: string } | null>(null);
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["family-members"],
