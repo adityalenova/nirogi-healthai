@@ -20,7 +20,9 @@ import {
   updateFamilyMember,
   deleteFamilyMember,
 } from "@/lib/family.functions";
-import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite } from "@/lib/family-invite.functions";
+import { useNavigate } from "@tanstack/react-router";
+import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite, resolveFamilyCode } from "@/lib/family-invite.functions";
+
 import { getFamilyOverview, type FamilyOverviewMember } from "@/lib/family-overview.functions";
 import { useActiveMember } from "@/lib/active-member";
 import { useI18n } from "@/lib/i18n";
