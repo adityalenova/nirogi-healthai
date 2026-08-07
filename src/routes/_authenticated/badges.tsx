@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Award, Lock } from "lucide-react";
+import { ArrowLeft, Award, Lock, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { getGamification } from "@/lib/gamification.functions";
