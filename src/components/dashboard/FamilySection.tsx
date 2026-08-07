@@ -430,7 +430,35 @@ export function FamilySection() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={joinOpen} onOpenChange={setJoinOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Join a family with a code</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Enter the 6-character code someone shared with you. We&apos;ll open their invite so you can accept it.
+          </p>
+          <Input
+            value={joinCode}
+            onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+            placeholder="ABC123"
+            className="font-mono text-lg tracking-[0.3em]"
+            maxLength={8}
+          />
+          <DialogFooter>
+            <Button
+              disabled={joinCode.trim().length < 4 || joinMut.isPending}
+              onClick={() => joinMut.mutate()}
+              className="bg-gradient-to-r from-primary to-primary-glow text-primary-foreground"
+            >
+              {joinMut.isPending ? <Loader2 className="size-4 animate-spin" /> : null} Continue
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
+
   );
 }
 
