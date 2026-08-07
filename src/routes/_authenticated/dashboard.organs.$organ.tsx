@@ -59,7 +59,7 @@ function OrganDetailPage() {
                 <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-muted-foreground">Related Nirogi tools</h2>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   {tools.map((t) => (
-                    <Link key={t.slug} to="/tools/$slug" params={{ slug: t.slug }} className="rounded-xl border border-border p-3 transition-colors hover:bg-muted/50">
+                    <Link key={t.slug} to="/tools/$tool" params={{ tool: t.slug }} className="rounded-xl border border-border p-3 transition-colors hover:bg-muted/50">
                       <p className="font-display text-sm font-bold">{t.name}</p>
                       <p className="text-xs text-muted-foreground">{t.tagline}</p>
                     </Link>
