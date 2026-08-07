@@ -250,31 +250,42 @@ export function FamilySection() {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-          <Users className="size-5 text-primary" /> {t("dash.my_family", "My Family")}
-        </h2>
-        <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={() => setInviteOpen(true)}>
-            <Link2 className="size-4" /> Invite family member
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+            <Users className="size-5 shrink-0 text-primary" />
+            <span className="truncate">{t("dash.my_family", "My Family")}</span>
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {members.length} of 6 members. Tap a card to view that person&apos;s dashboard — everyone&apos;s health data
+            stays private and view-only to the rest of the family.
+          </p>
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+          <Button
+            size="sm"
+            className="bg-gradient-to-r from-primary to-primary-glow font-semibold text-primary-foreground shadow-[0_8px_20px_-10px_var(--color-primary)] transition-transform hover:-translate-y-0.5 hover:opacity-95"
+            onClick={() => setInviteOpen(true)}
+          >
+            <Link2 className="size-4" /> Invite
           </Button>
           <Button size="sm" variant="outline" onClick={startAdd}>
             <Plus className="size-4" /> {t("dash.add_member", "Add member")}
           </Button>
+          <Button size="sm" variant="ghost" onClick={() => setJoinOpen(true)}>
+            Have a code?
+          </Button>
         </div>
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Up to 6 people. Tap a card to view that person&apos;s dashboard — everyone&apos;s health data stays private and
-        view-only to the rest of the family.
-      </p>
 
       {isLoading ? (
         <div className="mt-6 flex justify-center"><Loader2 className="size-5 animate-spin text-primary" /></div>
       ) : (
-        <div className="-mx-1 mt-4 flex snap-x gap-3 overflow-x-auto px-1 pb-2">
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           <MemberCard
             name={t("dash.you", "You")}
             subtitle="Your own profile"
+            self
             active={memberId === null}
             onClick={() => setMember(null, null)}
           />
@@ -294,6 +305,7 @@ export function FamilySection() {
           ))}
         </div>
       )}
+
 
       {invites.filter((i) => i.status === "pending").length > 0 && (
         <div className="mt-4 space-y-2">
