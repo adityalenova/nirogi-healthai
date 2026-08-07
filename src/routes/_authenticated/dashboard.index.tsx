@@ -185,12 +185,14 @@ function Dashboard() {
           </div>
         ) : (
           <>
-            <div className="mt-8 grid gap-6 lg:grid-cols-3">
-              <div className="lg:col-span-2">
-                <HealthScoreCard />
-              </div>
+            <div className="mt-8">
+              <HealthScoreCard />
+            </div>
+
+            <div className="mt-6">
               <FamilySection />
             </div>
+
 
             <div className="mt-6">
               <WellnessTrackers />
