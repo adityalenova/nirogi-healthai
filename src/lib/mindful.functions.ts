@@ -11,13 +11,14 @@ export const getWellnessDay = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
     const from = daysAgo(29);
-    const [mood, gratitude, gut, energy, done, breathing] = await Promise.all([
+    const [mood, gratitude, gut, energy, done, breathing, sleep] = await Promise.all([
       supabase.from("mood_logs").select("mood_level, log_date").eq("user_id", userId).gte("log_date", from).order("log_date"),
       supabase.from("gratitude_journal").select("id, entry, log_date").eq("user_id", userId).order("created_at", { ascending: false }).limit(20),
       supabase.from("gut_health_logs").select("*").eq("user_id", userId).gte("log_date", from).order("log_date"),
       supabase.from("energy_logs").select("energy_level, log_date").eq("user_id", userId).gte("log_date", from).order("log_date"),
       supabase.from("wellness_completions").select("activity_key").eq("user_id", userId).eq("log_date", today()),
       supabase.from("breathing_sessions").select("duration_sec").eq("user_id", userId).gte("logged_at", `${today()}T00:00:00Z`),
+      supabase.from("sleep_reports").select("report_date, quality_score").eq("user_id", userId).gte("report_date", from).order("report_date"),
     ]);
 
     const t = today();
@@ -32,6 +33,7 @@ export const getWellnessDay = createServerFn({ method: "GET" })
       energyHistory: energy.data ?? [],
       completedToday: (done.data ?? []).map((d) => d.activity_key),
       breathingSecToday: (breathing.data ?? []).reduce((s, b) => s + (b.duration_sec ?? 0), 0),
+      sleepHistory: sleep.data ?? [],
     };
   });
 

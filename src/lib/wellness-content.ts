@@ -270,3 +270,14 @@ export function microExerciseOfDay(date = new Date()) {
 
 export const SUNLIGHT_SCIENCE =
   "Go stand outside or near a window right now. Morning sunlight triggers serotonin production — your natural mood lifter — and helps set your body clock, improving sleep and energy the same day.";
+
+export const GUT_CHECK_QUESTIONS: { key: "bowel_movement" | "bloated" | "stomach_pain" | "appetite_normal" | "hydrated"; question: string; goodAnswer: boolean }[] = [
+  { key: "bowel_movement", question: "Did you have a bowel movement today?", goodAnswer: true },
+  { key: "bloated", question: "Are you feeling bloated?", goodAnswer: false },
+  { key: "stomach_pain", question: "Do you have any stomach pain?", goodAnswer: false },
+  { key: "appetite_normal", question: "Is your appetite normal today?", goodAnswer: true },
+  { key: "hydrated", question: "Have you had 8 glasses of water today?", goodAnswer: true },
+];
+
+export const IRON_DEFICIENCY_CONTEXT =
+  "Over 50% of Indian women and a large share of men are iron-deficient, largely due to vegetarian diets low in easily-absorbed iron. Pairing iron-rich foods with vitamin C (lemon, amla, tomato) roughly triples absorption — small daily swaps make a real difference.";
