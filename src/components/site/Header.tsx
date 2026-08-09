@@ -100,6 +100,20 @@ export function Header() {
               {n.label}
             </a>
           ))}
+          <Link
+            to="/health-browser"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+          >
+            <Globe className="size-4" /> AI Health Browser
+          </Link>
+          <Link
+            to="/knowledge"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+          >
+            <BookOpen className="size-4" /> Knowledge Library
+          </Link>
           <Button asChild size="sm" variant="destructive" className="mt-2">
             <Link to="/sos" onClick={() => setOpen(false)}>
               <Siren className="size-4" /> {t("common.sos", "SOS")}
