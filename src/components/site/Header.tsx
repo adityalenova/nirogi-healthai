@@ -44,6 +44,16 @@ export function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           <CreditPill />
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/health-browser">
+              <Globe className="size-4" /> AI Browser
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/knowledge">
+              <BookOpen className="size-4" /> Knowledge
+            </Link>
+          </Button>
           <Button asChild size="sm" variant="destructive">
             <Link to="/sos">
               <Siren className="size-4" /> {t("common.sos", "SOS")}
