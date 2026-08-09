@@ -18,14 +18,25 @@ export const getGamification = createServerFn({ method: "GET" })
     const loginDays = new Set((txs.data ?? []).map((r) => dayKey(r.created_at)));
     const login = streakFromDates(loginDays);
 
-    const already = new Set((badgeRows.data ?? []).map((b) => b.badge_id));
-    const newlyEarned = BADGES.filter((b) => login.current >= b.days && !already.has(b.id)).map((b) => b.id);
+    // A badge is legitimately earned only when the user's BEST streak has actually
+    // reached its milestone. Anything else stored previously is stale and removed.
+    const qualifying = new Set(BADGES.filter((b) => login.longest >= b.days).map((b) => b.id));
+    const stored = badgeRows.data ?? [];
+    const stale = stored.filter((b) => !qualifying.has(b.badge_id as string)).map((b) => b.badge_id as string);
+    if (stale.length > 0) {
+      await supabase.from("user_badges").delete().eq("user_id", userId).in("badge_id", stale);
+    }
+
+    const already = new Set(stored.filter((b) => qualifying.has(b.badge_id as string)).map((b) => b.badge_id as string));
+    const newlyEarned = [...qualifying].filter((id) => !already.has(id));
     if (newlyEarned.length > 0) {
       await supabase.from("user_badges").insert(newlyEarned.map((badge_id) => ({ user_id: userId, badge_id })));
     }
 
     const earned = [
-      ...(badgeRows.data ?? []).map((b) => ({ badge_id: b.badge_id as string, earned_at: b.earned_at as string })),
+      ...stored
+        .filter((b) => qualifying.has(b.badge_id as string))
+        .map((b) => ({ badge_id: b.badge_id as string, earned_at: b.earned_at as string })),
       ...newlyEarned.map((badge_id) => ({ badge_id, earned_at: new Date().toISOString() })),
     ].sort((a, b) => (a.earned_at < b.earned_at ? 1 : -1));
 
