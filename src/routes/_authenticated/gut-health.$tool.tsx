@@ -61,7 +61,7 @@ function useCountdown(totalSeconds: number, onDone: () => void) {
 
 type GutAnswers = Record<string, boolean>;
 
-function GutCheckTool({ mark, gutHistory }: { mark: () => void; gutHistory: { log_date: string; bowel_movement: boolean }[] }) {
+function GutCheckTool({ mark, gutHistory }: { mark: () => void; gutHistory: { log_date: string; bowel_movement: boolean | null }[] }) {
   const qc = useQueryClient();
   const fnGutCheck = useServerFn(saveGutCheck);
   const [step, setStep] = useState(0);

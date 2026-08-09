@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SosRouteImport } from './routes/sos'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -23,6 +24,7 @@ import { Route as AuthenticatedSenseCheckRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMindMoodRouteImport } from './routes/_authenticated/mind-mood'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedHeartRhythmRouteImport } from './routes/_authenticated/heart-rhythm'
+import { Route as AuthenticatedHealthBrowserRouteImport } from './routes/_authenticated/health-browser'
 import { Route as AuthenticatedGutHealthRouteImport } from './routes/_authenticated/gut-health'
 import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
 import { Route as AuthenticatedExerciseTrackerRouteImport } from './routes/_authenticated/exercise-tracker'
@@ -38,6 +40,7 @@ import { Route as AuthenticatedGutHealthIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as AuthenticatedDailyEnergyIndexRouteImport } from './routes/_authenticated/daily-energy.index'
 import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
+import { Route as AuthenticatedMindMoodActivityRouteImport } from './routes/_authenticated/mind-mood.$activity'
 import { Route as AuthenticatedGutHealthToolRouteImport } from './routes/_authenticated/gut-health.$tool'
 import { Route as AuthenticatedDoctorsIdRouteImport } from './routes/_authenticated/doctors.$id'
 import { Route as AuthenticatedDashboardWeightRouteImport } from './routes/_authenticated/dashboard.weight'
@@ -61,6 +64,7 @@ import { Route as AuthenticatedDashboardBoneHealthRouteImport } from './routes/_
 import { Route as AuthenticatedDashboardBody3dRouteImport } from './routes/_authenticated/dashboard.body-3d'
 import { Route as AuthenticatedDashboardBioAgeRouteImport } from './routes/_authenticated/dashboard.bio-age'
 import { Route as AuthenticatedDashboardAltitudeRouteImport } from './routes/_authenticated/dashboard.altitude'
+import { Route as AuthenticatedDailyEnergyToolRouteImport } from './routes/_authenticated/daily-energy.$tool'
 import { Route as AuthenticatedDashboardOrgansOrganRouteImport } from './routes/_authenticated/dashboard.organs.$organ'
 
 const TermsRoute = TermsRouteImport.update({
@@ -76,6 +80,11 @@ const SosRoute = SosRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KnowledgeRoute = KnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CookiesRoute = CookiesRouteImport.update({
@@ -133,6 +142,12 @@ const AuthenticatedHeartRhythmRoute =
   AuthenticatedHeartRhythmRouteImport.update({
     id: '/heart-rhythm',
     path: '/heart-rhythm',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedHealthBrowserRoute =
+  AuthenticatedHealthBrowserRouteImport.update({
+    id: '/health-browser',
+    path: '/health-browser',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedGutHealthRoute = AuthenticatedGutHealthRouteImport.update({
@@ -216,6 +231,12 @@ const AuthenticatedToolsToolRoute = AuthenticatedToolsToolRouteImport.update({
   path: '/tools/$tool',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMindMoodActivityRoute =
+  AuthenticatedMindMoodActivityRouteImport.update({
+    id: '/$activity',
+    path: '/$activity',
+    getParentRoute: () => AuthenticatedMindMoodRoute,
+  } as any)
 const AuthenticatedGutHealthToolRoute =
   AuthenticatedGutHealthToolRouteImport.update({
     id: '/$tool',
@@ -353,6 +374,12 @@ const AuthenticatedDashboardAltitudeRoute =
     path: '/altitude',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDailyEnergyToolRoute =
+  AuthenticatedDailyEnergyToolRouteImport.update({
+    id: '/$tool',
+    path: '/$tool',
+    getParentRoute: () => AuthenticatedDailyEnergyRoute,
+  } as any)
 const AuthenticatedDashboardOrgansOrganRoute =
   AuthenticatedDashboardOrgansOrganRouteImport.update({
     id: '/organs/$organ',
@@ -364,6 +391,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cookies': typeof CookiesRoute
+  '/knowledge': typeof KnowledgeRoute
   '/privacy': typeof PrivacyRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
@@ -377,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/goals': typeof AuthenticatedGoalsRoute
   '/gut-health': typeof AuthenticatedGutHealthRouteWithChildren
+  '/health-browser': typeof AuthenticatedHealthBrowserRoute
   '/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/mind-mood': typeof AuthenticatedMindMoodRouteWithChildren
@@ -384,6 +413,7 @@ export interface FileRoutesByFullPath {
   '/sleep-tracker': typeof AuthenticatedSleepTrackerRoute
   '/water-tracker': typeof AuthenticatedWaterTrackerRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/daily-energy/$tool': typeof AuthenticatedDailyEnergyToolRoute
   '/dashboard/altitude': typeof AuthenticatedDashboardAltitudeRoute
   '/dashboard/bio-age': typeof AuthenticatedDashboardBioAgeRoute
   '/dashboard/body-3d': typeof AuthenticatedDashboardBody3dRoute
@@ -407,6 +437,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/weight': typeof AuthenticatedDashboardWeightRoute
   '/doctors/$id': typeof AuthenticatedDoctorsIdRoute
   '/gut-health/$tool': typeof AuthenticatedGutHealthToolRoute
+  '/mind-mood/$activity': typeof AuthenticatedMindMoodActivityRoute
   '/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/daily-energy/': typeof AuthenticatedDailyEnergyIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -418,6 +449,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/cookies': typeof CookiesRoute
+  '/knowledge': typeof KnowledgeRoute
   '/privacy': typeof PrivacyRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
@@ -428,12 +460,14 @@ export interface FileRoutesByTo {
   '/diet-plan': typeof AuthenticatedDietPlanRoute
   '/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/goals': typeof AuthenticatedGoalsRoute
+  '/health-browser': typeof AuthenticatedHealthBrowserRoute
   '/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/history': typeof AuthenticatedHistoryRoute
   '/sense-check': typeof AuthenticatedSenseCheckRoute
   '/sleep-tracker': typeof AuthenticatedSleepTrackerRoute
   '/water-tracker': typeof AuthenticatedWaterTrackerRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/daily-energy/$tool': typeof AuthenticatedDailyEnergyToolRoute
   '/dashboard/altitude': typeof AuthenticatedDashboardAltitudeRoute
   '/dashboard/bio-age': typeof AuthenticatedDashboardBioAgeRoute
   '/dashboard/body-3d': typeof AuthenticatedDashboardBody3dRoute
@@ -457,6 +491,7 @@ export interface FileRoutesByTo {
   '/dashboard/weight': typeof AuthenticatedDashboardWeightRoute
   '/doctors/$id': typeof AuthenticatedDoctorsIdRoute
   '/gut-health/$tool': typeof AuthenticatedGutHealthToolRoute
+  '/mind-mood/$activity': typeof AuthenticatedMindMoodActivityRoute
   '/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/daily-energy': typeof AuthenticatedDailyEnergyIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
@@ -470,6 +505,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/cookies': typeof CookiesRoute
+  '/knowledge': typeof KnowledgeRoute
   '/privacy': typeof PrivacyRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
@@ -483,6 +519,7 @@ export interface FileRoutesById {
   '/_authenticated/exercise-tracker': typeof AuthenticatedExerciseTrackerRoute
   '/_authenticated/goals': typeof AuthenticatedGoalsRoute
   '/_authenticated/gut-health': typeof AuthenticatedGutHealthRouteWithChildren
+  '/_authenticated/health-browser': typeof AuthenticatedHealthBrowserRoute
   '/_authenticated/heart-rhythm': typeof AuthenticatedHeartRhythmRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/mind-mood': typeof AuthenticatedMindMoodRouteWithChildren
@@ -490,6 +527,7 @@ export interface FileRoutesById {
   '/_authenticated/sleep-tracker': typeof AuthenticatedSleepTrackerRoute
   '/_authenticated/water-tracker': typeof AuthenticatedWaterTrackerRoute
   '/invite/$token': typeof InviteTokenRoute
+  '/_authenticated/daily-energy/$tool': typeof AuthenticatedDailyEnergyToolRoute
   '/_authenticated/dashboard/altitude': typeof AuthenticatedDashboardAltitudeRoute
   '/_authenticated/dashboard/bio-age': typeof AuthenticatedDashboardBioAgeRoute
   '/_authenticated/dashboard/body-3d': typeof AuthenticatedDashboardBody3dRoute
@@ -513,6 +551,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/weight': typeof AuthenticatedDashboardWeightRoute
   '/_authenticated/doctors/$id': typeof AuthenticatedDoctorsIdRoute
   '/_authenticated/gut-health/$tool': typeof AuthenticatedGutHealthToolRoute
+  '/_authenticated/mind-mood/$activity': typeof AuthenticatedMindMoodActivityRoute
   '/_authenticated/tools/$tool': typeof AuthenticatedToolsToolRoute
   '/_authenticated/daily-energy/': typeof AuthenticatedDailyEnergyIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
@@ -526,6 +565,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cookies'
+    | '/knowledge'
     | '/privacy'
     | '/sos'
     | '/terms'
@@ -539,6 +579,7 @@ export interface FileRouteTypes {
     | '/exercise-tracker'
     | '/goals'
     | '/gut-health'
+    | '/health-browser'
     | '/heart-rhythm'
     | '/history'
     | '/mind-mood'
@@ -546,6 +587,7 @@ export interface FileRouteTypes {
     | '/sleep-tracker'
     | '/water-tracker'
     | '/invite/$token'
+    | '/daily-energy/$tool'
     | '/dashboard/altitude'
     | '/dashboard/bio-age'
     | '/dashboard/body-3d'
@@ -569,6 +611,7 @@ export interface FileRouteTypes {
     | '/dashboard/weight'
     | '/doctors/$id'
     | '/gut-health/$tool'
+    | '/mind-mood/$activity'
     | '/tools/$tool'
     | '/daily-energy/'
     | '/dashboard/'
@@ -580,6 +623,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/cookies'
+    | '/knowledge'
     | '/privacy'
     | '/sos'
     | '/terms'
@@ -590,12 +634,14 @@ export interface FileRouteTypes {
     | '/diet-plan'
     | '/exercise-tracker'
     | '/goals'
+    | '/health-browser'
     | '/heart-rhythm'
     | '/history'
     | '/sense-check'
     | '/sleep-tracker'
     | '/water-tracker'
     | '/invite/$token'
+    | '/daily-energy/$tool'
     | '/dashboard/altitude'
     | '/dashboard/bio-age'
     | '/dashboard/body-3d'
@@ -619,6 +665,7 @@ export interface FileRouteTypes {
     | '/dashboard/weight'
     | '/doctors/$id'
     | '/gut-health/$tool'
+    | '/mind-mood/$activity'
     | '/tools/$tool'
     | '/daily-energy'
     | '/dashboard'
@@ -631,6 +678,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/cookies'
+    | '/knowledge'
     | '/privacy'
     | '/sos'
     | '/terms'
@@ -644,6 +692,7 @@ export interface FileRouteTypes {
     | '/_authenticated/exercise-tracker'
     | '/_authenticated/goals'
     | '/_authenticated/gut-health'
+    | '/_authenticated/health-browser'
     | '/_authenticated/heart-rhythm'
     | '/_authenticated/history'
     | '/_authenticated/mind-mood'
@@ -651,6 +700,7 @@ export interface FileRouteTypes {
     | '/_authenticated/sleep-tracker'
     | '/_authenticated/water-tracker'
     | '/invite/$token'
+    | '/_authenticated/daily-energy/$tool'
     | '/_authenticated/dashboard/altitude'
     | '/_authenticated/dashboard/bio-age'
     | '/_authenticated/dashboard/body-3d'
@@ -674,6 +724,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/weight'
     | '/_authenticated/doctors/$id'
     | '/_authenticated/gut-health/$tool'
+    | '/_authenticated/mind-mood/$activity'
     | '/_authenticated/tools/$tool'
     | '/_authenticated/daily-energy/'
     | '/_authenticated/dashboard/'
@@ -687,6 +738,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CookiesRoute: typeof CookiesRoute
+  KnowledgeRoute: typeof KnowledgeRoute
   PrivacyRoute: typeof PrivacyRoute
   SosRoute: typeof SosRoute
   TermsRoute: typeof TermsRoute
@@ -714,6 +766,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/knowledge': {
+      id: '/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cookies': {
@@ -791,6 +850,13 @@ declare module '@tanstack/react-router' {
       path: '/heart-rhythm'
       fullPath: '/heart-rhythm'
       preLoaderRoute: typeof AuthenticatedHeartRhythmRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/health-browser': {
+      id: '/_authenticated/health-browser'
+      path: '/health-browser'
+      fullPath: '/health-browser'
+      preLoaderRoute: typeof AuthenticatedHealthBrowserRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/gut-health': {
@@ -897,6 +963,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tools/$tool'
       preLoaderRoute: typeof AuthenticatedToolsToolRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mind-mood/$activity': {
+      id: '/_authenticated/mind-mood/$activity'
+      path: '/$activity'
+      fullPath: '/mind-mood/$activity'
+      preLoaderRoute: typeof AuthenticatedMindMoodActivityRouteImport
+      parentRoute: typeof AuthenticatedMindMoodRoute
     }
     '/_authenticated/gut-health/$tool': {
       id: '/_authenticated/gut-health/$tool'
@@ -1059,6 +1132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAltitudeRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/daily-energy/$tool': {
+      id: '/_authenticated/daily-energy/$tool'
+      path: '/$tool'
+      fullPath: '/daily-energy/$tool'
+      preLoaderRoute: typeof AuthenticatedDailyEnergyToolRouteImport
+      parentRoute: typeof AuthenticatedDailyEnergyRoute
+    }
     '/_authenticated/dashboard/organs/$organ': {
       id: '/_authenticated/dashboard/organs/$organ'
       path: '/organs/$organ'
@@ -1070,11 +1150,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDailyEnergyRouteChildren {
+  AuthenticatedDailyEnergyToolRoute: typeof AuthenticatedDailyEnergyToolRoute
   AuthenticatedDailyEnergyIndexRoute: typeof AuthenticatedDailyEnergyIndexRoute
 }
 
 const AuthenticatedDailyEnergyRouteChildren: AuthenticatedDailyEnergyRouteChildren =
   {
+    AuthenticatedDailyEnergyToolRoute: AuthenticatedDailyEnergyToolRoute,
     AuthenticatedDailyEnergyIndexRoute: AuthenticatedDailyEnergyIndexRoute,
   }
 
@@ -1163,10 +1245,12 @@ const AuthenticatedGutHealthRouteWithChildren =
   )
 
 interface AuthenticatedMindMoodRouteChildren {
+  AuthenticatedMindMoodActivityRoute: typeof AuthenticatedMindMoodActivityRoute
   AuthenticatedMindMoodIndexRoute: typeof AuthenticatedMindMoodIndexRoute
 }
 
 const AuthenticatedMindMoodRouteChildren: AuthenticatedMindMoodRouteChildren = {
+  AuthenticatedMindMoodActivityRoute: AuthenticatedMindMoodActivityRoute,
   AuthenticatedMindMoodIndexRoute: AuthenticatedMindMoodIndexRoute,
 }
 
@@ -1186,6 +1270,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedExerciseTrackerRoute: typeof AuthenticatedExerciseTrackerRoute
   AuthenticatedGoalsRoute: typeof AuthenticatedGoalsRoute
   AuthenticatedGutHealthRoute: typeof AuthenticatedGutHealthRouteWithChildren
+  AuthenticatedHealthBrowserRoute: typeof AuthenticatedHealthBrowserRoute
   AuthenticatedHeartRhythmRoute: typeof AuthenticatedHeartRhythmRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedMindMoodRoute: typeof AuthenticatedMindMoodRouteWithChildren
@@ -1207,6 +1292,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedExerciseTrackerRoute: AuthenticatedExerciseTrackerRoute,
   AuthenticatedGoalsRoute: AuthenticatedGoalsRoute,
   AuthenticatedGutHealthRoute: AuthenticatedGutHealthRouteWithChildren,
+  AuthenticatedHealthBrowserRoute: AuthenticatedHealthBrowserRoute,
   AuthenticatedHeartRhythmRoute: AuthenticatedHeartRhythmRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedMindMoodRoute: AuthenticatedMindMoodRouteWithChildren,
@@ -1225,6 +1311,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CookiesRoute: CookiesRoute,
+  KnowledgeRoute: KnowledgeRoute,
   PrivacyRoute: PrivacyRoute,
   SosRoute: SosRoute,
   TermsRoute: TermsRoute,

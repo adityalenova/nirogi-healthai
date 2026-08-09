@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, LogIn, LayoutDashboard, Siren } from "lucide-react";
+import { Menu, X, LogIn, LayoutDashboard, Siren, Globe, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useI18n } from "@/lib/i18n";
@@ -44,6 +44,16 @@ export function Header() {
 
         <div className="hidden items-center gap-2 md:flex">
           <CreditPill />
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/health-browser">
+              <Globe className="size-4" /> AI Browser
+            </Link>
+          </Button>
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/knowledge">
+              <BookOpen className="size-4" /> Knowledge
+            </Link>
+          </Button>
           <Button asChild size="sm" variant="destructive">
             <Link to="/sos">
               <Siren className="size-4" /> {t("common.sos", "SOS")}
@@ -90,6 +100,20 @@ export function Header() {
               {n.label}
             </a>
           ))}
+          <Link
+            to="/health-browser"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+          >
+            <Globe className="size-4" /> AI Health Browser
+          </Link>
+          <Link
+            to="/knowledge"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 rounded-md px-2 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+          >
+            <BookOpen className="size-4" /> Knowledge Library
+          </Link>
           <Button asChild size="sm" variant="destructive" className="mt-2">
             <Link to="/sos" onClick={() => setOpen(false)}>
               <Siren className="size-4" /> {t("common.sos", "SOS")}
