@@ -1171,8 +1171,11 @@ export type Database = {
           access_token: string | null
           connected_at: string
           id: string
+          last_sync_at: string | null
           provider: string
+          provider_user_id: string | null
           refresh_token: string | null
+          scopes: string | null
           token_expiry: string | null
           updated_at: string
           user_id: string
@@ -1181,8 +1184,11 @@ export type Database = {
           access_token?: string | null
           connected_at?: string
           id?: string
+          last_sync_at?: string | null
           provider: string
+          provider_user_id?: string | null
           refresh_token?: string | null
+          scopes?: string | null
           token_expiry?: string | null
           updated_at?: string
           user_id: string
@@ -1191,8 +1197,11 @@ export type Database = {
           access_token?: string | null
           connected_at?: string
           id?: string
+          last_sync_at?: string | null
           provider?: string
+          provider_user_id?: string | null
           refresh_token?: string | null
+          scopes?: string | null
           token_expiry?: string | null
           updated_at?: string
           user_id?: string
@@ -1348,6 +1357,216 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      withings_activity: {
+        Row: {
+          active_duration_minutes: number | null
+          activity_date: string
+          calories_active: number | null
+          calories_total: number | null
+          created_at: string
+          distance_metres: number | null
+          elevation_metres: number | null
+          id: string
+          intense_duration: number | null
+          moderate_duration: number | null
+          soft_duration: number | null
+          steps: number | null
+          user_id: string
+        }
+        Insert: {
+          active_duration_minutes?: number | null
+          activity_date: string
+          calories_active?: number | null
+          calories_total?: number | null
+          created_at?: string
+          distance_metres?: number | null
+          elevation_metres?: number | null
+          id?: string
+          intense_duration?: number | null
+          moderate_duration?: number | null
+          soft_duration?: number | null
+          steps?: number | null
+          user_id: string
+        }
+        Update: {
+          active_duration_minutes?: number | null
+          activity_date?: string
+          calories_active?: number | null
+          calories_total?: number | null
+          created_at?: string
+          distance_metres?: number | null
+          elevation_metres?: number | null
+          id?: string
+          intense_duration?: number | null
+          moderate_duration?: number | null
+          soft_duration?: number | null
+          steps?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withings_body_measurements: {
+        Row: {
+          bmi: number | null
+          body_temp_celsius: number | null
+          bone_mass_kg: number | null
+          bp_diastolic: number | null
+          bp_systolic: number | null
+          created_at: string
+          fat_free_mass_kg: number | null
+          fat_mass_kg: number | null
+          fat_ratio: number | null
+          heart_rate_bpm: number | null
+          hydration_kg: number | null
+          id: string
+          measured_at: string
+          muscle_mass_kg: number | null
+          pulse_wave_velocity: number | null
+          skin_temp_celsius: number | null
+          spo2_percent: number | null
+          user_id: string
+          visceral_fat: number | null
+          weight_kg: number | null
+        }
+        Insert: {
+          bmi?: number | null
+          body_temp_celsius?: number | null
+          bone_mass_kg?: number | null
+          bp_diastolic?: number | null
+          bp_systolic?: number | null
+          created_at?: string
+          fat_free_mass_kg?: number | null
+          fat_mass_kg?: number | null
+          fat_ratio?: number | null
+          heart_rate_bpm?: number | null
+          hydration_kg?: number | null
+          id?: string
+          measured_at: string
+          muscle_mass_kg?: number | null
+          pulse_wave_velocity?: number | null
+          skin_temp_celsius?: number | null
+          spo2_percent?: number | null
+          user_id: string
+          visceral_fat?: number | null
+          weight_kg?: number | null
+        }
+        Update: {
+          bmi?: number | null
+          body_temp_celsius?: number | null
+          bone_mass_kg?: number | null
+          bp_diastolic?: number | null
+          bp_systolic?: number | null
+          created_at?: string
+          fat_free_mass_kg?: number | null
+          fat_mass_kg?: number | null
+          fat_ratio?: number | null
+          heart_rate_bpm?: number | null
+          hydration_kg?: number | null
+          id?: string
+          measured_at?: string
+          muscle_mass_kg?: number | null
+          pulse_wave_velocity?: number | null
+          skin_temp_celsius?: number | null
+          spo2_percent?: number | null
+          user_id?: string
+          visceral_fat?: number | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      withings_heart: {
+        Row: {
+          afib_result: string | null
+          created_at: string
+          heart_sounds: string | null
+          hrv: number | null
+          id: string
+          recorded_at: string
+          resting_hr: number | null
+          user_id: string
+        }
+        Insert: {
+          afib_result?: string | null
+          created_at?: string
+          heart_sounds?: string | null
+          hrv?: number | null
+          id?: string
+          recorded_at: string
+          resting_hr?: number | null
+          user_id: string
+        }
+        Update: {
+          afib_result?: string | null
+          created_at?: string
+          heart_sounds?: string | null
+          hrv?: number | null
+          id?: string
+          recorded_at?: string
+          resting_hr?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withings_sleep: {
+        Row: {
+          apnea_index: number | null
+          avg_heart_rate: number | null
+          awake_count: number | null
+          created_at: string
+          deep_duration: number | null
+          duration_seconds: number | null
+          end_time: string | null
+          hrv: number | null
+          id: string
+          light_duration: number | null
+          rem_duration: number | null
+          respiratory_rate: number | null
+          sleep_date: string
+          sleep_score: number | null
+          snoring_duration: number | null
+          start_time: string | null
+          user_id: string
+        }
+        Insert: {
+          apnea_index?: number | null
+          avg_heart_rate?: number | null
+          awake_count?: number | null
+          created_at?: string
+          deep_duration?: number | null
+          duration_seconds?: number | null
+          end_time?: string | null
+          hrv?: number | null
+          id?: string
+          light_duration?: number | null
+          rem_duration?: number | null
+          respiratory_rate?: number | null
+          sleep_date: string
+          sleep_score?: number | null
+          snoring_duration?: number | null
+          start_time?: string | null
+          user_id: string
+        }
+        Update: {
+          apnea_index?: number | null
+          avg_heart_rate?: number | null
+          awake_count?: number | null
+          created_at?: string
+          deep_duration?: number | null
+          duration_seconds?: number | null
+          end_time?: string | null
+          hrv?: number | null
+          id?: string
+          light_duration?: number | null
+          rem_duration?: number | null
+          respiratory_rate?: number | null
+          sleep_date?: string
+          sleep_score?: number | null
+          snoring_duration?: number | null
+          start_time?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
