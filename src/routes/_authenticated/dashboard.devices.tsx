@@ -1,12 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Smartphone, Activity, Mic, Camera, MapPin, Bell, HeartPulse, CheckCircle2, Gauge } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, Smartphone, Activity, Mic, Camera, MapPin, Bell, HeartPulse, CheckCircle2, Gauge, Loader2, RefreshCw, Unlink, ShieldCheck } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { startWithingsAuth, completeWithingsAuth, syncWithings, getWithingsStatus, disconnectWithings } from "@/lib/withings.functions";
+
 
 export const Route = createFileRoute("/_authenticated/dashboard/devices")({
   head: () => ({ meta: [{ title: "Connected Devices · Nirogi" }] }),
