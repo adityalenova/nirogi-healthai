@@ -100,12 +100,13 @@ function DevicesPage() {
           </div>
         </div>
 
-        <Tabs defaultValue="sensors" className="mt-8">
+        <Tabs defaultValue={typeof window !== "undefined" && window.location.search.includes("code=") ? "withings" : "sensors"} className="mt-8">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="sensors">Phone Sensors</TabsTrigger>
-            <TabsTrigger value="health-connect">Health Connect</TabsTrigger>
+            <TabsTrigger value="withings">Withings</TabsTrigger>
             <TabsTrigger value="google-fit">Google Fit</TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="sensors" className="mt-5 space-y-3">
             {SENSORS.map((s) => (
