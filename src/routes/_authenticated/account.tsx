@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Loader2, ShieldAlert, Trash2, UserMinus } from "lucide-react";
+import { ArrowLeft, Loader2, LogOut, ShieldAlert, Trash2, UserMinus } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,6 +57,24 @@ function AccountPage() {
 
         <h1 className="mt-4 font-display text-2xl font-bold">Account &amp; data controls</h1>
         <p className="mt-1 text-sm text-muted-foreground">You own your health data. Clear parts of it, or remove everything for good.</p>
+
+        <section className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-card p-6 shadow-card">
+          <div>
+            <h2 className="font-display text-lg font-semibold">Session</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Sign out of Nirogi on this device.</p>
+          </div>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              await qc.cancelQueries();
+              qc.clear();
+              await signOut();
+              navigate({ to: "/auth", replace: true });
+            }}
+          >
+            <LogOut className="size-4" /> Sign out
+          </Button>
+        </section>
 
         <section className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card">
           <h2 className="font-display text-lg font-semibold">Clear health history</h2>

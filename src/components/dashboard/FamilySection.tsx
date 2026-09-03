@@ -526,7 +526,7 @@ function MemberCard({
           </svg>
           <div className="absolute inset-1.5 overflow-hidden rounded-full bg-muted">
             {avatar ? (
-              <img src={avatar} alt="" className="size-full object-cover" />
+              <img src={avatar} alt="" referrerPolicy="no-referrer" loading="lazy" className="size-full object-cover" />
             ) : (
               <span className="flex size-full items-center justify-center">
                 <User className="size-6 text-muted-foreground" />
