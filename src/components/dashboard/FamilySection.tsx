@@ -273,7 +273,7 @@ export function FamilySection() {
         </div>
       )}
 
-      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
             <Users className="size-5 shrink-0 text-primary" />
@@ -284,7 +284,7 @@ export function FamilySection() {
             stays private and view-only to the rest of the family.
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+        <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
           <Button
             size="sm"
             className="bg-gradient-to-r from-primary to-primary-glow font-semibold text-primary-foreground shadow-[0_8px_20px_-10px_var(--color-primary)] transition-transform hover:-translate-y-0.5 hover:opacity-95"
@@ -526,7 +526,7 @@ function MemberCard({
           </svg>
           <div className="absolute inset-1.5 overflow-hidden rounded-full bg-muted">
             {avatar ? (
-              <img src={avatar} alt="" className="size-full object-cover" />
+              <img src={avatar} alt="" referrerPolicy="no-referrer" loading="lazy" className="size-full object-cover" />
             ) : (
               <span className="flex size-full items-center justify-center">
                 <User className="size-6 text-muted-foreground" />

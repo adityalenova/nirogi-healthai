@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { HeartPulse, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
@@ -22,7 +24,10 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [busy, setBusy] = useState<"google" | "apple" | null>(null);
+  const [busy, setBusy] = useState<"google" | "apple" | "email" | null>(null);
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (!loading && user) {
@@ -86,6 +91,72 @@ function AuthPage() {
             {busy === "apple" ? "Connecting…" : "Continue with Apple"}
           </Button>
         </div>
+
+        <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="h-px flex-1 bg-border" /> or use email <span className="h-px flex-1 bg-border" />
+        </div>
+
+        <form
+          className="space-y-3"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            if (!email || password.length < 6) {
+              toast.error("Enter your email and a password of at least 6 characters.");
+              return;
+            }
+            setBusy("email");
+            try {
+              if (mode === "signin") {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                toast.success("Welcome back!");
+              } else {
+                const { data, error } = await supabase.auth.signUp({
+                  email,
+                  password,
+                  options: { emailRedirectTo: window.location.origin },
+                });
+                if (error) throw error;
+                if (!data.session) {
+                  toast.success("Check your email to confirm your account.");
+                }
+              }
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+            } finally {
+              setBusy(null);
+            }
+          }}
+        >
+          <Input
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type="password"
+            autoComplete={mode === "signin" ? "current-password" : "new-password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type="submit" size="lg" variant="outline" className="w-full" disabled={busy !== null}>
+            {busy === "email" ? "Please wait…" : mode === "signin" ? "Sign in with email" : "Create account"}
+          </Button>
+        </form>
+
+        <p className="mt-3 text-center text-xs text-muted-foreground">
+          {mode === "signin" ? "New to Nirogi?" : "Already have an account?"}{" "}
+          <button
+            type="button"
+            className="font-semibold text-primary underline"
+            onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+          >
+            {mode === "signin" ? "Create an account" : "Sign in"}
+          </button>
+        </p>
 
         <div className="mt-6 space-y-2 text-xs text-muted-foreground">
           <p className="inline-flex items-center gap-1.5">

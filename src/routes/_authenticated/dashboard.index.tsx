@@ -151,9 +151,9 @@ function Dashboard() {
 
   return (
     <SiteLayout>
-      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <div className="mx-auto w-full max-w-5xl overflow-x-hidden px-4 py-12 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h1 className="font-display text-3xl font-bold">{t("dash.title", "Your health profile")}</h1>
             <p className="mt-1 text-muted-foreground">{t("dash.subtitle", "Keep this updated — every AI tool reads it to personalize results.")}</p>
           </div>
