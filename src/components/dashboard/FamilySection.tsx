@@ -284,7 +284,7 @@ export function FamilySection() {
             stays private and view-only to the rest of the family.
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+        <div className="flex w-full shrink-0 flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
           <Button
             size="sm"
             className="bg-gradient-to-r from-primary to-primary-glow font-semibold text-primary-foreground shadow-[0_8px_20px_-10px_var(--color-primary)] transition-transform hover:-translate-y-0.5 hover:opacity-95"
