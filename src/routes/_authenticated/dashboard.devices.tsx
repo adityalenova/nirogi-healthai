@@ -244,9 +244,9 @@ function WithingsPanel() {
   const cards = [
     { label: "Weight", value: latest?.body?.weight_kg != null ? `${latest.body.weight_kg} kg` : "—" },
     { label: "Body fat", value: latest?.body?.fat_ratio != null ? `${latest.body.fat_ratio}%` : "—" },
-    { label: "Sleep", value: latest?.sleep?.total_sleep_minutes != null ? `${Math.round(latest.sleep.total_sleep_minutes / 60 * 10) / 10} h` : "—" },
+    { label: "Sleep", value: latest?.sleep?.duration_seconds != null ? `${Math.round((latest.sleep.duration_seconds / 3600) * 10) / 10} h` : "—" },
     { label: "Steps", value: latest?.activity?.steps != null ? `${latest.activity.steps}` : "—" },
-    { label: "Heart rate", value: latest?.heart?.heart_rate != null ? `${latest.heart.heart_rate} bpm` : "—" },
+    { label: "Heart rate", value: latest?.heart?.resting_hr != null ? `${latest.heart.resting_hr} bpm` : "—" },
     { label: "Last sync", value: connected && data.last_sync_at ? new Date(data.last_sync_at).toLocaleDateString() : "Never" },
   ];
 
