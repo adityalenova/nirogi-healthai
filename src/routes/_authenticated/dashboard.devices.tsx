@@ -126,25 +126,8 @@ function DevicesPage() {
             <p className="pt-1 text-center text-xs text-muted-foreground">Permissions are requested by your browser. Nirogi never accesses a sensor without your tap.</p>
           </TabsContent>
 
-          <TabsContent value="health-connect" className="mt-5">
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
-              <div className="flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-2xl bg-success/10 text-success"><HeartPulse className="size-6" /></span>
-                <div>
-                  <h2 className="font-display text-lg font-semibold">Android Health Connect</h2>
-                  <p className="text-sm text-muted-foreground">Sync steps, heart rate, sleep, weight & SpO2</p>
-                </div>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {["Steps", "Heart rate", "Sleep", "Weight", "SpO2", "Blood glucose"].map((d) => (
-                  <span key={d} className="rounded-full border border-border bg-muted/40 px-3 py-1 text-xs text-muted-foreground">{d}</span>
-                ))}
-              </div>
-              <div className="mt-4 rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm text-muted-foreground">
-                Health Connect needs the free <span className="font-semibold text-foreground">Nirogi Sync</span> companion app (coming soon) on Android. We'll notify you when it's available — for now, use the phone sensors and manual logging.
-              </div>
-              <Button disabled className="mt-4 w-full">Install Nirogi Sync (coming soon)</Button>
-            </div>
+          <TabsContent value="withings" className="mt-5">
+            <WithingsPanel />
           </TabsContent>
 
           <TabsContent value="google-fit" className="mt-5">
