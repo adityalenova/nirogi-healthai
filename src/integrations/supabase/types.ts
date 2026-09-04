@@ -368,6 +368,7 @@ export type Database = {
           accepted_at: string | null
           accepted_user_id: string | null
           created_at: string
+          email: string | null
           id: string
           label: string | null
           member_id: string | null
@@ -380,6 +381,7 @@ export type Database = {
           accepted_at?: string | null
           accepted_user_id?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           label?: string | null
           member_id?: string | null
@@ -392,6 +394,7 @@ export type Database = {
           accepted_at?: string | null
           accepted_user_id?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           label?: string | null
           member_id?: string | null
@@ -531,6 +534,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      google_fit_daily: {
+        Row: {
+          active_minutes: number | null
+          calories: number | null
+          created_at: string
+          date: string
+          distance_m: number | null
+          heart_rate_avg: number | null
+          id: string
+          sleep_minutes: number | null
+          spo2_avg: number | null
+          steps: number | null
+          updated_at: string
+          user_id: string
+          weight_kg: number | null
+        }
+        Insert: {
+          active_minutes?: number | null
+          calories?: number | null
+          created_at?: string
+          date: string
+          distance_m?: number | null
+          heart_rate_avg?: number | null
+          id?: string
+          sleep_minutes?: number | null
+          spo2_avg?: number | null
+          steps?: number | null
+          updated_at?: string
+          user_id: string
+          weight_kg?: number | null
+        }
+        Update: {
+          active_minutes?: number | null
+          calories?: number | null
+          created_at?: string
+          date?: string
+          distance_m?: number | null
+          heart_rate_avg?: number | null
+          id?: string
+          sleep_minutes?: number | null
+          spo2_avg?: number | null
+          steps?: number | null
+          updated_at?: string
+          user_id?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
       }
       gratitude_journal: {
         Row: {
