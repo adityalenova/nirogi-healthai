@@ -108,26 +108,47 @@ function AuthPage() {
             try {
               if (mode === "signin") {
                 const { error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
+                if (error) {
+                  if (/confirm/i.test(error.message)) {
+                    await resend({ data: { email, redirect_to: `${window.location.origin}/dashboard` } }).catch(() => undefined);
+                    toast.error("Please confirm your email first — we've sent you a fresh link.");
+                    return;
+                  }
+                  throw error;
+                }
                 toast.success("Welcome back!");
               } else {
-                const { data, error } = await supabase.auth.signUp({
-                  email,
-                  password,
-                  options: { emailRedirectTo: window.location.origin },
+                await signUp({
+                  data: {
+                    email,
+                    password,
+                    full_name: fullName.trim() || null,
+                    redirect_to: `${window.location.origin}/dashboard`,
+                  },
                 });
-                if (error) throw error;
-                if (!data.session) {
-                  toast.success("Check your email to confirm your account.");
-                }
+                toast.success("Check your inbox — we've emailed you a confirmation link.");
+                setMode("signin");
               }
             } catch (err) {
-              toast.error(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+              const msg = err instanceof Error ? err.message : "";
+              if (msg.includes("ALREADY_REGISTERED")) toast.error("That email already has an account. Try signing in.");
+              else if (msg.includes("EMAIL_NOT_CONFIGURED") || msg.includes("EMAIL_SEND_FAILED"))
+                toast.error("We couldn't send the confirmation email. Please try again shortly.");
+              else toast.error(msg || "Something went wrong. Please try again.");
             } finally {
               setBusy(null);
             }
           }}
         >
+          {mode === "signup" && (
+            <Input
+              type="text"
+              autoComplete="name"
+              placeholder="Your full name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          )}
           <Input
             type="email"
             autoComplete="email"
@@ -146,6 +167,30 @@ function AuthPage() {
             {busy === "email" ? "Please wait…" : mode === "signin" ? "Sign in with email" : "Create account"}
           </Button>
         </form>
+
+        {mode === "signin" && (
+          <p className="mt-3 text-center text-xs">
+            <button
+              type="button"
+              className="text-muted-foreground underline hover:text-foreground"
+              disabled={busy !== null}
+              onClick={async () => {
+                if (!email) return toast.error("Enter your email first, then tap reset.");
+                setBusy("email");
+                try {
+                  await reset({ data: { email, redirect_to: `${window.location.origin}/reset-password` } });
+                  toast.success("If that email has an account, a reset link is on its way.");
+                } catch {
+                  toast.error("Couldn't send the reset email. Please try again.");
+                } finally {
+                  setBusy(null);
+                }
+              }}
+            >
+              Forgot your password?
+            </button>
+          </p>
+        )}
 
         <p className="mt-3 text-center text-xs text-muted-foreground">
           {mode === "signin" ? "New to Nirogi?" : "Already have an account?"}{" "}
