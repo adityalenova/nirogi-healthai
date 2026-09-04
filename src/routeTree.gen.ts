@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SosRouteImport } from './routes/sos'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as KnowledgeRouteImport } from './routes/knowledge'
 import { Route as CookiesRouteImport } from './routes/cookies'
@@ -75,6 +76,11 @@ const TermsRoute = TermsRouteImport.update({
 const SosRoute = SosRouteImport.update({
   id: '/sos',
   path: '/sos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -393,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/knowledge': typeof KnowledgeRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -451,6 +458,7 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/knowledge': typeof KnowledgeRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -507,6 +515,7 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/knowledge': typeof KnowledgeRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sos': typeof SosRoute
   '/terms': typeof TermsRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
@@ -567,6 +576,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/knowledge'
     | '/privacy'
+    | '/reset-password'
     | '/sos'
     | '/terms'
     | '/account'
@@ -625,6 +635,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/knowledge'
     | '/privacy'
+    | '/reset-password'
     | '/sos'
     | '/terms'
     | '/account'
@@ -680,6 +691,7 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/knowledge'
     | '/privacy'
+    | '/reset-password'
     | '/sos'
     | '/terms'
     | '/_authenticated/account'
@@ -740,6 +752,7 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   KnowledgeRoute: typeof KnowledgeRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SosRoute: typeof SosRoute
   TermsRoute: typeof TermsRoute
   InviteTokenRoute: typeof InviteTokenRoute
@@ -759,6 +772,13 @@ declare module '@tanstack/react-router' {
       path: '/sos'
       fullPath: '/sos'
       preLoaderRoute: typeof SosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -1313,6 +1333,7 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   KnowledgeRoute: KnowledgeRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SosRoute: SosRoute,
   TermsRoute: TermsRoute,
   InviteTokenRoute: InviteTokenRoute,
