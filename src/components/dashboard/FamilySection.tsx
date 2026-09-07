@@ -21,7 +21,7 @@ import {
   deleteFamilyMember,
 } from "@/lib/family.functions";
 import { useNavigate } from "@tanstack/react-router";
-import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite, resolveFamilyCode } from "@/lib/family-invite.functions";
+import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite, resolveFamilyCode, sendFamilyInviteEmail } from "@/lib/family-invite.functions";
 
 import { getFamilyOverview, type FamilyOverviewMember } from "@/lib/family-overview.functions";
 import { useActiveMember } from "@/lib/active-member";
@@ -81,6 +81,7 @@ export function FamilySection() {
   const inviteFn = useServerFn(createFamilyInvite);
   const listInvitesFn = useServerFn(listFamilyInvites);
   const revokeFn = useServerFn(revokeFamilyInvite);
+  const sendInviteEmailFn = useServerFn(sendFamilyInviteEmail);
 
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
@@ -91,6 +92,8 @@ export function FamilySection() {
   const [joinCode, setJoinCode] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteRelation, setInviteRelation] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [lastInvite, setLastInvite] = useState<{ token: string; label: string } | null>(null);
@@ -121,15 +124,28 @@ export function FamilySection() {
     onSuccess: async (res) => {
       qc.invalidateQueries({ queryKey: ["family-invites"] });
       qc.invalidateQueries({ queryKey: ["family-members"] });
-      setLastInvite({ token: res.token, label: inviteName.trim() });
+      const label = inviteName.trim();
+      setLastInvite({ token: res.token, label });
       try {
         await navigator.clipboard.writeText(inviteLink(res.token));
         toast.success("Invite link copied to clipboard.");
       } catch {
         toast.success("Invite created.");
       }
+      if (inviteEmail.trim()) {
+        try {
+          await sendInviteEmailFn({
+            data: { token: res.token, email: inviteEmail.trim(), label, origin: window.location.origin },
+          });
+          setEmailSent(true);
+          toast.success(`Invite emailed to ${inviteEmail.trim()}.`);
+        } catch {
+          toast.error("Invite created, but the email couldn't be sent. Share the link instead.");
+        }
+      }
       setInviteName("");
       setInviteRelation("");
+      setInviteEmail("");
     },
     onError: (e) => {
       const msg = e instanceof Error ? e.message : "";
@@ -364,7 +380,7 @@ export function FamilySection() {
         open={inviteOpen}
         onOpenChange={(v) => {
           setInviteOpen(v);
-          if (!v) setLastInvite(null);
+          if (!v) { setLastInvite(null); setEmailSent(false); }
         }}
       >
         <DialogContent>
@@ -381,6 +397,9 @@ export function FamilySection() {
               <div className="grid gap-3">
                 <Field label="Their name"><Input value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="e.g. Mummy" /></Field>
                 <Field label="Relation"><Input value={inviteRelation} onChange={(e) => setInviteRelation(e.target.value)} placeholder="e.g. Mother" /></Field>
+                <Field label="Their email (optional — we'll send the invite)">
+                  <Input type="email" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} placeholder="name@example.com" />
+                </Field>
               </div>
               <DialogFooter>
                 <Button onClick={() => inviteMut.mutate()} disabled={!inviteName.trim() || inviteMut.isPending}>
@@ -418,6 +437,7 @@ export function FamilySection() {
                 <Button variant="outline" onClick={() => shareWhatsApp(lastInvite.token, lastInvite.label)}>
                   Share on WhatsApp
                 </Button>
+                {emailSent && <span className="self-center text-xs text-success">Invite emailed</span>}
                 <Button onClick={() => { setInviteOpen(false); setLastInvite(null); }}>Done</Button>
               </DialogFooter>
             </>

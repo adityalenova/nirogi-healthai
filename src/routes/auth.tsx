@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { signUpWithEmail, requestPasswordReset, resendConfirmationEmail } from "@/lib/auth-email.functions";
 import { motion } from "framer-motion";
 import { HeartPulse, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +30,10 @@ function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const signUp = useServerFn(signUpWithEmail);
+  const reset = useServerFn(requestPasswordReset);
+  const resend = useServerFn(resendConfirmationEmail);
 
   useEffect(() => {
     if (!loading && user) {

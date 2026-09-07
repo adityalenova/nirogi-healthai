@@ -141,3 +141,49 @@ export const acceptFamilyInvite = createServerFn({ method: "POST" })
     const { data: owner } = await supabaseAdmin.from("profiles").select("full_name").eq("id", invite.owner_id).maybeSingle();
     return { ok: true, ownerName: owner?.full_name ?? "your family" };
   });
+
+/** Emails a branded family invite (link + short join code) through Resend. */
+export const sendFamilyInviteEmail = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        token: z.string().min(8).max(80),
+        email: z.string().email().max(200),
+        label: z.string().max(120).optional().nullable(),
+        origin: z.string().url().max(300),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { sendEmail, brandedEmail } = await import("@/lib/email.server");
+
+    const { data: invite } = await supabase
+      .from("family_invites")
+      .select("id, token, label, owner_id")
+      .eq("token", data.token)
+      .eq("owner_id", userId)
+      .maybeSingle();
+    if (!invite) throw new Error("INVALID_INVITE");
+
+    const { data: owner } = await supabase.from("profiles").select("full_name").eq("id", userId).maybeSingle();
+    const ownerName = owner?.full_name?.trim() || "A family member";
+    const link = `${data.origin.replace(/\/$/, "")}/invite/${data.token}`;
+    const code = data.token.slice(0, 6).toUpperCase();
+
+    await sendEmail({
+      to: data.email,
+      subject: `${ownerName} invited you to their Nirogi family circle`,
+      html: brandedEmail({
+        heading: "Join the family circle",
+        intro: `${ownerName} would like to add ${data.label || "you"} to their Nirogi family health circle. Your health data stays private — they only see the summary you allow. You can also join manually with the code <strong>${code}</strong>.`,
+        ctaLabel: "Accept the invite",
+        ctaUrl: link,
+        footnote: "If you weren't expecting this invitation, you can safely ignore this email.",
+      }),
+    });
+
+    await supabase.from("family_invites").update({ email: data.email }).eq("id", invite.id);
+    return { ok: true as const };
+  });
