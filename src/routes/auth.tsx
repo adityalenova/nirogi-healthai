@@ -58,21 +58,25 @@ function AuthPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-mesh px-4">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-mesh px-4 py-10">
       <div className="absolute inset-0 bg-gradient-hero" aria-hidden />
-      <Link
-        to="/"
-        className="absolute left-5 top-5 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="size-4" /> Home
-      </Link>
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md rounded-3xl border border-border bg-card/90 p-8 shadow-elegant backdrop-blur-xl"
+        className="relative w-full max-w-md rounded-3xl border border-border bg-card/90 p-6 shadow-elegant backdrop-blur-xl sm:p-8"
       >
+        <div className="mb-5 flex items-center">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+          >
+            <ArrowLeft className="size-3.5" />
+            Back to home
+          </Link>
+        </div>
+
         <div className="flex flex-col items-center text-center">
           <img src={logo} alt="Nirogi" width={56} height={56} className="h-14 w-14" />
           <h1 className="mt-4 font-display text-2xl font-bold">Welcome to Nirogi</h1>
