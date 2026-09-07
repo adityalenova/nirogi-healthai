@@ -91,6 +91,8 @@ export function FamilySection() {
   const [joinCode, setJoinCode] = useState("");
   const [inviteName, setInviteName] = useState("");
   const [inviteRelation, setInviteRelation] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
   const [copied, setCopied] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const [lastInvite, setLastInvite] = useState<{ token: string; label: string } | null>(null);
