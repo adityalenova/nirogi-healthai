@@ -381,6 +381,9 @@ export function FamilySection() {
               <div className="grid gap-3">
                 <Field label="Their name"><Input value={inviteName} onChange={(e) => setInviteName(e.target.value)} placeholder="e.g. Mummy" /></Field>
                 <Field label="Relation"><Input value={inviteRelation} onChange={(e) => setInviteRelation(e.target.value)} placeholder="e.g. Mother" /></Field>
+                <Field label="Their email (optional — we'll send the invite)">
+                  <Input type="email" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} placeholder="name@example.com" />
+                </Field>
               </div>
               <DialogFooter>
                 <Button onClick={() => inviteMut.mutate()} disabled={!inviteName.trim() || inviteMut.isPending}>
