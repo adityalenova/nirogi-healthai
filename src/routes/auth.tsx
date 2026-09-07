@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { signUpWithEmail, requestPasswordReset, resendConfirmationEmail } from "@/lib/auth-email.functions";
 import { motion } from "framer-motion";
 import { HeartPulse, ShieldCheck, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
