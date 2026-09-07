@@ -123,15 +123,28 @@ export function FamilySection() {
     onSuccess: async (res) => {
       qc.invalidateQueries({ queryKey: ["family-invites"] });
       qc.invalidateQueries({ queryKey: ["family-members"] });
-      setLastInvite({ token: res.token, label: inviteName.trim() });
+      const label = inviteName.trim();
+      setLastInvite({ token: res.token, label });
       try {
         await navigator.clipboard.writeText(inviteLink(res.token));
         toast.success("Invite link copied to clipboard.");
       } catch {
         toast.success("Invite created.");
       }
+      if (inviteEmail.trim()) {
+        try {
+          await sendInviteEmailFn({
+            data: { token: res.token, email: inviteEmail.trim(), label, origin: window.location.origin },
+          });
+          setEmailSent(true);
+          toast.success(`Invite emailed to ${inviteEmail.trim()}.`);
+        } catch {
+          toast.error("Invite created, but the email couldn't be sent. Share the link instead.");
+        }
+      }
       setInviteName("");
       setInviteRelation("");
+      setInviteEmail("");
     },
     onError: (e) => {
       const msg = e instanceof Error ? e.message : "";
