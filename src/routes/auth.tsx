@@ -30,6 +30,10 @@ function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const signUp = useServerFn(signUpWithEmail);
+  const reset = useServerFn(requestPasswordReset);
+  const resend = useServerFn(resendConfirmationEmail);
 
   useEffect(() => {
     if (!loading && user) {
