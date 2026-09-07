@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { startWithingsAuth, completeWithingsAuth, syncWithings, getWithingsStatus, disconnectWithings } from "@/lib/withings.functions";
+import { startGoogleHealthAuth, completeGoogleHealthAuth, syncGoogleHealth, getGoogleHealthStatus, disconnectGoogleHealth } from "@/lib/googlefit.functions";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/devices")({
@@ -40,17 +41,6 @@ function save(state: Record<string, boolean>) {
 function DevicesPage() {
   const [state, setState] = useState<Record<string, boolean>>({});
   useEffect(() => setState(load()), []);
-
-  const googleFitClientId = import.meta.env.VITE_GOOGLE_FIT_CLIENT_ID as string | undefined;
-  const connectGoogleFit = () => {
-    if (!googleFitClientId) return;
-    const scope = "https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.heart_rate.read";
-    const redirect = `${window.location.origin}/dashboard/devices`;
-    const url =
-      `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(googleFitClientId)}` +
-      `&redirect_uri=${encodeURIComponent(redirect)}&response_type=token&scope=${encodeURIComponent(scope)}&include_granted_scopes=true`;
-    window.location.href = url;
-  };
 
   const setKey = (key: string, val: boolean) => {
     const next = { ...state, [key]: val };
@@ -100,11 +90,11 @@ function DevicesPage() {
           </div>
         </div>
 
-        <Tabs defaultValue={typeof window !== "undefined" && window.location.search.includes("code=") ? "withings" : "sensors"} className="mt-8">
+        <Tabs defaultValue={typeof window !== "undefined" && window.location.search.includes("code=") ? (window.location.search.includes("state=gh.") ? "google-health" : "withings") : "sensors"} className="mt-8">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="sensors">Phone Sensors</TabsTrigger>
             <TabsTrigger value="withings">Withings</TabsTrigger>
-            <TabsTrigger value="google-fit">Google Fit</TabsTrigger>
+            <TabsTrigger value="google-health">Google Health</TabsTrigger>
           </TabsList>
 
 
@@ -130,29 +120,8 @@ function DevicesPage() {
             <WithingsPanel />
           </TabsContent>
 
-          <TabsContent value="google-fit" className="mt-5">
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
-              <div className="flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Gauge className="size-6" /></span>
-                <div>
-                  <h2 className="font-display text-lg font-semibold">Google Fit</h2>
-                  <p className="text-sm text-muted-foreground">Import activity, steps & heart data</p>
-                </div>
-              </div>
-              {googleFitClientId ? (
-                <>
-                  <p className="mt-4 text-sm text-muted-foreground">Connect your Google account to pull your fitness history into Nirogi.</p>
-                  <Button className="mt-4 w-full" onClick={connectGoogleFit}>Connect Google Fit</Button>
-                </>
-              ) : (
-                <>
-                  <div className="mt-4 rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm text-muted-foreground">
-                    Google Fit connection requires a Google OAuth client ID to be configured for Nirogi. Once set up, you'll be able to connect your account here and pull your fitness history.
-                  </div>
-                  <Button disabled className="mt-4 w-full">Connect (setup required)</Button>
-                </>
-              )}
-            </div>
+          <TabsContent value="google-health" className="mt-5">
+            <GoogleHealthPanel />
           </TabsContent>
         </Tabs>
 
@@ -180,7 +149,7 @@ function WithingsPanel() {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
-    if (!code) return;
+    if (!code || (params.get("state") ?? "").startsWith("gh.")) return;
     setBusy("callback");
     complete({ data: { code, redirect_uri: redirectUri } })
       .then(async () => {
@@ -313,6 +282,161 @@ function WithingsPanel() {
       <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
         <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
         Your Withings tokens are stored securely on Nirogi's servers and never exposed to your browser. Disconnecting revokes access instantly.
+      </p>
+    </div>
+  );
+}
+
+function GoogleHealthPanel() {
+  const qc = useQueryClient();
+  const start = useServerFn(startGoogleHealthAuth);
+  const complete = useServerFn(completeGoogleHealthAuth);
+  const sync = useServerFn(syncGoogleHealth);
+  const disconnect = useServerFn(disconnectGoogleHealth);
+  const status = useQuery({ queryKey: ["google-health-status"], queryFn: () => getGoogleHealthStatus() });
+  const [busy, setBusy] = useState<null | "connect" | "sync" | "disconnect" | "callback">(null);
+
+  const redirectUri = typeof window !== "undefined" ? `${window.location.origin}/dashboard/devices` : "";
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state") ?? "";
+    if (!code || !state.startsWith("gh.")) return;
+    setBusy("callback");
+    complete({ data: { code, redirect_uri: redirectUri } })
+      .then(async () => {
+        window.history.replaceState({}, "", "/dashboard/devices");
+        toast.success("Google Health connected. Importing your data…");
+        await sync().catch(() => undefined);
+        qc.invalidateQueries();
+      })
+      .catch(() => toast.error("Couldn't finish connecting Google Health. Please try again."))
+      .finally(() => setBusy(null));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const data = status.data;
+  const connected = Boolean(data?.connected);
+  const configured = Boolean(data?.configured);
+  const days = (data?.days ?? []) as Array<Record<string, number | string | null>>;
+  const latest = days[0];
+
+  const onConnect = async () => {
+    setBusy("connect");
+    try {
+      const { url } = await start({ data: { redirect_uri: redirectUri } });
+      window.location.href = url;
+    } catch {
+      toast.error("Google Health isn't configured yet. Add the API keys to enable it.");
+      setBusy(null);
+    }
+  };
+
+  const onSync = async () => {
+    setBusy("sync");
+    try {
+      const res = await sync();
+      if (res.connected === false) toast.error("Google Health isn't connected.");
+      else toast.success(`Synced ${res.imported} day${res.imported === 1 ? "" : "s"} of activity.`);
+      qc.invalidateQueries();
+    } catch {
+      toast.error("Sync failed. Please try again.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const onDisconnect = async () => {
+    if (!window.confirm("Disconnect Google Health? Imported data stays in Nirogi.")) return;
+    setBusy("disconnect");
+    try {
+      await disconnect();
+      toast.success("Google Health disconnected.");
+      qc.invalidateQueries();
+    } catch {
+      toast.error("Couldn't disconnect. Please try again.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const num = (v: unknown) => (typeof v === "number" ? v : null);
+  const cards = [
+    { label: "Steps", value: num(latest?.steps) != null ? `${num(latest?.steps)}` : "—" },
+    { label: "Calories", value: num(latest?.calories) != null ? `${num(latest?.calories)} kcal` : "—" },
+    { label: "Distance", value: num(latest?.distance_m) != null ? `${Math.round((num(latest?.distance_m)! / 1000) * 10) / 10} km` : "—" },
+    { label: "Active time", value: num(latest?.active_minutes) != null ? `${num(latest?.active_minutes)} min` : "—" },
+    { label: "Heart rate", value: num(latest?.heart_rate_avg) != null ? `${num(latest?.heart_rate_avg)} bpm` : "—" },
+    { label: "Sleep", value: num(latest?.sleep_minutes) != null ? `${Math.round((num(latest?.sleep_minutes)! / 60) * 10) / 10} h` : "—" },
+    { label: "SpO2", value: num(latest?.spo2_avg) != null ? `${num(latest?.spo2_avg)}%` : "—" },
+    { label: "Last sync", value: data?.lastSync ? new Date(data.lastSync).toLocaleDateString() : "Never" },
+  ];
+
+  return (
+    <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Activity className="size-6" /></span>
+        <div className="min-w-0">
+          <h2 className="font-display text-lg font-semibold">Google Health</h2>
+          <p className="text-sm text-muted-foreground">Steps, workouts, sleep, heart rate & body data</p>
+        </div>
+        {connected && (
+          <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
+            <CheckCircle2 className="size-3.5" /> Connected
+          </span>
+        )}
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {["Steps & distance", "Calories", "Active minutes", "Heart rate", "Sleep", "Weight & BMI", "SpO2"].map((d) => (
+          <span key={d} className="rounded-full border border-border bg-muted/40 px-3 py-1 text-xs text-muted-foreground">{d}</span>
+        ))}
+      </div>
+
+      {status.isLoading || busy === "callback" ? (
+        <div className="mt-6 flex justify-center"><Loader2 className="size-6 animate-spin text-primary" /></div>
+      ) : connected ? (
+        <>
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {cards.map((c) => (
+              <div key={c.label} className="rounded-xl border border-border bg-muted/30 p-3">
+                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{c.label}</p>
+                <p className="mt-0.5 font-display text-base font-semibold">{c.value}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button onClick={onSync} disabled={busy !== null}>
+              {busy === "sync" ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />} Sync now
+            </Button>
+            <Button variant="outline" onClick={onDisconnect} disabled={busy !== null}>
+              <Unlink className="size-4" /> Disconnect
+            </Button>
+          </div>
+        </>
+      ) : configured ? (
+        <>
+          <p className="mt-4 text-sm text-muted-foreground">
+            Link your Google account to import the last 30 days of steps, workouts, sleep, heart rate and weight — Nirogi keeps your dashboard and health score up to date from it.
+          </p>
+          <Button className="mt-4 w-full" onClick={onConnect} disabled={busy !== null}>
+            {busy === "connect" ? <Loader2 className="size-4 animate-spin" /> : null} Connect Google Health
+          </Button>
+        </>
+      ) : (
+        <>
+          <div className="mt-4 rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm text-muted-foreground">
+            Google Health needs its client ID and secret configured for Nirogi before you can link an account.
+          </div>
+          <Button disabled className="mt-4 w-full">Connect (setup required)</Button>
+        </>
+      )}
+
+      <p className="mt-4 flex items-start gap-2 text-xs text-muted-foreground">
+        <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-success" />
+        Your Google tokens are stored securely on Nirogi's servers and never exposed to your browser. Disconnecting revokes access instantly.
       </p>
     </div>
   );
