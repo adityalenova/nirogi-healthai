@@ -21,7 +21,7 @@ import {
   deleteFamilyMember,
 } from "@/lib/family.functions";
 import { useNavigate } from "@tanstack/react-router";
-import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite, resolveFamilyCode } from "@/lib/family-invite.functions";
+import { createFamilyInvite, listFamilyInvites, revokeFamilyInvite, resolveFamilyCode, sendFamilyInviteEmail } from "@/lib/family-invite.functions";
 
 import { getFamilyOverview, type FamilyOverviewMember } from "@/lib/family-overview.functions";
 import { useActiveMember } from "@/lib/active-member";
@@ -81,6 +81,7 @@ export function FamilySection() {
   const inviteFn = useServerFn(createFamilyInvite);
   const listInvitesFn = useServerFn(listFamilyInvites);
   const revokeFn = useServerFn(revokeFamilyInvite);
+  const sendInviteEmailFn = useServerFn(sendFamilyInviteEmail);
 
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
@@ -379,7 +380,7 @@ export function FamilySection() {
         open={inviteOpen}
         onOpenChange={(v) => {
           setInviteOpen(v);
-          if (!v) setLastInvite(null);
+          if (!v) { setLastInvite(null); setEmailSent(false); }
         }}
       >
         <DialogContent>
@@ -436,6 +437,7 @@ export function FamilySection() {
                 <Button variant="outline" onClick={() => shareWhatsApp(lastInvite.token, lastInvite.label)}>
                   Share on WhatsApp
                 </Button>
+                {emailSent && <span className="self-center text-xs text-success">Invite emailed</span>}
                 <Button onClick={() => { setInviteOpen(false); setLastInvite(null); }}>Done</Button>
               </DialogFooter>
             </>
