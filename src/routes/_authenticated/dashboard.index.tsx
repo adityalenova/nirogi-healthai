@@ -20,6 +20,8 @@ import { MedicineReminders } from "@/components/dashboard/MedicineReminders";
 import { WellnessTrackers } from "@/components/dashboard/WellnessTrackers";
 import { TodaysWellness } from "@/components/dashboard/TodaysWellness";
 import { StreaksBadges } from "@/components/dashboard/StreaksBadges";
+import { GoogleHealthSummary } from "@/components/dashboard/GoogleHealthSummary";
+
 
 import { MyDoctors } from "@/components/dashboard/MyDoctors";
 import { PrescriptionAnalyzer } from "@/components/dashboard/PrescriptionAnalyzer";
