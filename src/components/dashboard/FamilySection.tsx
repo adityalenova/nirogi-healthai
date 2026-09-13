@@ -139,8 +139,13 @@ export function FamilySection() {
           });
           setEmailSent(true);
           toast.success(`Invite emailed to ${inviteEmail.trim()}.`);
-        } catch {
-          toast.error("Invite created, but the email couldn't be sent. Share the link instead.");
+        } catch (e) {
+          const m = e instanceof Error ? e.message : "";
+          if (m.includes(":403") || m.includes("not verified") || m.includes("domain"))
+            toast.error("Invite created. Email sending isn't active yet — your sender domain still needs verifying. Share the link or code for now.");
+          else if (m.includes("EMAIL_NOT_CONFIGURED"))
+            toast.error("Invite created. Email sending isn't set up yet — share the link or code instead.");
+          else toast.error("Invite created, but the email couldn't be sent. Share the link instead.");
         }
       }
       setInviteName("");
