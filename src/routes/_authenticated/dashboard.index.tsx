@@ -20,6 +20,8 @@ import { MedicineReminders } from "@/components/dashboard/MedicineReminders";
 import { WellnessTrackers } from "@/components/dashboard/WellnessTrackers";
 import { TodaysWellness } from "@/components/dashboard/TodaysWellness";
 import { StreaksBadges } from "@/components/dashboard/StreaksBadges";
+import { GoogleHealthSummary } from "@/components/dashboard/GoogleHealthSummary";
+
 
 import { MyDoctors } from "@/components/dashboard/MyDoctors";
 import { PrescriptionAnalyzer } from "@/components/dashboard/PrescriptionAnalyzer";
@@ -240,6 +242,11 @@ function Dashboard() {
             </div>
 
             <div className="mt-6">
+              <GoogleHealthSummary />
+            </div>
+
+            <div className="mt-6">
+
               <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
                 <div className="flex items-center justify-between">
                   <h2 className="font-display text-lg font-semibold">{t("dash.modules", "Health modules")}</h2>
