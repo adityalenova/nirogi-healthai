@@ -9,93 +9,72 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as SosRouteImport } from './routes/sos'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as KnowledgeRouteImport } from './routes/knowledge'
-import { Route as CookiesRouteImport } from './routes/cookies'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as InviteTokenRouteImport } from './routes/invite.$token'
-import { Route as AuthenticatedWaterTrackerRouteImport } from './routes/_authenticated/water-tracker'
-import { Route as AuthenticatedSleepTrackerRouteImport } from './routes/_authenticated/sleep-tracker'
-import { Route as AuthenticatedSenseCheckRouteImport } from './routes/_authenticated/sense-check'
-import { Route as AuthenticatedMindMoodRouteImport } from './routes/_authenticated/mind-mood'
-import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
-import { Route as AuthenticatedHeartRhythmRouteImport } from './routes/_authenticated/heart-rhythm'
-import { Route as AuthenticatedHealthBrowserRouteImport } from './routes/_authenticated/health-browser'
-import { Route as AuthenticatedGutHealthRouteImport } from './routes/_authenticated/gut-health'
-import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
-import { Route as AuthenticatedExerciseTrackerRouteImport } from './routes/_authenticated/exercise-tracker'
-import { Route as AuthenticatedDietPlanRouteImport } from './routes/_authenticated/diet-plan'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedDailyEnergyRouteImport } from './routes/_authenticated/daily-energy'
-import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
-import { Route as AuthenticatedBreatheRouteImport } from './routes/_authenticated/breathe'
-import { Route as AuthenticatedBadgesRouteImport } from './routes/_authenticated/badges'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CookiesRouteImport } from './routes/cookies'
+import { Route as KnowledgeRouteImport } from './routes/knowledge'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SosRouteImport } from './routes/sos'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
-import { Route as AuthenticatedMindMoodIndexRouteImport } from './routes/_authenticated/mind-mood.index'
-import { Route as AuthenticatedGutHealthIndexRouteImport } from './routes/_authenticated/gut-health.index'
-import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedBadgesRouteImport } from './routes/_authenticated/badges'
+import { Route as AuthenticatedBreatheRouteImport } from './routes/_authenticated/breathe'
+import { Route as AuthenticatedCreditsRouteImport } from './routes/_authenticated/credits'
+import { Route as AuthenticatedDailyEnergyRouteImport } from './routes/_authenticated/daily-energy'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDietPlanRouteImport } from './routes/_authenticated/diet-plan'
+import { Route as AuthenticatedExerciseTrackerRouteImport } from './routes/_authenticated/exercise-tracker'
+import { Route as AuthenticatedGoalsRouteImport } from './routes/_authenticated/goals'
+import { Route as AuthenticatedGutHealthRouteImport } from './routes/_authenticated/gut-health'
+import { Route as AuthenticatedHealthBrowserRouteImport } from './routes/_authenticated/health-browser'
+import { Route as AuthenticatedHeartRhythmRouteImport } from './routes/_authenticated/heart-rhythm'
+import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
+import { Route as AuthenticatedMindMoodRouteImport } from './routes/_authenticated/mind-mood'
+import { Route as AuthenticatedSenseCheckRouteImport } from './routes/_authenticated/sense-check'
+import { Route as AuthenticatedSleepTrackerRouteImport } from './routes/_authenticated/sleep-tracker'
+import { Route as AuthenticatedWaterTrackerRouteImport } from './routes/_authenticated/water-tracker'
+import { Route as InviteTokenRouteImport } from './routes/invite.$token'
 import { Route as AuthenticatedDailyEnergyIndexRouteImport } from './routes/_authenticated/daily-energy.index'
-import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
-import { Route as AuthenticatedMindMoodActivityRouteImport } from './routes/_authenticated/mind-mood.$activity'
-import { Route as AuthenticatedGutHealthToolRouteImport } from './routes/_authenticated/gut-health.$tool'
-import { Route as AuthenticatedDoctorsIdRouteImport } from './routes/_authenticated/doctors.$id'
-import { Route as AuthenticatedDashboardWeightRouteImport } from './routes/_authenticated/dashboard.weight'
-import { Route as AuthenticatedDashboardWaterRouteImport } from './routes/_authenticated/dashboard.water'
-import { Route as AuthenticatedDashboardUvExposureRouteImport } from './routes/_authenticated/dashboard.uv-exposure'
-import { Route as AuthenticatedDashboardUvRouteImport } from './routes/_authenticated/dashboard.uv'
-import { Route as AuthenticatedDashboardTemperatureRouteImport } from './routes/_authenticated/dashboard.temperature'
-import { Route as AuthenticatedDashboardStressRouteImport } from './routes/_authenticated/dashboard.stress'
-import { Route as AuthenticatedDashboardSpo2RouteImport } from './routes/_authenticated/dashboard.spo2'
-import { Route as AuthenticatedDashboardSleepRouteImport } from './routes/_authenticated/dashboard.sleep'
-import { Route as AuthenticatedDashboardOxygenRouteImport } from './routes/_authenticated/dashboard.oxygen'
-import { Route as AuthenticatedDashboardHeartRateRouteImport } from './routes/_authenticated/dashboard.heart-rate'
-import { Route as AuthenticatedDashboardHearingHealthRouteImport } from './routes/_authenticated/dashboard.hearing-health'
-import { Route as AuthenticatedDashboardHearingRouteImport } from './routes/_authenticated/dashboard.hearing'
-import { Route as AuthenticatedDashboardGlucoseRouteImport } from './routes/_authenticated/dashboard.glucose'
-import { Route as AuthenticatedDashboardFitnessRouteImport } from './routes/_authenticated/dashboard.fitness'
-import { Route as AuthenticatedDashboardEyeStrainRouteImport } from './routes/_authenticated/dashboard.eye-strain'
-import { Route as AuthenticatedDashboardEnergyRouteImport } from './routes/_authenticated/dashboard.energy'
-import { Route as AuthenticatedDashboardDevicesRouteImport } from './routes/_authenticated/dashboard.devices'
-import { Route as AuthenticatedDashboardBoneHealthRouteImport } from './routes/_authenticated/dashboard.bone-health'
-import { Route as AuthenticatedDashboardBody3dRouteImport } from './routes/_authenticated/dashboard.body-3d'
-import { Route as AuthenticatedDashboardBioAgeRouteImport } from './routes/_authenticated/dashboard.bio-age'
-import { Route as AuthenticatedDashboardAltitudeRouteImport } from './routes/_authenticated/dashboard.altitude'
 import { Route as AuthenticatedDailyEnergyToolRouteImport } from './routes/_authenticated/daily-energy.$tool'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardAltitudeRouteImport } from './routes/_authenticated/dashboard.altitude'
+import { Route as AuthenticatedDashboardBioAgeRouteImport } from './routes/_authenticated/dashboard.bio-age'
+import { Route as AuthenticatedDashboardBody3dRouteImport } from './routes/_authenticated/dashboard.body-3d'
+import { Route as AuthenticatedDashboardBoneHealthRouteImport } from './routes/_authenticated/dashboard.bone-health'
+import { Route as AuthenticatedDashboardDevicesRouteImport } from './routes/_authenticated/dashboard.devices'
+import { Route as AuthenticatedDashboardEnergyRouteImport } from './routes/_authenticated/dashboard.energy'
+import { Route as AuthenticatedDashboardEyeStrainRouteImport } from './routes/_authenticated/dashboard.eye-strain'
+import { Route as AuthenticatedDashboardFitnessRouteImport } from './routes/_authenticated/dashboard.fitness'
+import { Route as AuthenticatedDashboardGlucoseRouteImport } from './routes/_authenticated/dashboard.glucose'
+import { Route as AuthenticatedDashboardHearingRouteImport } from './routes/_authenticated/dashboard.hearing'
+import { Route as AuthenticatedDashboardHearingHealthRouteImport } from './routes/_authenticated/dashboard.hearing-health'
+import { Route as AuthenticatedDashboardHeartRateRouteImport } from './routes/_authenticated/dashboard.heart-rate'
+import { Route as AuthenticatedDashboardOxygenRouteImport } from './routes/_authenticated/dashboard.oxygen'
+import { Route as AuthenticatedDashboardSleepRouteImport } from './routes/_authenticated/dashboard.sleep'
+import { Route as AuthenticatedDashboardSpo2RouteImport } from './routes/_authenticated/dashboard.spo2'
+import { Route as AuthenticatedDashboardStressRouteImport } from './routes/_authenticated/dashboard.stress'
+import { Route as AuthenticatedDashboardTemperatureRouteImport } from './routes/_authenticated/dashboard.temperature'
+import { Route as AuthenticatedDashboardUvRouteImport } from './routes/_authenticated/dashboard.uv'
+import { Route as AuthenticatedDashboardUvExposureRouteImport } from './routes/_authenticated/dashboard.uv-exposure'
+import { Route as AuthenticatedDashboardWaterRouteImport } from './routes/_authenticated/dashboard.water'
+import { Route as AuthenticatedDashboardWeightRouteImport } from './routes/_authenticated/dashboard.weight'
+import { Route as AuthenticatedDoctorsIdRouteImport } from './routes/_authenticated/doctors.$id'
+import { Route as AuthenticatedGutHealthIndexRouteImport } from './routes/_authenticated/gut-health.index'
+import { Route as AuthenticatedGutHealthToolRouteImport } from './routes/_authenticated/gut-health.$tool'
+import { Route as AuthenticatedMindMoodIndexRouteImport } from './routes/_authenticated/mind-mood.index'
+import { Route as AuthenticatedMindMoodActivityRouteImport } from './routes/_authenticated/mind-mood.$activity'
+import { Route as AuthenticatedToolsToolRouteImport } from './routes/_authenticated/tools/$tool'
 import { Route as AuthenticatedDashboardOrgansOrganRouteImport } from './routes/_authenticated/dashboard.organs.$organ'
 
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SosRoute = SosRouteImport.update({
-  id: '/sos',
-  path: '/sos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KnowledgeRoute = KnowledgeRouteImport.update({
-  id: '/knowledge',
-  path: '/knowledge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CookiesRoute = CookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -103,83 +82,54 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const KnowledgeRoute = KnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InviteTokenRoute = InviteTokenRouteImport.update({
-  id: '/invite/$token',
-  path: '/invite/$token',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedWaterTrackerRoute =
-  AuthenticatedWaterTrackerRouteImport.update({
-    id: '/water-tracker',
-    path: '/water-tracker',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedSleepTrackerRoute =
-  AuthenticatedSleepTrackerRouteImport.update({
-    id: '/sleep-tracker',
-    path: '/sleep-tracker',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedSenseCheckRoute = AuthenticatedSenseCheckRouteImport.update({
-  id: '/sense-check',
-  path: '/sense-check',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SosRoute = SosRouteImport.update({
+  id: '/sos',
+  path: '/sos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMindMoodRoute = AuthenticatedMindMoodRouteImport.update({
-  id: '/mind-mood',
-  path: '/mind-mood',
+const AuthenticatedBadgesRoute = AuthenticatedBadgesRouteImport.update({
+  id: '/badges',
+  path: '/badges',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
+const AuthenticatedBreatheRoute = AuthenticatedBreatheRouteImport.update({
+  id: '/breathe',
+  path: '/breathe',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedHeartRhythmRoute =
-  AuthenticatedHeartRhythmRouteImport.update({
-    id: '/heart-rhythm',
-    path: '/heart-rhythm',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedHealthBrowserRoute =
-  AuthenticatedHealthBrowserRouteImport.update({
-    id: '/health-browser',
-    path: '/health-browser',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedGutHealthRoute = AuthenticatedGutHealthRouteImport.update({
-  id: '/gut-health',
-  path: '/gut-health',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedGoalsRoute = AuthenticatedGoalsRouteImport.update({
-  id: '/goals',
-  path: '/goals',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedExerciseTrackerRoute =
-  AuthenticatedExerciseTrackerRouteImport.update({
-    id: '/exercise-tracker',
-    path: '/exercise-tracker',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedDietPlanRoute = AuthenticatedDietPlanRouteImport.update({
-  id: '/diet-plan',
-  path: '/diet-plan',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
+  id: '/credits',
+  path: '/credits',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDailyEnergyRoute =
@@ -188,190 +138,92 @@ const AuthenticatedDailyEnergyRoute =
     path: '/daily-energy',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedCreditsRoute = AuthenticatedCreditsRouteImport.update({
-  id: '/credits',
-  path: '/credits',
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedBreatheRoute = AuthenticatedBreatheRouteImport.update({
-  id: '/breathe',
-  path: '/breathe',
+const AuthenticatedDietPlanRoute = AuthenticatedDietPlanRouteImport.update({
+  id: '/diet-plan',
+  path: '/diet-plan',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedBadgesRoute = AuthenticatedBadgesRouteImport.update({
-  id: '/badges',
-  path: '/badges',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedMindMoodIndexRoute =
-  AuthenticatedMindMoodIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedMindMoodRoute,
+const AuthenticatedExerciseTrackerRoute =
+  AuthenticatedExerciseTrackerRouteImport.update({
+    id: '/exercise-tracker',
+    path: '/exercise-tracker',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedGutHealthIndexRoute =
-  AuthenticatedGutHealthIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedGutHealthRoute,
+const AuthenticatedGoalsRoute = AuthenticatedGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGutHealthRoute = AuthenticatedGutHealthRouteImport.update({
+  id: '/gut-health',
+  path: '/gut-health',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHealthBrowserRoute =
+  AuthenticatedHealthBrowserRouteImport.update({
+    id: '/health-browser',
+    path: '/health-browser',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedDashboardIndexRoute =
-  AuthenticatedDashboardIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedDashboardRoute,
+const AuthenticatedHeartRhythmRoute =
+  AuthenticatedHeartRhythmRouteImport.update({
+    id: '/heart-rhythm',
+    path: '/heart-rhythm',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMindMoodRoute = AuthenticatedMindMoodRouteImport.update({
+  id: '/mind-mood',
+  path: '/mind-mood',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSenseCheckRoute = AuthenticatedSenseCheckRouteImport.update({
+  id: '/sense-check',
+  path: '/sense-check',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSleepTrackerRoute =
+  AuthenticatedSleepTrackerRouteImport.update({
+    id: '/sleep-tracker',
+    path: '/sleep-tracker',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedWaterTrackerRoute =
+  AuthenticatedWaterTrackerRouteImport.update({
+    id: '/water-tracker',
+    path: '/water-tracker',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDailyEnergyIndexRoute =
   AuthenticatedDailyEnergyIndexRouteImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => AuthenticatedDailyEnergyRoute,
   } as any)
-const AuthenticatedToolsToolRoute = AuthenticatedToolsToolRouteImport.update({
-  id: '/tools/$tool',
-  path: '/tools/$tool',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedMindMoodActivityRoute =
-  AuthenticatedMindMoodActivityRouteImport.update({
-    id: '/$activity',
-    path: '/$activity',
-    getParentRoute: () => AuthenticatedMindMoodRoute,
-  } as any)
-const AuthenticatedGutHealthToolRoute =
-  AuthenticatedGutHealthToolRouteImport.update({
+const AuthenticatedDailyEnergyToolRoute =
+  AuthenticatedDailyEnergyToolRouteImport.update({
     id: '/$tool',
     path: '/$tool',
-    getParentRoute: () => AuthenticatedGutHealthRoute,
+    getParentRoute: () => AuthenticatedDailyEnergyRoute,
   } as any)
-const AuthenticatedDoctorsIdRoute = AuthenticatedDoctorsIdRouteImport.update({
-  id: '/doctors/$id',
-  path: '/doctors/$id',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardWeightRoute =
-  AuthenticatedDashboardWeightRouteImport.update({
-    id: '/weight',
-    path: '/weight',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardWaterRoute =
-  AuthenticatedDashboardWaterRouteImport.update({
-    id: '/water',
-    path: '/water',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardUvExposureRoute =
-  AuthenticatedDashboardUvExposureRouteImport.update({
-    id: '/uv-exposure',
-    path: '/uv-exposure',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardUvRoute =
-  AuthenticatedDashboardUvRouteImport.update({
-    id: '/uv',
-    path: '/uv',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardTemperatureRoute =
-  AuthenticatedDashboardTemperatureRouteImport.update({
-    id: '/temperature',
-    path: '/temperature',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardStressRoute =
-  AuthenticatedDashboardStressRouteImport.update({
-    id: '/stress',
-    path: '/stress',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardSpo2Route =
-  AuthenticatedDashboardSpo2RouteImport.update({
-    id: '/spo2',
-    path: '/spo2',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardSleepRoute =
-  AuthenticatedDashboardSleepRouteImport.update({
-    id: '/sleep',
-    path: '/sleep',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardOxygenRoute =
-  AuthenticatedDashboardOxygenRouteImport.update({
-    id: '/oxygen',
-    path: '/oxygen',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardHeartRateRoute =
-  AuthenticatedDashboardHeartRateRouteImport.update({
-    id: '/heart-rate',
-    path: '/heart-rate',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardHearingHealthRoute =
-  AuthenticatedDashboardHearingHealthRouteImport.update({
-    id: '/hearing-health',
-    path: '/hearing-health',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardHearingRoute =
-  AuthenticatedDashboardHearingRouteImport.update({
-    id: '/hearing',
-    path: '/hearing',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardGlucoseRoute =
-  AuthenticatedDashboardGlucoseRouteImport.update({
-    id: '/glucose',
-    path: '/glucose',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardFitnessRoute =
-  AuthenticatedDashboardFitnessRouteImport.update({
-    id: '/fitness',
-    path: '/fitness',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardEyeStrainRoute =
-  AuthenticatedDashboardEyeStrainRouteImport.update({
-    id: '/eye-strain',
-    path: '/eye-strain',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardEnergyRoute =
-  AuthenticatedDashboardEnergyRouteImport.update({
-    id: '/energy',
-    path: '/energy',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardDevicesRoute =
-  AuthenticatedDashboardDevicesRouteImport.update({
-    id: '/devices',
-    path: '/devices',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardBoneHealthRoute =
-  AuthenticatedDashboardBoneHealthRouteImport.update({
-    id: '/bone-health',
-    path: '/bone-health',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardBody3dRoute =
-  AuthenticatedDashboardBody3dRouteImport.update({
-    id: '/body-3d',
-    path: '/body-3d',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardBioAgeRoute =
-  AuthenticatedDashboardBioAgeRouteImport.update({
-    id: '/bio-age',
-    path: '/bio-age',
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardAltitudeRoute =
@@ -380,12 +232,160 @@ const AuthenticatedDashboardAltitudeRoute =
     path: '/altitude',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDailyEnergyToolRoute =
-  AuthenticatedDailyEnergyToolRouteImport.update({
+const AuthenticatedDashboardBioAgeRoute =
+  AuthenticatedDashboardBioAgeRouteImport.update({
+    id: '/bio-age',
+    path: '/bio-age',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardBody3dRoute =
+  AuthenticatedDashboardBody3dRouteImport.update({
+    id: '/body-3d',
+    path: '/body-3d',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardBoneHealthRoute =
+  AuthenticatedDashboardBoneHealthRouteImport.update({
+    id: '/bone-health',
+    path: '/bone-health',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardDevicesRoute =
+  AuthenticatedDashboardDevicesRouteImport.update({
+    id: '/devices',
+    path: '/devices',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardEnergyRoute =
+  AuthenticatedDashboardEnergyRouteImport.update({
+    id: '/energy',
+    path: '/energy',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardEyeStrainRoute =
+  AuthenticatedDashboardEyeStrainRouteImport.update({
+    id: '/eye-strain',
+    path: '/eye-strain',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardFitnessRoute =
+  AuthenticatedDashboardFitnessRouteImport.update({
+    id: '/fitness',
+    path: '/fitness',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardGlucoseRoute =
+  AuthenticatedDashboardGlucoseRouteImport.update({
+    id: '/glucose',
+    path: '/glucose',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardHearingRoute =
+  AuthenticatedDashboardHearingRouteImport.update({
+    id: '/hearing',
+    path: '/hearing',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardHearingHealthRoute =
+  AuthenticatedDashboardHearingHealthRouteImport.update({
+    id: '/hearing-health',
+    path: '/hearing-health',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardHeartRateRoute =
+  AuthenticatedDashboardHeartRateRouteImport.update({
+    id: '/heart-rate',
+    path: '/heart-rate',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardOxygenRoute =
+  AuthenticatedDashboardOxygenRouteImport.update({
+    id: '/oxygen',
+    path: '/oxygen',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSleepRoute =
+  AuthenticatedDashboardSleepRouteImport.update({
+    id: '/sleep',
+    path: '/sleep',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardSpo2Route =
+  AuthenticatedDashboardSpo2RouteImport.update({
+    id: '/spo2',
+    path: '/spo2',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardStressRoute =
+  AuthenticatedDashboardStressRouteImport.update({
+    id: '/stress',
+    path: '/stress',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardTemperatureRoute =
+  AuthenticatedDashboardTemperatureRouteImport.update({
+    id: '/temperature',
+    path: '/temperature',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardUvRoute =
+  AuthenticatedDashboardUvRouteImport.update({
+    id: '/uv',
+    path: '/uv',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardUvExposureRoute =
+  AuthenticatedDashboardUvExposureRouteImport.update({
+    id: '/uv-exposure',
+    path: '/uv-exposure',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardWaterRoute =
+  AuthenticatedDashboardWaterRouteImport.update({
+    id: '/water',
+    path: '/water',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardWeightRoute =
+  AuthenticatedDashboardWeightRouteImport.update({
+    id: '/weight',
+    path: '/weight',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDoctorsIdRoute = AuthenticatedDoctorsIdRouteImport.update({
+  id: '/doctors/$id',
+  path: '/doctors/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGutHealthIndexRoute =
+  AuthenticatedGutHealthIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedGutHealthRoute,
+  } as any)
+const AuthenticatedGutHealthToolRoute =
+  AuthenticatedGutHealthToolRouteImport.update({
     id: '/$tool',
     path: '/$tool',
-    getParentRoute: () => AuthenticatedDailyEnergyRoute,
+    getParentRoute: () => AuthenticatedGutHealthRoute,
   } as any)
+const AuthenticatedMindMoodIndexRoute =
+  AuthenticatedMindMoodIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedMindMoodRoute,
+  } as any)
+const AuthenticatedMindMoodActivityRoute =
+  AuthenticatedMindMoodActivityRouteImport.update({
+    id: '/$activity',
+    path: '/$activity',
+    getParentRoute: () => AuthenticatedMindMoodRoute,
+  } as any)
+const AuthenticatedToolsToolRoute = AuthenticatedToolsToolRouteImport.update({
+  id: '/tools/$tool',
+  path: '/tools/$tool',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardOrgansOrganRoute =
   AuthenticatedDashboardOrgansOrganRouteImport.update({
     id: '/organs/$organ',
@@ -760,53 +760,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sos': {
-      id: '/sos'
-      path: '/sos'
-      fullPath: '/sos'
-      preLoaderRoute: typeof SosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/knowledge': {
-      id: '/knowledge'
-      path: '/knowledge'
-      fullPath: '/knowledge'
-      preLoaderRoute: typeof KnowledgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cookies': {
-      id: '/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof CookiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -816,123 +774,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/invite/$token': {
-      id: '/invite/$token'
-      path: '/invite/$token'
-      fullPath: '/invite/$token'
-      preLoaderRoute: typeof InviteTokenRouteImport
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/water-tracker': {
-      id: '/_authenticated/water-tracker'
-      path: '/water-tracker'
-      fullPath: '/water-tracker'
-      preLoaderRoute: typeof AuthenticatedWaterTrackerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/knowledge': {
+      id: '/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof KnowledgeRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/sleep-tracker': {
-      id: '/_authenticated/sleep-tracker'
-      path: '/sleep-tracker'
-      fullPath: '/sleep-tracker'
-      preLoaderRoute: typeof AuthenticatedSleepTrackerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/sense-check': {
-      id: '/_authenticated/sense-check'
-      path: '/sense-check'
-      fullPath: '/sense-check'
-      preLoaderRoute: typeof AuthenticatedSenseCheckRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/mind-mood': {
-      id: '/_authenticated/mind-mood'
-      path: '/mind-mood'
-      fullPath: '/mind-mood'
-      preLoaderRoute: typeof AuthenticatedMindMoodRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/sos': {
+      id: '/sos'
+      path: '/sos'
+      fullPath: '/sos'
+      preLoaderRoute: typeof SosRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/history': {
-      id: '/_authenticated/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof AuthenticatedHistoryRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/heart-rhythm': {
-      id: '/_authenticated/heart-rhythm'
-      path: '/heart-rhythm'
-      fullPath: '/heart-rhythm'
-      preLoaderRoute: typeof AuthenticatedHeartRhythmRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/health-browser': {
-      id: '/_authenticated/health-browser'
-      path: '/health-browser'
-      fullPath: '/health-browser'
-      preLoaderRoute: typeof AuthenticatedHealthBrowserRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/gut-health': {
-      id: '/_authenticated/gut-health'
-      path: '/gut-health'
-      fullPath: '/gut-health'
-      preLoaderRoute: typeof AuthenticatedGutHealthRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/goals': {
-      id: '/_authenticated/goals'
-      path: '/goals'
-      fullPath: '/goals'
-      preLoaderRoute: typeof AuthenticatedGoalsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/exercise-tracker': {
-      id: '/_authenticated/exercise-tracker'
-      path: '/exercise-tracker'
-      fullPath: '/exercise-tracker'
-      preLoaderRoute: typeof AuthenticatedExerciseTrackerRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/diet-plan': {
-      id: '/_authenticated/diet-plan'
-      path: '/diet-plan'
-      fullPath: '/diet-plan'
-      preLoaderRoute: typeof AuthenticatedDietPlanRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/daily-energy': {
-      id: '/_authenticated/daily-energy'
-      path: '/daily-energy'
-      fullPath: '/daily-energy'
-      preLoaderRoute: typeof AuthenticatedDailyEnergyRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/credits': {
-      id: '/_authenticated/credits'
-      path: '/credits'
-      fullPath: '/credits'
-      preLoaderRoute: typeof AuthenticatedCreditsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/breathe': {
-      id: '/_authenticated/breathe'
-      path: '/breathe'
-      fullPath: '/breathe'
-      preLoaderRoute: typeof AuthenticatedBreatheRouteImport
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/badges': {
@@ -942,33 +837,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBadgesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/account': {
-      id: '/_authenticated/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+    '/_authenticated/breathe': {
+      id: '/_authenticated/breathe'
+      path: '/breathe'
+      fullPath: '/breathe'
+      preLoaderRoute: typeof AuthenticatedBreatheRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/mind-mood/': {
-      id: '/_authenticated/mind-mood/'
-      path: '/'
-      fullPath: '/mind-mood/'
-      preLoaderRoute: typeof AuthenticatedMindMoodIndexRouteImport
-      parentRoute: typeof AuthenticatedMindMoodRoute
+    '/_authenticated/credits': {
+      id: '/_authenticated/credits'
+      path: '/credits'
+      fullPath: '/credits'
+      preLoaderRoute: typeof AuthenticatedCreditsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/gut-health/': {
-      id: '/_authenticated/gut-health/'
-      path: '/'
-      fullPath: '/gut-health/'
-      preLoaderRoute: typeof AuthenticatedGutHealthIndexRouteImport
-      parentRoute: typeof AuthenticatedGutHealthRoute
+    '/_authenticated/daily-energy': {
+      id: '/_authenticated/daily-energy'
+      path: '/daily-energy'
+      fullPath: '/daily-energy'
+      preLoaderRoute: typeof AuthenticatedDailyEnergyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/dashboard/': {
-      id: '/_authenticated/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/diet-plan': {
+      id: '/_authenticated/diet-plan'
+      path: '/diet-plan'
+      fullPath: '/diet-plan'
+      preLoaderRoute: typeof AuthenticatedDietPlanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/exercise-tracker': {
+      id: '/_authenticated/exercise-tracker'
+      path: '/exercise-tracker'
+      fullPath: '/exercise-tracker'
+      preLoaderRoute: typeof AuthenticatedExerciseTrackerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/goals': {
+      id: '/_authenticated/goals'
+      path: '/goals'
+      fullPath: '/goals'
+      preLoaderRoute: typeof AuthenticatedGoalsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gut-health': {
+      id: '/_authenticated/gut-health'
+      path: '/gut-health'
+      fullPath: '/gut-health'
+      preLoaderRoute: typeof AuthenticatedGutHealthRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/health-browser': {
+      id: '/_authenticated/health-browser'
+      path: '/health-browser'
+      fullPath: '/health-browser'
+      preLoaderRoute: typeof AuthenticatedHealthBrowserRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/heart-rhythm': {
+      id: '/_authenticated/heart-rhythm'
+      path: '/heart-rhythm'
+      fullPath: '/heart-rhythm'
+      preLoaderRoute: typeof AuthenticatedHeartRhythmRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/history': {
+      id: '/_authenticated/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof AuthenticatedHistoryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mind-mood': {
+      id: '/_authenticated/mind-mood'
+      path: '/mind-mood'
+      fullPath: '/mind-mood'
+      preLoaderRoute: typeof AuthenticatedMindMoodRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sense-check': {
+      id: '/_authenticated/sense-check'
+      path: '/sense-check'
+      fullPath: '/sense-check'
+      preLoaderRoute: typeof AuthenticatedSenseCheckRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sleep-tracker': {
+      id: '/_authenticated/sleep-tracker'
+      path: '/sleep-tracker'
+      fullPath: '/sleep-tracker'
+      preLoaderRoute: typeof AuthenticatedSleepTrackerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/water-tracker': {
+      id: '/_authenticated/water-tracker'
+      path: '/water-tracker'
+      fullPath: '/water-tracker'
+      preLoaderRoute: typeof AuthenticatedWaterTrackerRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/daily-energy/': {
       id: '/_authenticated/daily-energy/'
@@ -977,172 +956,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDailyEnergyIndexRouteImport
       parentRoute: typeof AuthenticatedDailyEnergyRoute
     }
-    '/_authenticated/tools/$tool': {
-      id: '/_authenticated/tools/$tool'
-      path: '/tools/$tool'
-      fullPath: '/tools/$tool'
-      preLoaderRoute: typeof AuthenticatedToolsToolRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/mind-mood/$activity': {
-      id: '/_authenticated/mind-mood/$activity'
-      path: '/$activity'
-      fullPath: '/mind-mood/$activity'
-      preLoaderRoute: typeof AuthenticatedMindMoodActivityRouteImport
-      parentRoute: typeof AuthenticatedMindMoodRoute
-    }
-    '/_authenticated/gut-health/$tool': {
-      id: '/_authenticated/gut-health/$tool'
+    '/_authenticated/daily-energy/$tool': {
+      id: '/_authenticated/daily-energy/$tool'
       path: '/$tool'
-      fullPath: '/gut-health/$tool'
-      preLoaderRoute: typeof AuthenticatedGutHealthToolRouteImport
-      parentRoute: typeof AuthenticatedGutHealthRoute
+      fullPath: '/daily-energy/$tool'
+      preLoaderRoute: typeof AuthenticatedDailyEnergyToolRouteImport
+      parentRoute: typeof AuthenticatedDailyEnergyRoute
     }
-    '/_authenticated/doctors/$id': {
-      id: '/_authenticated/doctors/$id'
-      path: '/doctors/$id'
-      fullPath: '/doctors/$id'
-      preLoaderRoute: typeof AuthenticatedDoctorsIdRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard/weight': {
-      id: '/_authenticated/dashboard/weight'
-      path: '/weight'
-      fullPath: '/dashboard/weight'
-      preLoaderRoute: typeof AuthenticatedDashboardWeightRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/water': {
-      id: '/_authenticated/dashboard/water'
-      path: '/water'
-      fullPath: '/dashboard/water'
-      preLoaderRoute: typeof AuthenticatedDashboardWaterRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/uv-exposure': {
-      id: '/_authenticated/dashboard/uv-exposure'
-      path: '/uv-exposure'
-      fullPath: '/dashboard/uv-exposure'
-      preLoaderRoute: typeof AuthenticatedDashboardUvExposureRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/uv': {
-      id: '/_authenticated/dashboard/uv'
-      path: '/uv'
-      fullPath: '/dashboard/uv'
-      preLoaderRoute: typeof AuthenticatedDashboardUvRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/temperature': {
-      id: '/_authenticated/dashboard/temperature'
-      path: '/temperature'
-      fullPath: '/dashboard/temperature'
-      preLoaderRoute: typeof AuthenticatedDashboardTemperatureRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/stress': {
-      id: '/_authenticated/dashboard/stress'
-      path: '/stress'
-      fullPath: '/dashboard/stress'
-      preLoaderRoute: typeof AuthenticatedDashboardStressRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/spo2': {
-      id: '/_authenticated/dashboard/spo2'
-      path: '/spo2'
-      fullPath: '/dashboard/spo2'
-      preLoaderRoute: typeof AuthenticatedDashboardSpo2RouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/sleep': {
-      id: '/_authenticated/dashboard/sleep'
-      path: '/sleep'
-      fullPath: '/dashboard/sleep'
-      preLoaderRoute: typeof AuthenticatedDashboardSleepRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/oxygen': {
-      id: '/_authenticated/dashboard/oxygen'
-      path: '/oxygen'
-      fullPath: '/dashboard/oxygen'
-      preLoaderRoute: typeof AuthenticatedDashboardOxygenRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/heart-rate': {
-      id: '/_authenticated/dashboard/heart-rate'
-      path: '/heart-rate'
-      fullPath: '/dashboard/heart-rate'
-      preLoaderRoute: typeof AuthenticatedDashboardHeartRateRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/hearing-health': {
-      id: '/_authenticated/dashboard/hearing-health'
-      path: '/hearing-health'
-      fullPath: '/dashboard/hearing-health'
-      preLoaderRoute: typeof AuthenticatedDashboardHearingHealthRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/hearing': {
-      id: '/_authenticated/dashboard/hearing'
-      path: '/hearing'
-      fullPath: '/dashboard/hearing'
-      preLoaderRoute: typeof AuthenticatedDashboardHearingRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/glucose': {
-      id: '/_authenticated/dashboard/glucose'
-      path: '/glucose'
-      fullPath: '/dashboard/glucose'
-      preLoaderRoute: typeof AuthenticatedDashboardGlucoseRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/fitness': {
-      id: '/_authenticated/dashboard/fitness'
-      path: '/fitness'
-      fullPath: '/dashboard/fitness'
-      preLoaderRoute: typeof AuthenticatedDashboardFitnessRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/eye-strain': {
-      id: '/_authenticated/dashboard/eye-strain'
-      path: '/eye-strain'
-      fullPath: '/dashboard/eye-strain'
-      preLoaderRoute: typeof AuthenticatedDashboardEyeStrainRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/energy': {
-      id: '/_authenticated/dashboard/energy'
-      path: '/energy'
-      fullPath: '/dashboard/energy'
-      preLoaderRoute: typeof AuthenticatedDashboardEnergyRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/devices': {
-      id: '/_authenticated/dashboard/devices'
-      path: '/devices'
-      fullPath: '/dashboard/devices'
-      preLoaderRoute: typeof AuthenticatedDashboardDevicesRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/bone-health': {
-      id: '/_authenticated/dashboard/bone-health'
-      path: '/bone-health'
-      fullPath: '/dashboard/bone-health'
-      preLoaderRoute: typeof AuthenticatedDashboardBoneHealthRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/body-3d': {
-      id: '/_authenticated/dashboard/body-3d'
-      path: '/body-3d'
-      fullPath: '/dashboard/body-3d'
-      preLoaderRoute: typeof AuthenticatedDashboardBody3dRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
-    '/_authenticated/dashboard/bio-age': {
-      id: '/_authenticated/dashboard/bio-age'
-      path: '/bio-age'
-      fullPath: '/dashboard/bio-age'
-      preLoaderRoute: typeof AuthenticatedDashboardBioAgeRouteImport
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/altitude': {
@@ -1152,12 +977,187 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAltitudeRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/daily-energy/$tool': {
-      id: '/_authenticated/daily-energy/$tool'
+    '/_authenticated/dashboard/bio-age': {
+      id: '/_authenticated/dashboard/bio-age'
+      path: '/bio-age'
+      fullPath: '/dashboard/bio-age'
+      preLoaderRoute: typeof AuthenticatedDashboardBioAgeRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/body-3d': {
+      id: '/_authenticated/dashboard/body-3d'
+      path: '/body-3d'
+      fullPath: '/dashboard/body-3d'
+      preLoaderRoute: typeof AuthenticatedDashboardBody3dRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/bone-health': {
+      id: '/_authenticated/dashboard/bone-health'
+      path: '/bone-health'
+      fullPath: '/dashboard/bone-health'
+      preLoaderRoute: typeof AuthenticatedDashboardBoneHealthRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/devices': {
+      id: '/_authenticated/dashboard/devices'
+      path: '/devices'
+      fullPath: '/dashboard/devices'
+      preLoaderRoute: typeof AuthenticatedDashboardDevicesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/energy': {
+      id: '/_authenticated/dashboard/energy'
+      path: '/energy'
+      fullPath: '/dashboard/energy'
+      preLoaderRoute: typeof AuthenticatedDashboardEnergyRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/eye-strain': {
+      id: '/_authenticated/dashboard/eye-strain'
+      path: '/eye-strain'
+      fullPath: '/dashboard/eye-strain'
+      preLoaderRoute: typeof AuthenticatedDashboardEyeStrainRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/fitness': {
+      id: '/_authenticated/dashboard/fitness'
+      path: '/fitness'
+      fullPath: '/dashboard/fitness'
+      preLoaderRoute: typeof AuthenticatedDashboardFitnessRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/glucose': {
+      id: '/_authenticated/dashboard/glucose'
+      path: '/glucose'
+      fullPath: '/dashboard/glucose'
+      preLoaderRoute: typeof AuthenticatedDashboardGlucoseRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/hearing': {
+      id: '/_authenticated/dashboard/hearing'
+      path: '/hearing'
+      fullPath: '/dashboard/hearing'
+      preLoaderRoute: typeof AuthenticatedDashboardHearingRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/hearing-health': {
+      id: '/_authenticated/dashboard/hearing-health'
+      path: '/hearing-health'
+      fullPath: '/dashboard/hearing-health'
+      preLoaderRoute: typeof AuthenticatedDashboardHearingHealthRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/heart-rate': {
+      id: '/_authenticated/dashboard/heart-rate'
+      path: '/heart-rate'
+      fullPath: '/dashboard/heart-rate'
+      preLoaderRoute: typeof AuthenticatedDashboardHeartRateRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/oxygen': {
+      id: '/_authenticated/dashboard/oxygen'
+      path: '/oxygen'
+      fullPath: '/dashboard/oxygen'
+      preLoaderRoute: typeof AuthenticatedDashboardOxygenRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/sleep': {
+      id: '/_authenticated/dashboard/sleep'
+      path: '/sleep'
+      fullPath: '/dashboard/sleep'
+      preLoaderRoute: typeof AuthenticatedDashboardSleepRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/spo2': {
+      id: '/_authenticated/dashboard/spo2'
+      path: '/spo2'
+      fullPath: '/dashboard/spo2'
+      preLoaderRoute: typeof AuthenticatedDashboardSpo2RouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/stress': {
+      id: '/_authenticated/dashboard/stress'
+      path: '/stress'
+      fullPath: '/dashboard/stress'
+      preLoaderRoute: typeof AuthenticatedDashboardStressRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/temperature': {
+      id: '/_authenticated/dashboard/temperature'
+      path: '/temperature'
+      fullPath: '/dashboard/temperature'
+      preLoaderRoute: typeof AuthenticatedDashboardTemperatureRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/uv': {
+      id: '/_authenticated/dashboard/uv'
+      path: '/uv'
+      fullPath: '/dashboard/uv'
+      preLoaderRoute: typeof AuthenticatedDashboardUvRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/uv-exposure': {
+      id: '/_authenticated/dashboard/uv-exposure'
+      path: '/uv-exposure'
+      fullPath: '/dashboard/uv-exposure'
+      preLoaderRoute: typeof AuthenticatedDashboardUvExposureRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/water': {
+      id: '/_authenticated/dashboard/water'
+      path: '/water'
+      fullPath: '/dashboard/water'
+      preLoaderRoute: typeof AuthenticatedDashboardWaterRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/weight': {
+      id: '/_authenticated/dashboard/weight'
+      path: '/weight'
+      fullPath: '/dashboard/weight'
+      preLoaderRoute: typeof AuthenticatedDashboardWeightRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/doctors/$id': {
+      id: '/_authenticated/doctors/$id'
+      path: '/doctors/$id'
+      fullPath: '/doctors/$id'
+      preLoaderRoute: typeof AuthenticatedDoctorsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gut-health/': {
+      id: '/_authenticated/gut-health/'
+      path: '/'
+      fullPath: '/gut-health/'
+      preLoaderRoute: typeof AuthenticatedGutHealthIndexRouteImport
+      parentRoute: typeof AuthenticatedGutHealthRoute
+    }
+    '/_authenticated/gut-health/$tool': {
+      id: '/_authenticated/gut-health/$tool'
       path: '/$tool'
-      fullPath: '/daily-energy/$tool'
-      preLoaderRoute: typeof AuthenticatedDailyEnergyToolRouteImport
-      parentRoute: typeof AuthenticatedDailyEnergyRoute
+      fullPath: '/gut-health/$tool'
+      preLoaderRoute: typeof AuthenticatedGutHealthToolRouteImport
+      parentRoute: typeof AuthenticatedGutHealthRoute
+    }
+    '/_authenticated/mind-mood/': {
+      id: '/_authenticated/mind-mood/'
+      path: '/'
+      fullPath: '/mind-mood/'
+      preLoaderRoute: typeof AuthenticatedMindMoodIndexRouteImport
+      parentRoute: typeof AuthenticatedMindMoodRoute
+    }
+    '/_authenticated/mind-mood/$activity': {
+      id: '/_authenticated/mind-mood/$activity'
+      path: '/$activity'
+      fullPath: '/mind-mood/$activity'
+      preLoaderRoute: typeof AuthenticatedMindMoodActivityRouteImport
+      parentRoute: typeof AuthenticatedMindMoodRoute
+    }
+    '/_authenticated/tools/$tool': {
+      id: '/_authenticated/tools/$tool'
+      path: '/tools/$tool'
+      fullPath: '/tools/$tool'
+      preLoaderRoute: typeof AuthenticatedToolsToolRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard/organs/$organ': {
       id: '/_authenticated/dashboard/organs/$organ'
