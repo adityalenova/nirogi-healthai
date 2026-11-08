@@ -8,10 +8,10 @@ import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/sos")({
   head: () => ({
-    meta: [
+    meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/sos" }, 
       { title: "Emergency SOS · Nirogi" },
       { name: "description", content: "Fast access to India emergency numbers, nearest hospitals and your medical info for first responders." },
-    ],
+    ], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/sos" }],
   }),
   component: SosPage,
 });

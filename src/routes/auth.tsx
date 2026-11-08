@@ -15,10 +15,10 @@ import logo from "@/assets/nirogi-logo.png";
 export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
-    meta: [
+    meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/auth" }, 
       { title: "Sign in · Nirogi" },
       { name: "description", content: "Sign in to Nirogi to access your private AI health tools and profile." },
-    ],
+    ], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/auth" }],
   }),
   component: AuthPage,
 });
@@ -78,8 +78,8 @@ function AuthPage() {
         </div>
 
         <div className="flex flex-col items-center text-center">
-          <img src={logo} alt="Nirogi" width={56} height={56} className="h-14 w-14" />
-          <h1 className="mt-4 font-display text-2xl font-bold">Welcome to Nirogi</h1>
+          <img src={logo} alt="Nirogi healthcare logo" width={56} height={56} className="h-14 w-14" />
+          <h1 className="mt-4 font-display text-2xl font-bold">Sign in to Nirogi</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Sign in to unlock your nine AI health tools and your private profile.
           </p>

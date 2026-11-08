@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({ meta: [{ title: "Terms of Service · Nirogi" }, { name: "description", content: "The terms governing your use of Nirogi's AI health tools." }] }),
+  head: () => ({ meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/terms" }, { title: "Terms of Service · Nirogi" }, { name: "description", content: "The terms governing your use of Nirogi's AI health tools." }], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/terms" }] }),
   component: () => (
     <SiteLayout>
       <LegalShell title="Terms of Service">

@@ -7,14 +7,14 @@ import { ARTICLES, KNOWLEDGE_CATEGORIES, INSTITUTIONS } from "@/lib/knowledge";
 
 export const Route = createFileRoute("/knowledge")({
   head: () => ({
-    meta: [
+    meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/knowledge" }, 
       { title: "Nirogi Knowledge Library · Skills & Knowledge" },
       { name: "description", content: "Curated health research from the world's top 50 medical institutions — the science behind every Nirogi AI recommendation." },
       { property: "og:title", content: "Nirogi Knowledge Library" },
       { property: "og:description", content: "Search curated health articles from Harvard, WHO, Mayo Clinic, AIIMS, ICMR and more." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-    ],
+    ], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/knowledge" }],
   }),
   component: KnowledgePage,
 });

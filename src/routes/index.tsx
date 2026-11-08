@@ -34,14 +34,30 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Nirogi gives everyone nine free AI health tools: check medicines, scan skin, read meals, assess cancer, diabetes & heart risk, test vision & hearing, read scans and verify medicines.",
+          "Nine free AI health tools: check medicines, scan skin, read meals, assess cancer, diabetes and heart risk, and verify medicines.",
       },
+      { property: "og:url", content: "https://nirogi-healthai.lovable.app/" },
       { property: "og:title", content: "Nirogi — Free AI Healthcare" },
       {
         property: "og:description",
         content: "Nine AI tools for free preventive healthcare. Catch it before it's too late.",
       },
       { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify([
+          { "@context": "https://schema.org", "@type": "Organization", name: "Nirogi", url: "https://nirogi-healthai.lovable.app/", description: "Free AI preventive healthcare tools." },
+          { "@context": "https://schema.org", "@type": "WebSite", name: "NIROGI.AI", url: "https://nirogi-healthai.lovable.app/" },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+          },
+        ]),
+      },
     ],
   }),
   component: HomePage,
