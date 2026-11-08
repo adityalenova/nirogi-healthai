@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/cookies")({
-  head: () => ({ meta: [{ title: "Cookie Policy · Nirogi" }, { name: "description", content: "How Nirogi uses cookies." }] }),
+  head: () => ({ meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/cookies" }, { title: "Cookie Policy · Nirogi" }, { name: "description", content: "How Nirogi uses cookies." }], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/cookies" }] }),
   component: () => (
     <SiteLayout>
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">

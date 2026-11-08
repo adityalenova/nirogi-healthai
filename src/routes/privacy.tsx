@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({ meta: [{ title: "Privacy Policy · Nirogi" }, { name: "description", content: "How Nirogi protects your private health data." }] }),
+  head: () => ({ meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/privacy" }, { title: "Privacy Policy · Nirogi" }, { name: "description", content: "How Nirogi protects your private health data." }], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/privacy" }] }),
   component: () => (
     <SiteLayout>
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">

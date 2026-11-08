@@ -11,14 +11,14 @@ import logo from "@/assets/nirogi-logo.png";
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
-    meta: [
+    meta: [{ property: "og:url", content: "https://nirogi-healthai.lovable.app/reset-password" }, 
       { title: "Set a new password · Nirogi" },
       { name: "description", content: "Choose a new password for your Nirogi account." },
       { property: "og:title", content: "Set a new password · Nirogi" },
       { property: "og:description", content: "Choose a new password for your Nirogi account." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-    ],
+    ], links: [{ rel: "canonical", href: "https://nirogi-healthai.lovable.app/reset-password" }],
   }),
   component: ResetPasswordPage,
 });
